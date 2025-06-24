@@ -6,14 +6,20 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store, persistor } from './features/store'
 import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';  // adjust path based on your project
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <React.StrictMode>
+   <ThemeProvider theme={theme}>
+        <CssBaseline />
+   {/* <React.StrictMode> */}
     <Provider store={store}>
       <App />
     </Provider>
-  // </React.StrictMode>
+     </ThemeProvider>,
+  //  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
