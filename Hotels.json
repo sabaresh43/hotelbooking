@@ -1,0 +1,1720 @@
+{
+    "data": [
+        {
+            "isActive": true,
+            "HotelName": "Secret Point Hotel",
+            "Description": "This classic hotel is ideally located on the main commercial artery of the city in the heart of New York. A few minutes away is Time's Square and the historic centre of the city, as well as other places of interest that make New York one of America's most attractive and cosmopolitan cities.",
+            "Tags": [
+                "concierge",
+                "air conditioning"
+            ],
+            "Photo": "https://www.fairmont.com/assets/0/104/2793/2798/4415/4416/2a8bc888-2178-4066-9d11-f53108f1eb9b.jpg",
+            "Rating": 3.6,
+            "Address": {
+                "StreetAddress": "100 Front St W",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5J 1E3",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.64642238354618,
+                    -79.38146488610136
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Budget Room, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 80.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "1-1"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "BaseRate": 150.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "coffee maker",
+                        "suite"
+                    ],
+                    "RoomId": "1-2"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 110.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "Room Tags"
+                    ],
+                    "RoomId": "1-3"
+                },
+                {
+                    "Description": "Suite, 1 Queen Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 243.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "Room Tags"
+                    ],
+                    "RoomId": "1-4"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 87.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "1-5"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 248.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "1-6"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 234.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "1-7"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 146.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "1-8"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 121.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "1-9"
+                },
+                {
+                    "Description": "Standard Room, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 128.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "coffee maker",
+                        "suite"
+                    ],
+                    "RoomId": "1-10"
+                }
+            ]
+        },
+        {
+            "HotelName": "Country Home",
+            "isActive": true,
+            "Description": "Save up to 50% off traditional hotels. Free WiFi, great location near downtown, full kitchen, washer & dryer, 24/7 support, bowling alley, fitness center and more.",
+            "Tags": [
+                "24-hour front desk service",
+                "free wifi",
+                "laundry service",
+                "free parking"
+            ],
+            "Photo": "https://www.booking.com/hotel/ca/st-regis-toronto.en-gb.html?aid=356980&label=gog235jc-1DCAsoJ0IQc3QtcmVnaXMtdG9yb250b0gzWANoJ4gBAZgBCbgBF8gBDNgBA-gBAYgCAagCA7gC3bC0rwbAAgHSAiQ4ODM2YTU1ZS00ZDA4LTQ2YTgtODE5MS1mMGE2ZDc5MTQzOGHYAgTgAgE&sid=542650b5806b200520803667b4978ad5&dist=0&keep_landing=1&sb_price_type=total&type=total&#",
+            "Rating": 2.7,
+            "Address": {
+                "StreetAddress": "325 Bay St",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5H 4G3",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.65027299307071,
+                    -79.38052073453919
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Suite, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 244.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "10-1"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 76.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "10-2"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 145.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "10-3"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 167.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "suite"
+                    ],
+                    "RoomId": "10-4"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 150.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower",
+                        "tv"
+                    ],
+                    "RoomId": "10-5"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 238.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "10-6"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 256.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "10-7"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 64.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "10-8"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 122.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "Room Tags",
+                        "coffee maker"
+                    ],
+                    "RoomId": "10-9"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 142.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "10-10"
+                },
+                {
+                    "Description": "Standard Room, 2 Queen Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 117.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "tv"
+                    ],
+                    "RoomId": "10-11"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 129.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "10-12"
+                }
+            ]
+        },
+        {
+            "HotelName": "Regal Orb Residence Inn",
+            "isActive": true,
+            "Description": "Your home away from home. Brand new fully equipped premium rooms, fast WiFi, full kitchen, washer & dryer, fitness center. Inner courtyard includes water features and outdoor seating. All units include fireplaces and small outdoor balconies. Pets accepted.",
+            "Tags": [
+                "24-hour front desk service",
+                "free parking",
+                "free wifi"
+            ],
+            "Photo": "https://www.hilton.com/im/en/YTOCSDT/7710359/ytocsdt-exterior2.jpg?impolicy=crop&cw=4600&ch=2575&gravity=NorthWest&xposition=0&yposition=245&rw=768&rh=430",
+            "Rating": 2.5,
+            "Address": {
+                "StreetAddress": "108 Chestnut St",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5G 1R3",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.65488854501076,
+                    -79.38600034992967
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Deluxe Room, 1 Queen Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 144.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "coffee maker"
+                    ],
+                    "RoomId": "11-1"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 248.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower",
+                        "suite"
+                    ],
+                    "RoomId": "11-2"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 229.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "coffee maker"
+                    ],
+                    "RoomId": "11-3"
+                },
+                {
+                    "Description": "Budget Room, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 61.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "11-4"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 248.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "11-5"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 239.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "11-6"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 132.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "11-7"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 144.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "11-8"
+                },
+                {
+                    "Description": "Budget Room, 2 Queen Beds (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 98.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "11-9"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 263.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "11-10"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 241.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "suite"
+                    ],
+                    "RoomId": "11-11"
+                },
+                {
+                    "Description": "Suite, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 242.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "tv"
+                    ],
+                    "RoomId": "11-12"
+                }
+            ]
+        },
+        {
+            "HotelName": "Historic Lion Resort",
+            "Description": "Unmatched Luxury. Visit our downtown hotel to indulge in luxury accommodations. Moments from the stadium, we feature the best in comfort",
+            "isActive": true,
+            "Tags": [
+                "bar",
+                "concierge",
+                "restaurant"
+            ],
+            "Photo": "https://digital.ihg.com/is/image/ihg/holiday-inn-toronto-9117953654-3x2?fmt=jpg&jpegSize=500&wid=733&qlt=85&resMode=sharp2&op_usm=1.75,0.3,2.0",
+            "Rating": 4.1,
+            "Address": {
+                "StreetAddress": "30 Carlton St",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5B 2E9",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.6618126173321,
+                    -79.38114374593238
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Standard Room, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 114.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "13-1"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 145.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "13-2"
+                },
+                {
+                    "Description": "Standard Room, 2 Queen Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 133.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub",
+                        "Room Tags"
+                    ],
+                    "RoomId": "13-3"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 242.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "13-4"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 103.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "13-5"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 257.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "coffee maker"
+                    ],
+                    "RoomId": "13-6"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 136.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "tv"
+                    ],
+                    "RoomId": "13-7"
+                },
+                {
+                    "Description": "Standard Room, 2 Queen Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 137.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "13-8"
+                },
+                {
+                    "Description": "Standard Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 128.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite",
+                        "coffee maker"
+                    ],
+                    "RoomId": "13-9"
+                },
+                {
+                    "Description": "Budget Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 65.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "13-10"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 163.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "13-11"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 262.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "13-12"
+                },
+                {
+                    "Description": "Deluxe Room, 1 Queen Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 142.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "13-13"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 256.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "suite"
+                    ],
+                    "RoomId": "13-14"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 254.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "13-15"
+                },
+                {
+                    "Description": "Standard Room, 1 Queen Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 103.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "13-16"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 243.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "13-17"
+                }
+            ]
+        },
+        {
+            "HotelName": "Twin Vertex Hotel",
+            "isActive": true,
+            "Description": "New experience in the Making. Be the first to experience the luxury of the Twin Vertex. Reserve one of our newly-renovated guest rooms today.",
+            "Tags": [
+                "bar",
+                "restaurant",
+                "concierge"
+            ],
+            "Photo": "https://www.ahstatic.com/photos/0931_ho_00_p_2048x1536.jpg",
+            "Rating": 4.4,
+            "Address": {
+                "StreetAddress": "45 The Esplanade",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5E 1W2",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.64680715548798,
+                    -79.37456340153594
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Budget Room, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 62.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "14-1"
+                },
+                {
+                    "Description": "Standard Room, 2 Queen Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 107.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "coffee maker"
+                    ],
+                    "RoomId": "14-2"
+                },
+                {
+                    "Description": "Deluxe Room, 1 Queen Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 138.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "14-3"
+                },
+                {
+                    "Description": "Standard Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 126.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "14-4"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 249.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "14-5"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 257.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "14-6"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 151.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "Room Tags"
+                    ],
+                    "RoomId": "14-7"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 149.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "14-8"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 258.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "14-9"
+                },
+                {
+                    "Description": "Standard Room, 2 Queen Beds (City View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 109.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "14-10"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 161.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "coffee maker"
+                    ],
+                    "RoomId": "14-11"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 235.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "14-12"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 260.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "14-13"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 151.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "14-14"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 148.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "coffee maker"
+                    ],
+                    "RoomId": "14-15"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 118.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "coffee maker"
+                    ],
+                    "RoomId": "14-16"
+                }
+            ]
+        },
+        {
+            "HotelName": "Peaceful Market Hotel",
+            "isActive": true,
+            "Description": "Book now and Save up to 30%. Central location. Steps from Empire State Building & Times Square, in Chelsea neighborhood. Brand new rooms. Impeccable service.",
+            "Tags": [
+                "24-hour front desk service",
+                "coffee in lobby",
+                "free wifi",
+                "free parking"
+            ],
+            "Photo": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/25/05/f5/deluxe-guest-rooms-city.jpg?w=1400&h=-1&s=1",
+            "Rating": 3.3,
+            "Address": {
+                "StreetAddress": "181 Wellington St W",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5V 3G7",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.64593764002948,
+                    -79.3872448852292
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Standard Room, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 105.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "15-1"
+                },
+                {
+                    "Description": "Budget Room, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 80.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "15-2"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 130.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "coffee maker"
+                    ],
+                    "RoomId": "15-3"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 259.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "15-4"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 138.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "15-5"
+                },
+                {
+                    "Description": "Suite, 1 Queen Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 264.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "15-6"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 260.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "15-7"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 139.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "Room Tags",
+                        "suite"
+                    ],
+                    "RoomId": "15-8"
+                },
+                {
+                    "Description": "Budget Room, 2 Queen Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 65.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "15-9"
+                },
+                {
+                    "Description": "Standard Room, 1 Queen Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 124.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "Room Tags",
+                        "suite"
+                    ],
+                    "RoomId": "15-10"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 131.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "tv"
+                    ],
+                    "RoomId": "15-11"
+                },
+                {
+                    "Description": "Suite, 1 Queen Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 252.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "15-12"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 124.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "15-13"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (City View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 263.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "suite"
+                    ],
+                    "RoomId": "15-14"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 154.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "15-15"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 262.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "15-16"
+                }
+            ]
+        },
+        {
+            "HotelName": "Double Sanctuary Resort",
+            "isActive": true,
+            "Description": "5* Luxury Hotel - Biggest Rooms in the city.  #1 Hotel in the area listed by Conde Nast Traveler. Free WiFi, Flexible check in/out, Fitness Center & Nespresso in room.",
+            "Tags": [
+                "pool",
+                "continental breakfast",
+                "bar",
+                "restaurant",
+                "free parking"
+            ],
+            "Photo": "https://www.omnihotels.com/-/media/images/hotels/tordtn/hotel/tordtn-omni-king-edward-hotel-deluxe-room-2.jpg?h=660&iar=0&w=1170",
+            "Rating": 4.2,
+            "Address": {
+                "StreetAddress": "37 King St E",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5C 1E9",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.649400099785254,
+                    -79.37580794651787
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Suite, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 254.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "16-1"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 124.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "16-2"
+                },
+                {
+                    "Description": "Budget Room, 2 Double Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 68.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "16-3"
+                },
+                {
+                    "Description": "Standard Room, 2 Double Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 108.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker",
+                        "suite"
+                    ],
+                    "RoomId": "16-4"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 136.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "Room Tags"
+                    ],
+                    "RoomId": "16-5"
+                },
+                {
+                    "Description": "Suite, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 260.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "coffee maker"
+                    ],
+                    "RoomId": "16-6"
+                },
+                {
+                    "Description": "Standard Room, 1 Queen Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 133.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "16-7"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 71.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite"
+                    ],
+                    "RoomId": "16-8"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 97.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite",
+                        "coffee maker"
+                    ],
+                    "RoomId": "16-9"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 162.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "16-10"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 67.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "16-11"
+                },
+                {
+                    "Description": "Deluxe Room, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 138.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite",
+                        "coffee maker"
+                    ],
+                    "RoomId": "16-12"
+                },
+                {
+                    "Description": "Deluxe Room, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 156.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "16-13"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 88.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "16-14"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 131.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "tv"
+                    ],
+                    "RoomId": "16-15"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 81.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "Room Tags"
+                    ],
+                    "RoomId": "16-16"
+                }
+            ]
+        },
+        {
+            "HotelName": "Antiquity Hotel",
+            "isActive": true,
+            "Description": "In vogue since 1888, the Antiquity Hotel takes you back to bygone era. From the crystal chandeliers that adorn the Green Room, to the arched ceilings of the Grand Hall, the elegance of old New York beckons. Elevate Your Experience. Upgrade to a premiere city skyline view for less, where old world charm combines with dramatic views of the city, local cathedral and midtown.",
+            "Tags": [
+                "bar",
+                "concierge"
+            ],
+            "Photo": "https://cf.bstatic.com/xdata/images/hotel/max1280x900/465590812.jpg?k=a0f733c177a9cbbb39ba7c41f1f24a4b5b43eb30d07808e95fade2e273237438&o=&hp=1",
+            "Rating": 4.5,
+            "Address": {
+                "StreetAddress": "123 Queen St W",
+                "City": "Toronto",
+                "StateProvince": "ON",
+                "PostalCode": "M5H 2M9",
+                "Country": "Canada"
+            },
+            "Location": {
+                "type": "Point",
+                "coordinates": [
+                    43.65141848199125,
+                    -79.38454121866704
+                ]
+            },
+            "Rooms": [
+                {
+                    "Description": "Budget Room, 2 Queen Beds (Waterfront View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 59.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "tv",
+                        "suite"
+                    ],
+                    "RoomId": "17-1"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 85.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "17-2"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Double Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 145.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "suite",
+                        "coffee maker"
+                    ],
+                    "RoomId": "17-3"
+                },
+                {
+                    "Description": "Suite, 2 Double Beds (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 247.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "17-4"
+                },
+                {
+                    "Description": "Standard Room, 1 King Bed (City View)",
+                    "isActive": true,
+                    "Type": "Standard Room",
+                    "BaseRate": 118.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "coffee maker"
+                    ],
+                    "RoomId": "17-5"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (City View)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 144.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "Room Tags",
+                        "suite"
+                    ],
+                    "RoomId": "17-6"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 62.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "suite"
+                    ],
+                    "RoomId": "17-7"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 262.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "tv",
+                        "coffee maker"
+                    ],
+                    "RoomId": "17-8"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 68.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "coffee maker"
+                    ],
+                    "RoomId": "17-9"
+                },
+                {
+                    "Description": "Deluxe Room, 1 Queen Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 147.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "17-10"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 131.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "Room Tags"
+                    ],
+                    "RoomId": "17-11"
+                },
+                {
+                    "Description": "Budget Room, 1 Queen Bed (City View)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 80.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "17-12"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 72.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "17-13"
+                },
+                {
+                    "Description": "Deluxe Room, 2 Queen Beds (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 160.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "17-14"
+                },
+                {
+                    "Description": "Budget Room, 2 Double Beds (Amenities)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 84.99,
+                    "BedOptions": "2 Double Beds",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower",
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "17-15"
+                },
+                {
+                    "Description": "Suite, 2 Queen Beds (City View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 257.99,
+                    "BedOptions": "2 Queen Beds",
+                    "SleepsCount": 4,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "suite"
+                    ],
+                    "RoomId": "17-16"
+                },
+                {
+                    "Description": "Budget Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Budget Room",
+                    "BaseRate": 97.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "bathroom shower"
+                    ],
+                    "RoomId": "17-17"
+                },
+                {
+                    "Description": "Suite, 1 Queen Bed (Mountain View)",
+                    "isActive": true,
+                    "Type": "Suite",
+                    "BaseRate": 247.99,
+                    "BedOptions": "1 Queen Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "suite"
+                    ],
+                    "RoomId": "17-18"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (Amenities)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 167.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub",
+                        "suite"
+                    ],
+                    "RoomId": "17-19"
+                },
+                {
+                    "Description": "Deluxe Room, 1 King Bed (Cityside)",
+                    "isActive": true,
+                    "Type": "Deluxe Room",
+                    "BaseRate": 158.99,
+                    "BedOptions": "1 King Bed",
+                    "SleepsCount": 2,
+                    "Tags": [
+                        "jacuzzi tub"
+                    ],
+                    "RoomId": "17-20"
+                }
+            ]
+        }
+    ]
+}
