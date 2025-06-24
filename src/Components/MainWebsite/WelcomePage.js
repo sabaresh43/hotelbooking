@@ -1,11 +1,9 @@
-import { Paper, Stack, Typography, Box, Container, Grid, Card, CardContent, Fade, Chip } from "@mui/material"
+import { Stack, Typography, Box, Container, Grid, Card, CardContent, Fade, Chip } from "@mui/material"
 import SearchBar from "../SearchHotelContext/SearchBar";
 import React from "react";
 import { keyframes } from '@mui/system';
 import HotelIcon from '@mui/icons-material/Hotel';
-import SecurityIcon from '@mui/icons-material/Security';
-import StarIcon from '@mui/icons-material/Star';
-import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+
 
 const fadeInUp = keyframes`
   from {
@@ -78,41 +76,7 @@ export const WelcomePage = () => {
                             <SearchBar />
                         </Box>
                     </Stack>
-                    <Paper sx={{
-                        width: '70%', justifySelf: 'center', p: 3, textAlign: 'left', backgroundColor: 'grey.50',
-                        animation: `${fadeInUp} 1s ease-out`
-                    }}
-                        elevation={3}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'center' }}>
-                            <SecurityIcon sx={{ mr: 2, color: 'primary.main' }} />
-                            <Typography variant="h5" component="h3">
-                                Admin Access
-                            </Typography>
-                        </Box>
-                        <Typography variant="body1" sx={{ textAlign: 'center', mb: 3, color: 'text.secondary' }} gutterBottom >
-                            To view the admin dashboard, please create your admin account first in the database following this format:
-                        </Typography>
-                        <Paper
-                            sx={{
-                                backgroundColor: 'grey.900',
-                                color: 'white',
-                                p: 3,
-                                borderRadius: 2,
-                                position: 'relative',
-                                fontFamily: 'monospace',
-                                fontSize: '0.875rem',
-                                overflow: 'auto'
-                            }}
-                        >
-                            <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
-                                {JSON.stringify({
-                                    email: "[adminEmail]",
-                                    role: "admin",
-                                    password: "[adminPassword]"
-                                }, null, 2)}
-                            </pre>
-                        </Paper>
-                    </Paper>
+                   
                 </Container>
             </Box>
         </React.Fragment >);
