@@ -107,7 +107,7 @@ function SearchBar() {
                         }}
                     />
                     {/* Button size changes based on extra small screen detection */}
-                    <IconButton onClick={handleIncrease} size={isXs ? "small" : "medium"}>
+                    <IconButton onClick={handleIncrease} size={isXs ? "medium" : "large"}>
                         <AddIcon />
                     </IconButton>
                 </Stack>

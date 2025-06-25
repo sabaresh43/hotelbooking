@@ -42,13 +42,13 @@ function RoomDetailsList({ rooms }) {
     const handleCheck = (room) => (event) => {
         if (event.target.checked) {
             // if the array doesn't contain it already, ad it
-            if (!selectedRooms.find(existingRoom => existingRoom.RoomId === room.RoomId)) {
+            if (!selectedRooms.find(existingRoom => existingRoom.roomId === room.roomId)) {
                 setSelectedRooms([...selectedRooms, room]);
             }
         } else {
             // if the array contains it, delete it
-            if (selectedRooms.find(existingRoom => existingRoom.RoomId === room.RoomId)) {
-                setSelectedRooms(selectedRooms.filter(existingRoom => existingRoom.RoomId !== room.RoomId));
+            if (selectedRooms.find(existingRoom => existingRoom.roomId === room.roomId)) {
+                setSelectedRooms(selectedRooms.filter(existingRoom => existingRoom.roomId !== room.roomId));
             }
         }
     }
@@ -115,12 +115,12 @@ function RoomDetailsList({ rooms }) {
                 <TableBody>
                     {rooms.map((room) => {
                         return (<TableRow
-                            key={room.RoomId}
+                            key={room.roomId}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
                                 <Typography gutterBottom variant="h6" fontWeight="500" component="div">
-                                    {room.Description}
+                                    {room.description}
                                 </Typography>
                                 {room.Tags && room.Tags.map((tag, tagIndex) => (
                                     <Chip label={tag} key={tagIndex} color="primary" variant="outlined" sx={{ mr: 1, textTransform: 'capitalize' }} />
@@ -129,25 +129,25 @@ function RoomDetailsList({ rooms }) {
                             <TableCell align="left">
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                                     <Typography variant="body2" color="text.secondary">
-                                        {room.BedOptions}
+                                        {room.bedOptions}
                                     </Typography>
                                     <BedIcon sx={{ verticalAlign: "bottom" }} />
                                 </div>
 
                             </TableCell>
                             <TableCell align="left">
-                                {Array.from({ length: room.SleepsCount }).map((_, k) => (
+                                {Array.from({ length: room.sleepsCount }).map((_, k) => (
                                     <PersonIcon key={k} sx={{ verticalAlign: "bottom" }} />
                                 ))}
                             </TableCell>
                             <TableCell align="left">
                                 <Typography variant="h6" sx={{ fontWeight: '500' }}>
-                                    ${(room.BaseRate * bookingData.duration).toFixed(2)}
+                                    ${(room.baseRate * bookingData.duration).toFixed(2)}
                                 </Typography>
                             </TableCell>
                             <TableCell align="left">
                                 <Checkbox
-                                    value={selectedRooms.some(r => r.RoomId === room.RoomId)}
+                                    value={selectedRooms.some(r => r.roomId === room.roomId)}
                                     onChange={handleCheck(room)}
                                 />
                             </TableCell>

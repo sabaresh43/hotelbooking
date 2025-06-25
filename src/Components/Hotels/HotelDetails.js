@@ -23,9 +23,11 @@ function HotelDetails() {
             // Handle case where hotel is not found
             console.error(`Hotel with id ${id} not found`);
             return;
+        }else{
+             console.log('Hotel found:', hotel);
         }
 
-        const { Rooms, ...pureHotelData } = hotel;
+        const { rooms, ...pureHotelData } = hotel;
         const from = dayjs(searchOption.from);
         const to = dayjs(searchOption.to);
         const duration = to.diff(from, 'day');
@@ -45,13 +47,13 @@ function HotelDetails() {
 
     if (!hotelData) return <CircularProgress />;
     else {
-        //console.log(hotelData);
+        console.log(hotelData);
         return (
             <Routes>
                 <Route index element={
                     <Container sx={{ minWidth: '70%' }}>
                         <HotelOverview hotel={hotelData} />
-                        {hotelData.Rooms && <RoomDetailsList rooms={hotelData.Rooms} />}
+                        {hotelData.rooms && <RoomDetailsList rooms={hotelData.rooms} />}
                     </Container>}>
                 </Route>
                 <Route path="booking/*" element={

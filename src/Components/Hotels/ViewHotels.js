@@ -51,7 +51,7 @@ const displayDataReducer = (state, action) => {
             // get the data and the filters
             const data = action.payload.data;
             console.log('Filtering data with:', data);
-            
+
             const searchTags = action.payload.searchTags;
             const minRating = action.payload.minRating;
             const location = action.payload.location;
@@ -62,14 +62,14 @@ const displayDataReducer = (state, action) => {
                 // Filter by location
                 if (hotel.address.city.toLowerCase() !== location.toLowerCase()) {
                     console.log(`Hotel ${hotel.HotelName} does not match location filter: ${location}`);
-                    
+
                     return false;
                 }
 
                 // Filter by minimum rating
                 if (hotel.Rating < minRating) {
                     console.log(`Hotel ${hotel.HotelName} does not meet minimum rating: ${minRating}`);
-                    
+
                     return false;
                 }
 
@@ -85,7 +85,7 @@ const displayDataReducer = (state, action) => {
                 //console.log(hasValidPrice);
                 if (!hasValidPrice) {
                     console.log(`Hotel ${hotel.HotelName} has no rooms in the price range: $${priceRange[0]} - $${priceRange[1]}`);
-                    
+
                     return false;
                 }
 
@@ -108,7 +108,7 @@ const displayDataReducer = (state, action) => {
 
             // finally return the filtered Hotel List
             console.log('Filtered Hotel List:', filteredList);
-            
+
             return {
                 ...state,
                 itemList: filteredList,
@@ -383,7 +383,7 @@ function ViewHotels() {
                                                             component="img"
                                                             height="200"
                                                             image={item.photo}
-                                                            alt={item.HotelName}
+                                                            alt={item.hotelName}
                                                             sx={{
                                                                 borderRadius: 1,
                                                                 objectFit: 'cover',
@@ -408,7 +408,7 @@ function ViewHotels() {
                                                                             '&:hover': { color: 'primary.main' }
                                                                         }}
                                                                     >
-                                                                        {item.HotelName}
+                                                                        {item.hotelName}
                                                                     </Link>
                                                                 </Typography>
 
@@ -421,9 +421,11 @@ function ViewHotels() {
                                                             </Box>
 
                                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                                                                <Rating value={item.Rating} precision={0.5} readOnly size="regular" />
+                                                                <Rating value={item.rating} precision={0.5} readOnly size="regular" sx={{
+                                                                    color: 'secondary.main',
+                                                                }} />
                                                                 <Chip
-                                                                    label={item.Rating}
+                                                                    label={item.rating}
                                                                     color="primary"
                                                                     size="regular"
                                                                     sx={{ fontWeight: 'bold' }}
