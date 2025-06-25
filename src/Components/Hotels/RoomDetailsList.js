@@ -3,10 +3,8 @@ import {
     Card,
     Typography,
     Chip,
-   
     Box,
     Button,
-    
     Dialog,
     DialogContent,
     Alert,
@@ -14,12 +12,16 @@ import {
     Fab,
     CardMedia,
 } from '@mui/material';
+import Slider from "react-slick";
 import PersonIcon from '@mui/icons-material/Person';
 import BedIcon from '@mui/icons-material/Bed';
 import BookingContext from '../Booking/BookingContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 function RoomDetailsList({ rooms }) {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -50,29 +52,56 @@ function RoomDetailsList({ rooms }) {
     };
 
     const [openDialog, setOpenDialog] = useState(false);
+    console.log('Rooms:', rooms[0]?.images);
 
     return (
         <>
             <Stack spacing={3} sx={{ mb: 5 }}>
                 {rooms.map(room => (
-                    <Card key={room.roomId} sx={{ display: 'flex', borderRadius: 2, boxShadow: 3, }}>
-                        {!room.imageUrl && (
-                            <Box sx={{ position: 'relative', width: 220, width: 220, flexShrink: 0, borderRadius: '8px 0 0 8px', overflow: 'hidden', display: 'flex' }}>
+                    <Card key={room.roomId} sx={{ display: 'flex', borderRadius: 2, boxShadow: 3, mb: 2 }}>
+                        <Box sx={{ position: 'relative', width: 220, height: 220, flexShrink: 0, borderRadius: '8px 0 0 8px', overflow: 'visible' }}>
+
+                            {room.images?.length > 0 ? (
+                                <Slider
+                                    dots={true}
+                                    infinite={true}
+                                    speed={500}
+                                    slidesToShow={1}
+                                    pauseOnHover={true}
+                                    slidesToScroll={1}
+                                    arrows={true}
+                                    autoplay={true}
+                                    autoplaySpeed={3000}
+                                >
+                                    {room.images.map((img, idx) => (
+                                        <Box key={idx} sx={{ width: '100%', height: '220px', position: 'relative' }}>
+                                            <CardMedia
+                                                component="img"
+                                                image={img}
+                                                alt={`${room.description} ${idx + 1}`}
+                                                sx={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover',
+                                                }}
+                                            />
+                                        </Box>
+                                    ))}
+                                </Slider>
+                            ) : (
                                 <CardMedia
                                     component="img"
-                                    image={room.imageUrl || 'https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg'}
+                                    image="https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg"
                                     alt={room.description}
                                     sx={{
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'cover',
+                                        objectFit: 'fit',
                                     }}
                                 />
-                            </Box>
-                        )}
+                            )}
 
-
-                        {/* Image Section */}
+                        </Box>
 
                         <Stack direction="row" justifyContent="space-between" alignItems="center" flex={1} p={2}>
                             <Stack spacing={1} flex={1}>

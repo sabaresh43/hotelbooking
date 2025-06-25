@@ -21,6 +21,22 @@
   }
 }
 
+.slick-prev, .slick-next {
+    z-index: 3 !important;
+}
+
+.slick-dots {
+    z-index: 3 !important;
+    bottom: 10px; /* Adjust based on layout */
+}
+
+.slick-prev:before,
+.slick-next:before {
+    color: black;
+    font-size: 22px;
+}
+
+
 .App-header {
   background-color: var(--primary-color);
   min-height: 100vh;

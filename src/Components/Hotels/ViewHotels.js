@@ -19,6 +19,9 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useDebounce } from "../../hooks/hooks";
 import { Grid } from "@mui/material";
 import { Skeleton } from "@mui/material";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import SlickSlider from "react-slick"; 
 
 const facilityIcons = {
     wifi: <WifiIcon sx={{ fontSize: 20, color: 'primary.main' }} />,
@@ -92,10 +95,10 @@ const displayDataReducer = (state, action) => {
                 // Filter by tags
                 if (searchTags.length > 0) {
                     // first get hotel tags
-                    const hotelTags = new Set(hotel.Tags.map(tag => tag.toLowerCase()));
+                    const hotelTags = new Set(hotel.tags.map(tag => tag.toLowerCase()));
                     // get rooms' tag
-                    hotel.Rooms.forEach(room => {
-                        room.Tags.forEach(tag => hotelTags.add(tag.toLowerCase()));
+                    hotel.rooms.forEach(room => {
+                        room.tags.forEach(tag => hotelTags.add(tag.toLowerCase()));
                     });
                     // convert tags to lower case
                     const lowercaseHotelTags = Array.from(hotelTags);
@@ -379,20 +382,52 @@ function ViewHotels() {
                                             <Grid container spacing={3}>
                                                 <Grid size={{ xs: 12, sm: 4 }}>
                                                     <Link to={`/Hotels/${item._id}`} style={{ textDecoration: 'none' }}>
-                                                        <CardMedia
-                                                            component="img"
-                                                            height="200"
-                                                            image={item.photo}
-                                                            alt={item.hotelName}
-                                                            sx={{
-                                                                borderRadius: 1,
-                                                                objectFit: 'cover',
-                                                                transition: 'transform 0.3s ease-in-out',
-                                                                '&:hover': {
-                                                                    transform: 'scale(1.02)'
-                                                                }
-                                                            }}
-                                                        />
+                                                       <Box sx={{ position: 'relative', width: '100%', height: 200, borderRadius: 1, overflow: 'hidden' }}>
+                    
+                     {Array.isArray(item.photo) && item.photo.length > 0 ? (
+                        <SlickSlider
+                            dots={true}
+                            infinite={true}
+                            speed={500}
+                            slidesToShow={1}
+                            slidesToScroll={1}
+                            arrows={true}
+                            autoplay={true}
+                            autoplaySpeed={3000}
+                        >
+                            {item.photo.map((img, idx) => (
+                                <Box key={idx} sx={{ width: '100%', height: 200 }}>
+                                    <CardMedia
+                                        component="img"
+                                        image={img}
+                                        alt={`${item.hotelName} ${idx + 1}`}
+                                        sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                </Box>
+                            ))}
+                        </SlickSlider>
+                    ) : (
+                        <CardMedia
+                            component="img"
+                            height="200"
+                            image={item.photo}
+                            alt={item.hotelName}
+                            sx={{
+                                borderRadius: 1,
+                                objectFit: 'cover',
+                                transition: 'transform 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'scale(1.02)'
+                                }
+                            }}
+                        />
+                    )}
+                    
+                </Box>
                                                     </Link>
                                                 </Grid>
                                                 <Grid size={{ xs: 12, sm: 8 }}>
