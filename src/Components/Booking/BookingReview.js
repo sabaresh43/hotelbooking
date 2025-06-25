@@ -33,22 +33,24 @@ function BookingReview({ prevStep }) {
             userId: sessionKey || '',
             time: dayjs()
         });
+        dispatch({ type: "setIsBookingSuccess" }); // make the order details not visible
+        navigate("../success", { state: { bookingData } });
+        // if (bookingDetail) {
+        //     const { isBookingSuccess, ...pureBookingData } = bookingDetail;
+        //     // const isBookingCreated = await createBooking(pureBookingData);
 
-        if (bookingDetail) {
-            const { isBookingSuccess, ...pureBookingData } = bookingDetail;
-            const isBookingCreated = await createBooking(pureBookingData);
+        //     // if (isBookingCreated) {
+        //     //     dispatch({ type: "setIsBookingSuccess" }); // make the order details not visible
+        //     //     navigate("../success", { state: { bookingData } });
 
-            if (isBookingCreated) {
-                dispatch({ type: "setIsBookingSuccess" }); // make the order details not visible
-                navigate("../success");
-            } else {
-                dispatch({ type: "setIsBookingFailed" });
-                setIsBookingFailed(true); // set the alert to visible
-            }
-        } else {
-            setIsBookingFailed(true); // set the alert to visible
-            return;
-        }
+        //     // } else {
+        //     //     dispatch({ type: "setIsBookingFailed" });
+        //     //     setIsBookingFailed(true); // set the alert to visible
+        //     // }
+        // } else {
+        //     setIsBookingFailed(true); // set the alert to visible
+        //     return;
+        // }
     }
 
     return (

@@ -16,9 +16,9 @@ export default function Footer() {
                             ConnectXenia
                         </Typography>
                         <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                            A dream stay for a bucket list trip
+                            Booking across the globe with ConnectXenia
                         </Typography>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Box sx={{ display: 'flex', gap: 0.5 }}>
                             <IconButton size="large" sx={{ color: 'grey.50' }}>
                                 <Instagram />
                             </IconButton>
@@ -39,7 +39,7 @@ export default function Footer() {
                             Support
                         </Typography>
                         <Box component="ul" sx={{ listStyle: 'none', p: 0 }}>
-                            {['Help Centre', 'Anti-discrimination', 'Disability support', 'Cancellation options', 'Report concerns'].map((item, index) =>
+                            {['Help Centre','Cancellation options', 'Report concerns'].map((item, index) =>
                             (
                                 <Box component="li" key={item} mb={1}>
                                     <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'grey.50', }}>
@@ -53,10 +53,10 @@ export default function Footer() {
 
                     <Grid size={{ xs: 6, md: 3 }} >
                         <Typography variant="subtitle1" gutterBottom fontWeight="bold">
-                            Terms and settings
+                            Terms and conditions
                         </Typography>
                         <Box component="ul" sx={{ listStyle: 'none', p: 0 }}>
-                            {['Privacy & cookies', 'Terms & conditions', 'Partner dispute'].map((item, index) =>
+                            {['Privacy & cookies', 'Partner dispute'].map((item, index) =>
                             (
                                 <Box component="li" key={item} mb={1}>
                                     <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'grey.50', }}>
@@ -73,7 +73,7 @@ export default function Footer() {
                             About
                         </Typography>
                         <Box component="ul" sx={{ listStyle: 'none', p: 0 }}>
-                            {['About ConnectXenia', 'Contact us', 'Careers', 'Missions'].map((item, index) =>
+                            {['About ConnectXenia', 'Contact us'].map((item, index) =>
                             (
                                 <Box component="li" key={item} mb={1}>
                                     <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'grey.50', }}>

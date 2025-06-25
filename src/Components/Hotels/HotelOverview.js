@@ -87,7 +87,7 @@ const HotelOverview = ({ hotel }) => {
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
                         fontSize: 20,
-                        filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.8))',
+                        filter: 'drop-shadow(0 1px 2px rgba(198, 198, 198, 0.8))',
                         // Fallback for browsers that don't support background-clip
                         color: '#FFD700'
                     }} />
