@@ -1,25 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
     Card,
-    CardContent,
     Typography,
     Chip,
-    Grid,
+   
     Box,
     Button,
-    Checkbox,
-    TableCell,
-    TableContainer,
-    Paper,
-    Table,
-    TableHead,
-    TableRow,
-    TableBody,
+    
     Dialog,
     DialogContent,
     Alert,
     Stack,
-    Fab
+    Fab,
+    CardMedia,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import BedIcon from '@mui/icons-material/Bed';
@@ -31,152 +24,133 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 function RoomDetailsList({ rooms }) {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const role = useSelector(state => state.auth.role);
-    const [selectedRooms, setSelectedRooms] = useState([]);
+    const [selectedRoomId, setSelectedRoomId] = useState(null);
     const { bookingData, dispatch } = useContext(BookingContext);
     const navigate = useNavigate();
 
-    const goBack = () => {
-        navigate(-1);
-    }
-
-    const handleCheck = (room) => (event) => {
-        if (event.target.checked) {
-            // if the array doesn't contain it already, ad it
-            if (!selectedRooms.find(existingRoom => existingRoom.RoomId === room.RoomId)) {
-                setSelectedRooms([...selectedRooms, room]);
-            }
-        } else {
-            // if the array contains it, delete it
-            if (selectedRooms.find(existingRoom => existingRoom.RoomId === room.RoomId)) {
-                setSelectedRooms(selectedRooms.filter(existingRoom => existingRoom.RoomId !== room.RoomId));
-            }
-        }
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // prevent admin to book rooms
+    const handleSelect = (room) => {
         if (isAuthenticated && role === 'admin') {
-            handleDialogOpen();
+            setOpenDialog(true);
             return;
         }
 
-        // calculate the price
-        let totalPrice = 0;
-        for (let i = 0; i < selectedRooms.length; i++) {
-            totalPrice += selectedRooms[i].BaseRate * bookingData.duration;
-        }
+        const totalPrice = room.baseRate * bookingData.duration;
+
         dispatch({
             type: "setBookingDetails",
             payload: {
                 data: {
-                    rooms: selectedRooms,
-                    totalPrice: totalPrice
+                    rooms: [room],
+                    totalPrice
                 }
             }
         });
+
         navigate("booking");
-    }
+    };
 
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleDialogOpen = () => {
-        setOpenDialog(true);
-    };
-
-    const handleDialogClose = () => {
-        setOpenDialog(false);
-    };
-
-    return (<React.Fragment>
-        <TableContainer component={Paper} square={false} elevation={4} sx={{ mb: 3 }}>
-            <Table aria-label="simple table">
-                <TableHead >
-                    <TableRow>
-                        <TableCell sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', backgroundColor: theme => theme.palette.primary.main }}>Room Description</TableCell>
-                        <TableCell align="left" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', backgroundColor: theme => theme.palette.primary.main }}>Bed Options</TableCell>
-                        <TableCell align="left" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', backgroundColor: theme => theme.palette.primary.main }}>Number of Guests</TableCell>
-                        <TableCell align="left" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', backgroundColor: theme => theme.palette.primary.main }}>Price for {bookingData.duration} {bookingData.duration > 1 ? "nights" : "night"}</TableCell>
-                        <TableCell align="left" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', backgroundColor: theme => theme.palette.primary.main }}>Select</TableCell>
-                        <TableCell align="left" sx={{ fontSize: '1.2rem', fontWeight: 'bold', backgroundColor: theme => theme.palette.primary.main }} >
-                            <form onSubmit={handleSubmit}>
-                                <Button type="submit" disabled={selectedRooms.length === 0}
-                                    variant="contained"
+    return (
+        <>
+            <Stack spacing={3} sx={{ mb: 5 }}>
+                {rooms.map(room => (
+                    <Card key={room.roomId} sx={{ display: 'flex', borderRadius: 2, boxShadow: 3, }}>
+                        {!room.imageUrl && (
+                            <Box sx={{ position: 'relative', width: 220, width: 220, flexShrink: 0, borderRadius: '8px 0 0 8px', overflow: 'hidden', display: 'flex' }}>
+                                <CardMedia
+                                    component="img"
+                                    image={room.imageUrl || 'https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg'}
+                                    alt={room.description}
                                     sx={{
-                                        bgcolor: 'grey.100', color: theme => theme.palette.primary.main,
-                                        '&:disabled': { cursor: 'not-allowed', pointerEvents: 'auto', backgroundColor: 'grey.400' },
-                                    }}>
-                                    Reserve
-                                </Button>
-                            </form>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rooms.map((room) => {
-                        return (<TableRow
-                            key={room.RoomId}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                <Typography gutterBottom variant="h6" fontWeight="500" component="div">
-                                    {room.Description}
-                                </Typography>
-                                {room.Tags && room.Tags.map((tag, tagIndex) => (
-                                    <Chip label={tag} key={tagIndex} color="primary" variant="outlined" sx={{ mr: 1, textTransform: 'capitalize' }} />
-                                ))}
-                            </TableCell>
-                            <TableCell align="left">
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {room.BedOptions}
-                                    </Typography>
-                                    <BedIcon sx={{ verticalAlign: "bottom" }} />
-                                </div>
-
-                            </TableCell>
-                            <TableCell align="left">
-                                {Array.from({ length: room.SleepsCount }).map((_, k) => (
-                                    <PersonIcon key={k} sx={{ verticalAlign: "bottom" }} />
-                                ))}
-                            </TableCell>
-                            <TableCell align="left">
-                                <Typography variant="h6" sx={{ fontWeight: '500' }}>
-                                    ${(room.BaseRate * bookingData.duration).toFixed(2)}
-                                </Typography>
-                            </TableCell>
-                            <TableCell align="left">
-                                <Checkbox
-                                    value={selectedRooms.some(r => r.RoomId === room.RoomId)}
-                                    onChange={handleCheck(room)}
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
                                 />
-                            </TableCell>
-                        </TableRow>);
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
-        {
-            isAuthenticated && role === 'admin' && <Dialog
-                open={openDialog}
-                onClose={handleDialogClose} >
+                            </Box>
+                        )}
+
+
+                        {/* Image Section */}
+
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" flex={1} p={2}>
+                            <Stack spacing={1} flex={1}>
+                                <Typography variant="h6" fontWeight={600}>
+                                    {room.description}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {room.area || "Room Size: 350 sq.ft"} {/* Placeholder area */}
+                                </Typography>
+                                <Stack direction="row" spacing={1} alignItems="center">
+                                    <BedIcon fontSize="small" />
+                                    <Typography variant="body2">{room.bedOptions}</Typography>
+                                </Stack>
+                                <Stack direction="row" spacing={1}>
+                                    {Array.from({ length: room.sleepsCount }).map((_, idx) => (
+                                        <PersonIcon key={idx} fontSize="small" />
+                                    ))}
+                                </Stack>
+                                {room.tags && (
+                                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                                        {room.tags.map((tag, i) => (
+                                            <Chip
+                                                key={i}
+                                                label={tag}
+                                                variant="outlined"
+                                                size="small"
+                                                sx={{
+                                                    borderRadius: '4px',
+                                                    textTransform: 'capitalize',
+                                                    borderColor: 'primary.main',
+                                                    fontSize: '0.75rem'
+                                                }}
+                                            />
+                                        ))}
+                                    </Stack>
+                                )}
+
+                            </Stack>
+
+                            <Stack spacing={2} alignItems="flex-end">
+                                <Typography variant="h6" color="primary" fontWeight={600}>
+                                    ₹ {(room.baseRate * bookingData.duration).toFixed(2)}
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => handleSelect(room)}
+                                    sx={{ minWidth: 150 }}
+                                    disabled={isAuthenticated && role === 'admin'}
+                                >
+                                    Book Room
+                                </Button>
+                            </Stack>
+                        </Stack>
+                    </Card>
+                ))}
+            </Stack>
+
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                 <DialogContent>
-                    <Stack>
-                        <Alert variant="filled" severity="error">
-                            You can't create booking as an admin, please sign out or login as user
+                    <Stack spacing={2}>
+                        <Alert severity="error">
+                            You can't book rooms as an admin. Please sign out or login as a user.
                         </Alert>
-                        <Button color="inherit" variant="outlined" onClick={handleDialogClose}>Close</Button>
+                        <Button variant="outlined" onClick={() => setOpenDialog(false)}>Close</Button>
                     </Stack>
                 </DialogContent>
             </Dialog>
-        }
-        <div style={{ position: 'fixed', bottom: 50, right: 50 }}>
-            <Fab color="primary" aria-label="add" size="large" onClick={goBack} variant="extended">
-                <ArrowBackIcon />
-                Back
+
+            <Fab
+                color="primary"
+                aria-label="back"
+                sx={{ position: 'fixed', bottom: 50, right: 50 }}
+                onClick={() => navigate(-1)}
+                variant="extended"
+            >
+                <ArrowBackIcon sx={{ mr: 1 }} /> Back
             </Fab>
-        </div>
-    </React.Fragment >
+        </>
     );
 }
 

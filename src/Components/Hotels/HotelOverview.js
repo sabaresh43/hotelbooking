@@ -8,7 +8,7 @@ import HotelIcon from '@mui/icons-material/Hotel';
 import Grid from '@mui/material/Grid';
 const HotelOverview = ({ hotel }) => {
     // Destructure the hotel object for easier access to its properties.
-    const { Photo, HotelName, Description, Rating: hotelRating, Address, Tags } = hotel;
+    const { photo, hotelName, description, rating: hotelRating, address, tags } = hotel;
 
     const getRatingCategory = (rating) => {
         if (rating >= 4.5) return { text: 'Excellent', color: '#4caf50' };
@@ -19,8 +19,8 @@ const HotelOverview = ({ hotel }) => {
     };
 
     // Ensure Address is an object with the necessary properties.
-    const fullAddress = Address
-        ? `${Address.StreetAddress}, ${Address.City}, ${Address.StateProvince}, ${Address.PostalCode}, ${Address.Country}`
+    const fullAddress = address
+        ? `${address.street}, ${address.city}, ${address.province}, ${address.postalCode}, ${address.country}`
         : 'Address not available';
 
     const ratingInfo = getRatingCategory(parseFloat(hotelRating));
@@ -41,8 +41,8 @@ const HotelOverview = ({ hotel }) => {
                 <CardMedia
                     component="img"
                     height="400"
-                    image={Photo}
-                    alt={HotelName}
+                    image={photo}
+                    alt={hotelName}
                     sx={{
                         objectFit: 'cover',
                         filter: 'brightness(0.9)'
@@ -74,11 +74,11 @@ const HotelOverview = ({ hotel }) => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: 1,
-                        background: 'linear-gradient(135deg, #9E9E9E 0%, #5A5A5A 25%, #7A7A7A 50%, #4A4A4A 75%, #8E8E8E 100%)',
+                        backgroundColor:'white',
                         backdropFilter: 'blur(10px)',
                         zIndex: 2,
                         border: '1px solid rgba(255, 255, 255, 0.3)',
-                        boxShadow: '0 6px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.4)'
+                        boxShadow: 'primary.main 0px 2px 4px -1px, primary.main 0px 4px 5px 0px, primary.main 0px 1px 10px 0px'
                     }}
                 >
                     <StarIcon sx={{
@@ -87,7 +87,7 @@ const HotelOverview = ({ hotel }) => {
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
                         fontSize: 20,
-                        filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.8))',
+                        filter: 'drop-shadow(0 1px 2px rgba(198, 198, 198, 0.8))',
                         // Fallback for browsers that don't support background-clip
                         color: '#FFD700'
                     }} />
@@ -95,8 +95,8 @@ const HotelOverview = ({ hotel }) => {
                         variant="h6"
                         sx={{
                             fontWeight: 'bold',
-                            color: '#F1F1F1',
-                            textShadow: '0 1px 3px rgba(0,0,0,0.9)',
+                            color: 'primary.main',
+                           
                             fontSize: '1.1rem'
                         }}
                     >
@@ -105,9 +105,8 @@ const HotelOverview = ({ hotel }) => {
                     <Typography
                         variant="caption"
                         sx={{
-                            color: '#F1F1F1',
+                            color: 'primary.main',
                             fontWeight: 600,
-                            textShadow: '0 1px 2px rgba(0,0,0,0.8)',
                             fontSize: '0.8rem'
                         }}
                     >
@@ -145,7 +144,7 @@ const HotelOverview = ({ hotel }) => {
                                 lineHeight: 1.2
                             }}
                         >
-                            {HotelName}
+                            {hotelName}
                         </Typography>
 
                         <Typography
@@ -156,7 +155,7 @@ const HotelOverview = ({ hotel }) => {
                                 fontSize: '1.1rem'
                             }}
                         >
-                            {Description}
+                            {description}
                         </Typography>
                     </Box>
 
@@ -192,7 +191,7 @@ const HotelOverview = ({ hotel }) => {
                         </Box>
                     </Box>
                     {/* Amenities/Tags Section */}
-                    {Tags && Tags.length > 0 && (
+                    {tags && tags.length > 0 && (
                         <Box>
                             <Typography
                                 variant="subtitle1"
@@ -209,7 +208,7 @@ const HotelOverview = ({ hotel }) => {
                                 flexWrap: 'wrap',
                                 gap: 1.5
                             }}>
-                                {Tags.map((tag) => (
+                                {tags.map((tag) => (
                                     <Chip
                                         key={tag}
                                         label={tag}

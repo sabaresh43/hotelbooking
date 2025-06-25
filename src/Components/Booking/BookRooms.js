@@ -143,13 +143,13 @@ function BookRooms() {
                                             Hotel Info
                                         </Typography>
                                         <Typography variant="h6" gutterBottom>
-                                            {bookingData.hotel.HotelName}
+                                            {bookingData.hotel.hotelName}
                                         </Typography>
                                         <Stack direction="row" alignItems="center" spacing={1}>
                                             <LocationOnIcon color="action" />
                                             <Typography variant="body2" color="text.secondary">
-                                                {bookingData.hotel.Address
-                                                    ? `${bookingData.hotel.Address.StreetAddress}, ${bookingData.hotel.Address.City}, ${bookingData.hotel.Address.StateProvince}, ${bookingData.hotel.Address.PostalCode}, ${bookingData.hotel.Address.Country}`
+                                                {bookingData.hotel.address
+                                                    ? `${bookingData.hotel.address.street}, ${bookingData.hotel.address.city}, ${bookingData.hotel.address.province}, ${bookingData.hotel.address.postalCode}, ${bookingData.hotel.address.country}`
                                                     : 'Address not available'}
                                             </Typography>
                                         </Stack>
@@ -184,7 +184,7 @@ function BookRooms() {
                                         <Typography variant="h6" gutterBottom>Your price summary</Typography>
                                         <Box sx={{ display: "flex", flexWrap: 'wrap', justifyContent: { md: "space-between" }, bgcolor: "primary.main", color: "common.white", p: 2, borderRadius: 1 }}>
                                             <Typography variant="h5">Price</Typography>
-                                            <Typography variant="h5">CAD {bookingData.totalPrice.toFixed(2)}</Typography>
+                                            <Typography variant="h5">${bookingData.totalPrice.toFixed(2)}</Typography>
                                         </Box>
                                     </CardContent>
                                 </Card>

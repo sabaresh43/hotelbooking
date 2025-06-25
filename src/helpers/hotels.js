@@ -1,4 +1,6 @@
 import api from '../features/interceptor';
+import hotelList from './hotels_res.json'; // This is a mock data file, you can remove this line if you are using a real API
+
 const FIND_ALL_HOTELS = '/hotel/findAllHotels';
 //const GET_HOTEL_COUNT = '/document/countDocuments/hotels';
 
@@ -6,11 +8,11 @@ export async function findAllHotels() {
  console.log("api base url:" + api.defaults.baseURL);
     //console.log('findAllHotels called');
     try {
-        const response = await api.get(FIND_ALL_HOTELS);
-        console.log("api base url:" + api.defaults.baseURL);
-        const responseJson = await response.data;
+        // const response = await api.get(FIND_ALL_HOTELS);
+        // console.log("api base url:" + api.defaults.baseURL);
+        // const responseJson = await response.data;
         //console.log('responseJson', responseJson);
-        return responseJson.data;
+        return hotelList.data;
     } catch (error) {
         console.error('Error during fetching hotel data:', error);
     }

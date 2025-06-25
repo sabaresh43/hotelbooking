@@ -250,18 +250,18 @@ function ClientDetails({ nextStep }) {
                 </Card>
 
                 {bookingData.rooms.map((room) => {
-                    return (<Card key={room.RoomId} sx={{ boxShadow: 3, p: 1 }}>
+                    return (<Card key={room.roomId} sx={{ boxShadow: 3, p: 1 }}>
                         <CardContent
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                             <Typography gutterBottom variant="h6" fontWeight="500">
                                 {room.Description}
                             </Typography>
                             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                                Max guests: {Array.from({ length: room.SleepsCount }).map((_, k) => (
+                                Max guests: {Array.from({ length: room.sleepsCount }).map((_, k) => (
                                     <PersonIcon key={k} sx={{ verticalAlign: "bottom" }} />
                                 ))}
                             </Typography>
-                            {room.Tags && room.Tags.map((tag) => (
+                            {room.tags && room.tags.map((tag) => (
                                 <Chip sx={{ mr: 1, textTransform: 'capitalize' }} label={tag} key={tag} color="primary" variant="outlined" />
                             ))}
                         </CardContent></Card>);
