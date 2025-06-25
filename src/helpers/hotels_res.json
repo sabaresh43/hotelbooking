@@ -10,7 +10,8 @@
                 "restaurant",
                 "concierge"
             ],
-            "photo": "https://www.ahstatic.com/photos/0931_ho_00_p_2048x1536.jpg",
+            "photo": ["https://www.ahstatic.com/photos/0931_ho_00_p_2048x1536.jpg",
+            "https://www.omnihotels.com/-/media/images/hotels/tordtn/hotel/tordtn-omni-king-edward-hotel-deluxe-room-2.jpg","https://images.pexels.com/photos/70441/pexels-photo-70441.jpeg"],
             "rating": 4.4,
             "address": {
                 "street": "45 The Esplanade",
@@ -38,6 +39,10 @@
                         "tv",
                         "suite"
                     ],
+                    "images": [
+                        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg",
+                        "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg"
+                    ],
                     "roomId": "14-1"
                 },
                 {
@@ -51,7 +56,11 @@
                         "jacuzzi tub",
                         "coffee maker"
                     ],
-                    "roomId": "14-2"
+                    "roomId": "14-2",
+                    "images": [
+                        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg",
+                        "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg"
+                    ]
                 },
                 {
                     "description": "Deluxe Room, 1 Queen Bed (Amenities)",
@@ -63,7 +72,11 @@
                     "tags": [
                         "bathroom shower"
                     ],
-                    "roomId": "14-3"
+                    "roomId": "14-3",
+                    "images": [
+                        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg",
+                        "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg"
+                    ]
                 },
                 {
                     "description": "Standard Room, 2 Double Beds (Cityside)",
@@ -77,7 +90,11 @@
                         "tv",
                         "suite"
                     ],
-                    "roomId": "14-4"
+                    "roomId": "14-4",
+                    "images": [
+                        "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg",
+                        "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg"
+                    ]
                 },
                 {
                     "description": "Suite, 1 King Bed (Waterfront View)",
@@ -241,7 +258,7 @@
                 "restaurant",
                 "free parking"
             ],
-            "photo": "https://www.omnihotels.com/-/media/images/hotels/tordtn/hotel/tordtn-omni-king-edward-hotel-deluxe-room-2.jpg?h=660&iar=0&w=1170",
+            "photo": ["https://www.omnihotels.com/-/media/images/hotels/tordtn/hotel/tordtn-omni-king-edward-hotel-deluxe-room-2.jpg?h=660&iar=0&w=1170","https://images.pexels.com/photos/70441/pexels-photo-70441.jpeg","https://images.pexels.com/photos/2506988/pexels-photo-2506988.jpeg"],
             "rating": 4.2,
             "address": {
                 "street": "37 King St E",
@@ -470,7 +487,7 @@
                 "laundry service",
                 "free parking"
             ],
-            "photo": "https://www.1hotels.com/sites/1hotels.com/files/styles/card/public/brandfolder/bxjwcrskp46qw62s9m5ks63r/1HOTEL-RM511-City_View_2_Kingsh1320.png?h=22f6ab40&itok=tq0Evels",
+            "photo": ["https://www.1hotels.com/sites/1hotels.com/files/styles/card/public/brandfolder/bxjwcrskp46qw62s9m5ks63r/1HOTEL-RM511-City_View_2_Kingsh1320.png?h=22f6ab40&itok=tq0Evels","https://images.pexels.com/photos/12238221/pexels-photo-12238221.jpeg"],
             "rating": 2.7,
             "address": {
                 "street": "325 Bay St",
@@ -648,7 +665,7 @@
                 "free parking",
                 "free wifi"
             ],
-            "photo": "https://www.hilton.com/im/en/YTOCSDT/7710359/ytocsdt-exterior2.jpg?impolicy=crop&cw=4600&ch=2575&gravity=NorthWest&xposition=0&yposition=245&rw=768&rh=430",
+            "photo": ["https://www.hilton.com/im/en/YTOCSDT/7710359/ytocsdt-exterior2.jpg?impolicy=crop&cw=4600&ch=2575&gravity=NorthWest&xposition=0&yposition=245&rw=768&rh=430","https://images.pexels.com/photos/2506988/pexels-photo-2506988.jpeg"],
             "rating": 2.5,
             "address": {
                 "street": "108 Chestnut St",
@@ -828,7 +845,7 @@
                 "concierge",
                 "restaurant"
             ],
-            "photo": "https://digital.ihg.com/is/image/ihg/holiday-inn-toronto-9117953654-3x2?fmt=jpg&jpegSize=500&wid=733&qlt=85&resMode=sharp2&op_usm=1.75,0.3,2.0",
+            "photo": ["https://digital.ihg.com/is/image/ihg/holiday-inn-toronto-9117953654-3x2?fmt=jpg&jpegSize=500&wid=733&qlt=85&resMode=sharp2&op_usm=1.75,0.3,2.0","https://images.pexels.com/photos/8319454/pexels-photo-8319454.jpeg","https://images.pexels.com/photos/2064705/pexels-photo-2064705.jpeg"],
             "rating": 4.1,
             "address": {
                 "street": "30 Carlton St",
@@ -1069,7 +1086,7 @@
                 "free wifi",
                 "free parking"
             ],
-            "photo": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/25/05/f5/deluxe-guest-rooms-city.jpg?w=1400&h=-1&s=1",
+            "photo": ["https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/25/05/f5/deluxe-guest-rooms-city.jpg?w=1400&h=-1&s=1","https://www.hilton.com/im/en/YTOCSDT/7710359/ytocsdt-exterior2.jpg?impolicy=crop&cw=4600&ch=2575&gravity=NorthWest&xposition=0&yposition=245&rw=768&rh=430","https://www.omnihotels.com/-/media/images/hotels/tordtn/hotel/tordtn-omni-king-edward-hotel-deluxe-room-2.jpg"],
             "rating": 3.3,
             "address": {
                 "street": "181 Wellington St W",
@@ -1294,7 +1311,7 @@
                 "concierge",
                 "air conditioning"
             ],
-            "photo": "https://t3.ftcdn.net/jpg/00/29/13/38/360_F_29133877_bfA2n7cWV53fto2BomyZ6pyRujJTBwjd.jpg",
+            "photo": ["https://t3.ftcdn.net/jpg/00/29/13/38/360_F_29133877_bfA2n7cWV53fto2BomyZ6pyRujJTBwjd.jpg","https://www.omnihotels.com/-/media/images/hotels/tordtn/hotel/tordtn-omni-king-edward-hotel-deluxe-room-2.jpg?h=660&iar=0&w=1170","https://www.1hotels.com/sites/1hotels.com/files/styles/card/public/brandfolder/bxjwcrskp46qw62s9m5ks63r/1HOTEL-RM511-City_View_2_Kingsh1320.png?h=22f6ab40&itok=tq0Evels"],
             "rating": 3.6,
             "address": {
                 "street": "100 Front St W",
@@ -1443,7 +1460,7 @@
                 "bar",
                 "concierge"
             ],
-            "photo": "https://cf.bstatic.com/xdata/images/hotel/max1280x900/465590812.jpg?k=a0f733c177a9cbbb39ba7c41f1f24a4b5b43eb30d07808e95fade2e273237438&o=&hp=1",
+            "photo": ["https://cf.bstatic.com/xdata/images/hotel/max1280x900/465590812.jpg?k=a0f733c177a9cbbb39ba7c41f1f24a4b5b43eb30d07808e95fade2e273237438&o=&hp=1","https://images.pexels.com/photos/2064705/pexels-photo-2064705.jpeg","https://images.pexels.com/photos/2506988/pexels-photo-2506988.jpeg"],
             "rating": 4.5,
             "address": {
                 "street": "123 Queen St W",

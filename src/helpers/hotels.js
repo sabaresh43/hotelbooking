@@ -12,6 +12,8 @@ export async function findAllHotels() {
         // console.log("api base url:" + api.defaults.baseURL);
         // const responseJson = await response.data;
         //console.log('responseJson', responseJson);
+        console.log('hotelList', hotelList.data);
+        
         return hotelList.data;
     } catch (error) {
         console.error('Error during fetching hotel data:', error);
