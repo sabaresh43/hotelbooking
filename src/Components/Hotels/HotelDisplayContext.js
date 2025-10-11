@@ -1,46 +1,100 @@
-import React, { useReducer, createContext, useEffect } from 'react';
-import { findAllHotels } from '../../helpers/hotels';
+import React, { useReducer, createContext, useEffect,useState } from 'react';
+import hotelService from '../../services/hotel.service';
+import { useRef } from 'react';
+
 
 const HotelDisplayContext = createContext();
 
 const initialHotelList = {
-    itemList: []
+    itemList: [],
+    cityList: []
 };
 
 const hotelListReducer = (state, action) => {
     switch (action.type) {
-        case 'initialize':
+        case "initialize": {
+            const data = Array.isArray(action.payload?.data)
+                ? action.payload.data
+                : [];
+
             return {
                 ...state,
-                itemList: action.payload.data.filter(hotel => hotel.isActive) // only load active hotel
+                itemList: data,
+                cityList: [],
             };
-        default: return state;
+        }
+        default:
+            return state;
     }
 };
 
-export const HotelDisplayProvider = ({ children }) => {
-    // store the data from backend
+export const HotelDisplayProvider = ({ children, searchOptions }) => {
     const [hotelList, dispatch] = useReducer(hotelListReducer, initialHotelList);
+    const [searchParams, setSearchParams] = useState(searchOptions || {}); // ✅ Initialize with empty object
+    const [loading, setLoading] = useState(false);
+    const previousSearchRef = useRef(null);
 
     useEffect(() => {
-        loadHotelList();
-    }, []);
+        if (searchOptions && (searchOptions.location || searchOptions.cityCode)) {
+            // ✅ Only reload if search params actually changed
+            const searchKey = JSON.stringify({
+                location: searchOptions.location,
+                cityCode: searchOptions.cityCode,
+                from: searchOptions.from,
+                to: searchOptions.to,
+                numberOfGuest: searchOptions.numberOfGuest
+            });
 
+            if (previousSearchRef.current !== searchKey) {
+                previousSearchRef.current = searchKey;
+                setSearchParams(searchOptions);
+                loadHotelList(searchOptions);
+            }
+        }
+    }, [searchOptions]);
 
-    const loadHotelList = async () => {
-        const responseData = await findAllHotels();
+    const loadHotelList = async (options = {}) => {
+        if (!options || (!options.location && !options.cityCode)) {
+            return;
+        }
+
+        setLoading(true);
+        let responseData = [];
+
+        try {
+            const payload = {
+                ...options,
+                fromDate: options.from,
+                toDate: options.to
+            };
+
+            console.log("Payload being sent:", payload);
+            const response = await hotelService.searchHotels(payload);
+            responseData = response?.data || [];
+            console.log("Hotels loaded:", responseData.length);
+        } catch (error) {
+            console.error("Error loading hotels:", error);
+        } finally {
+            setLoading(false);
+        }
+
         dispatch({
             type: 'initialize',
-            payload: {
-                'data': responseData || [],
-            }
+            payload: { data: responseData },
         });
-    }
+    };
 
     return (
-        <HotelDisplayContext.Provider value={{ dispatch, hotelList, loadHotelList }} >
+        <HotelDisplayContext.Provider value={{ 
+            dispatch, 
+            hotelList, 
+            loadHotelList, 
+            searchParams,
+            loading 
+        }}>
             {children}
-        </HotelDisplayContext.Provider>);
+        </HotelDisplayContext.Provider>
+    );
 };
 
 export default HotelDisplayContext;

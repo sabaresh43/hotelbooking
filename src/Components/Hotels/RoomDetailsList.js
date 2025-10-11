@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import  { useContext, useState } from 'react';
 import {
     Card,
     Typography,
@@ -12,23 +12,23 @@ import {
     Fab,
     CardMedia,
 } from '@mui/material';
-import Slider from "react-slick";
-import PersonIcon from '@mui/icons-material/Person';
-import BedIcon from '@mui/icons-material/Bed';
+
 import BookingContext from '../Booking/BookingContext';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 
+
+
 function RoomDetailsList({ rooms }) {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const role = useSelector(state => state.auth.role);
-    const [selectedRoomId, setSelectedRoomId] = useState(null);
     const { bookingData, dispatch } = useContext(BookingContext);
     const navigate = useNavigate();
+    const [openDialog, setOpenDialog] = useState(false);
 
     const handleSelect = (room) => {
         if (isAuthenticated && role === 'admin') {
@@ -36,7 +36,7 @@ function RoomDetailsList({ rooms }) {
             return;
         }
 
-        const totalPrice = room.baseRate * bookingData.duration;
+        const totalPrice = (room.TotalPrice || 0) * bookingData.duration;
 
         dispatch({
             type: "setBookingDetails",
@@ -51,112 +51,115 @@ function RoomDetailsList({ rooms }) {
         navigate("booking");
     };
 
-    const [openDialog, setOpenDialog] = useState(false);
-    console.log('Rooms:', rooms[0]?.images);
-
     return (
         <>
-            <Stack spacing={3} sx={{ mb: 5 }}>
-                {rooms.map(room => (
-                    <Card key={room.roomId} sx={{ display: 'flex', borderRadius: 2, boxShadow: 3, mb: 2 }}>
-                        <Box sx={{ position: 'relative', width: 220, height: 220, flexShrink: 0, borderRadius: '8px 0 0 8px', overflow: 'visible' }}>
+            <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
+                Available Rooms
+            </Typography>
 
-                            {room.images?.length > 0 ? (
-                                <Slider
-                                    dots={true}
-                                    infinite={true}
-                                    speed={500}
-                                    slidesToShow={1}
-                                    pauseOnHover={true}
-                                    slidesToScroll={1}
-                                    arrows={true}
-                                    autoplay={true}
-                                    autoplaySpeed={3000}
-                                >
-                                    {room.images.map((img, idx) => (
-                                        <Box key={idx} sx={{ width: '100%', height: '220px', position: 'relative' }}>
-                                            <CardMedia
-                                                component="img"
-                                                image={img}
-                                                alt={`${room.description} ${idx + 1}`}
-                                                sx={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    objectFit: 'cover',
-                                                }}
-                                            />
-                                        </Box>
-                                    ))}
-                                </Slider>
-                            ) : (
+            <Stack spacing={3} sx={{ mb: 5 }}>
+                {rooms.map((room, index) => {
+                    // ✅ Extract room details from GoGlobal structure
+                    const roomName = room.Rooms?.[0] || 'Standard Room';
+                    const totalPrice = room.TotalPrice || 0;
+                    const currency = room.Currency || 'USD';
+                    const roomBasis = room.RoomBasis || 'Room Only';
+                    const availability = room.Availability || 0;
+                    const isRefundable = !room.NonRef;
+                    const special = room.Special || '';
+                    const taxFee = room.Fee?.find(f => f.Detail === 'tax_and_service_fee');
+
+                    return (
+                        <Card key={room.HotelSearchCode || index} sx={{ display: 'flex', borderRadius: 2, boxShadow: 3 }}>
+                            <Box sx={{ position: 'relative', width: 220, height: 220, flexShrink: 0, borderRadius: '8px 0 0 8px', overflow: 'hidden' }}>
                                 <CardMedia
                                     component="img"
-                                    image="https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg"
-                                    alt={room.description}
+                                    image="https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg"
+                                    alt={roomName}
                                     sx={{
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'fit',
+                                        objectFit: 'cover',
                                     }}
                                 />
-                            )}
-
-                        </Box>
-
-                        <Stack direction="row" justifyContent="space-between" alignItems="center" flex={1} p={2}>
-                            <Stack spacing={1} flex={1}>
-                                <Typography variant="h6" fontWeight={600}>
-                                    {room.description}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {room.area || "Room Size: 350 sq.ft"} {/* Placeholder area */}
-                                </Typography>
-                                <Stack direction="row" spacing={1} alignItems="center">
-                                    <BedIcon fontSize="small" />
-                                    <Typography variant="body2">{room.bedOptions}</Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1}>
-                                    {Array.from({ length: room.sleepsCount }).map((_, idx) => (
-                                        <PersonIcon key={idx} fontSize="small" />
-                                    ))}
-                                </Stack>
-                                {room.tags && (
-                                    <Stack direction="row" spacing={1} flexWrap="wrap">
-                                        {room.tags.map((tag, i) => (
-                                            <Chip
-                                                key={i}
-                                                label={tag}
-                                                variant="outlined"
-                                                size="small"
-                                                sx={{
-                                                    borderRadius: '4px',
-                                                    textTransform: 'capitalize',
-                                                    borderColor: 'primary.main',
-                                                    fontSize: '0.75rem'
-                                                }}
-                                            />
-                                        ))}
-                                    </Stack>
+                                {availability > 0 && (
+                                    <Chip
+                                        label={`Only ${availability} left`}
+                                        color="warning"
+                                        size="small"
+                                        sx={{ position: 'absolute', top: 10, right: 10 }}
+                                    />
                                 )}
+                            </Box>
 
-                            </Stack>
+                            <Stack direction="row" justifyContent="space-between" alignItems="center" flex={1} p={2}>
+                                <Stack spacing={1} flex={1}>
+                                    <Typography variant="h6" fontWeight={600}>
+                                        {roomName}
+                                    </Typography>
 
-                            <Stack spacing={2} alignItems="flex-end">
-                                <Typography variant="h6" color="primary" fontWeight={600}>
-                                    ₹ {(room.baseRate * bookingData.duration).toFixed(2)}
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => handleSelect(room)}
-                                    sx={{ minWidth: 150 }}
-                                    disabled={isAuthenticated && role === 'admin'}
-                                >
-                                    Book Room
-                                </Button>
+                                    <Chip
+                                        label={roomBasis}
+                                        size="small"
+                                        color="secondary"
+                                        sx={{ width: 'fit-content' }}
+                                    />
+
+                                    {special && (
+                                        <Typography variant="body2" color="primary" fontWeight={500}>
+                                            {special}
+                                        </Typography>
+                                    )}
+
+                                    <Stack direction="row" spacing={1} alignItems="center">
+                                        <Chip
+                                            label={isRefundable ? "Free Cancellation" : "Non-Refundable"}
+                                            size="small"
+                                            color={isRefundable ? "success" : "default"}
+                                            variant="outlined"
+                                        />
+                                    </Stack>
+
+                                    {room.CxlDeadLine && isRefundable && (
+                                        <Typography variant="caption" color="text.secondary">
+                                            Cancel before: {room.CxlDeadLine}
+                                        </Typography>
+                                    )}
+
+                                    {room.Remark && (
+                                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                                            {room.Remark.substring(0, 150)}...
+                                        </Typography>
+                                    )}
+                                </Stack>
+
+                                <Stack spacing={1} alignItems="flex-end" sx={{ minWidth: 200 }}>
+                                    <Typography variant="h5" color="primary" fontWeight={700}>
+                                        {currency} {totalPrice.toFixed(2)}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Total for {bookingData.duration} night{bookingData.duration > 1 ? 's' : ''}
+                                    </Typography>
+
+                                    {taxFee && (
+                                        <Typography variant="caption" color="text.secondary">
+                                            + {taxFee.Currency} {taxFee.Amount} taxes & fees
+                                        </Typography>
+                                    )}
+
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => handleSelect(room)}
+                                        sx={{ minWidth: 150, mt: 2 }}
+                                        disabled={isAuthenticated && role === 'admin'}
+                                    >
+                                        Book Now
+                                    </Button>
+                                </Stack>
                             </Stack>
-                        </Stack>
-                    </Card>
-                ))}
+                        </Card>
+                    );
+                })}
             </Stack>
 
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>

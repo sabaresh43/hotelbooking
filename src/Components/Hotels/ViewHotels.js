@@ -21,7 +21,7 @@ import { Grid } from "@mui/material";
 import { Skeleton } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import SlickSlider from "react-slick"; 
+import SlickSlider from "react-slick";
 
 const facilityIcons = {
     wifi: <WifiIcon sx={{ fontSize: 20, color: 'primary.main' }} />,
@@ -51,65 +51,45 @@ const initialDisplayData = {
 const displayDataReducer = (state, action) => {
     switch (action.type) {
         case 'filterData': {
-            // get the data and the filters
             const data = action.payload.data;
             console.log('Filtering data with:', data);
 
             const searchTags = action.payload.searchTags;
             const minRating = action.payload.minRating;
-            const location = action.payload.location;
             const priceRange = action.payload.priceRange;
             const numberOfGuest = action.payload.numberOfGuest;
 
             const filteredList = data.itemList.filter(hotel => {
-                // Filter by location
-                if (hotel.address.city.toLowerCase() !== location.toLowerCase()) {
-                    console.log(`Hotel ${hotel.HotelName} does not match location filter: ${location}`);
+                // ✅ GoGlobal structure: hotel.rooms is an object with price
+                const roomPrice = hotel.rooms?.price || 0;
 
+                // Filter by price range
+                if (roomPrice < priceRange[0] || roomPrice > priceRange[1]) {
+                    console.log(`Hotel ${hotel.name} price ${roomPrice} not in range $${priceRange[0]} - $${priceRange[1]}`);
                     return false;
                 }
 
-                // Filter by minimum rating
-                if (hotel.Rating < minRating) {
-                    console.log(`Hotel ${hotel.HotelName} does not meet minimum rating: ${minRating}`);
-
+                // Filter by minimum rating (if available in API)
+                if (hotel.rating && hotel.rating < minRating) {
+                    console.log(`Hotel ${hotel.name} rating ${hotel.rating} below minimum ${minRating}`);
                     return false;
                 }
 
-                // only filter active rooms and rooms can serve enough guests
-                const activeRooms = hotel.rooms.filter(room => room.isActive && room.sleepsCount >= numberOfGuest);
-                if (activeRooms.length === 0) {
-                    console.log(`Hotel ${hotel.HotelName} has no active rooms or not enough capacity for ${numberOfGuest} guests`);
-                    return false; // No active rooms, skip this hotel
-                }
-                // if no room is in the price range, skip the hotel 
-                const baseRates = activeRooms.map(room => room.baseRate);
-                const hasValidPrice = baseRates.some(rate => (rate >= priceRange[0] && rate <= priceRange[1]));
-                //console.log(hasValidPrice);
-                if (!hasValidPrice) {
-                    console.log(`Hotel ${hotel.HotelName} has no rooms in the price range: $${priceRange[0]} - $${priceRange[1]}`);
-
-                    return false;
+                // Filter by tags/facilities (if available)
+                if (searchTags.length > 0 && hotel.facilities) {
+                    const hotelFacilities = hotel.facilities.map(f => f.toLowerCase());
+                    const hasAllTags = searchTags.every(tag =>
+                        hotelFacilities.some(facility => facility.includes(tag.toLowerCase()))
+                    );
+                    if (!hasAllTags) {
+                        console.log(`Hotel ${hotel.name} missing required facilities`);
+                        return false;
+                    }
                 }
 
-                // Filter by tags
-                if (searchTags.length > 0) {
-                    // first get hotel tags
-                    const hotelTags = new Set(hotel.tags.map(tag => tag.toLowerCase()));
-                    // get rooms' tag
-                    hotel.rooms.forEach(room => {
-                        room.tags.forEach(tag => hotelTags.add(tag.toLowerCase()));
-                    });
-                    // convert tags to lower case
-                    const lowercaseHotelTags = Array.from(hotelTags);
-                    // check every search tag is included in the hotel's tags
-                    return searchTags.every(tag => lowercaseHotelTags.some(hotelTag => hotelTag.includes(tag.toLowerCase())));
-                }
-
-                return true; // If no tags provided, return true for all hotels
+                return true;
             });
 
-            // finally return the filtered Hotel List
             console.log('Filtered Hotel List:', filteredList);
 
             return {
@@ -117,8 +97,8 @@ const displayDataReducer = (state, action) => {
                 itemList: filteredList,
                 isLoaded: true
             };
-        };
-        case 'setIsLoading': // Add this case
+        }
+        case 'setIsLoading':
             return {
                 ...state,
                 isLoaded: false
@@ -128,7 +108,8 @@ const displayDataReducer = (state, action) => {
                 ...state,
                 isLoaded: true
             };
-        default: return state;
+        default:
+            return state;
     }
 };
 
@@ -136,51 +117,48 @@ function ViewHotels() {
     const { dispatch, hotelList, reloadHotelList } = useContext(HotelDisplayContext);
     const [displayData, dispatchDisplay] = useReducer(displayDataReducer, initialDisplayData);
     const { searchOption, setSearchOption } = useContext(SearchContext);
-    // debounce the filter data function to avoid too many re-renders
     const debouncedFilterData = useDebounce(dispatchDisplay, 1000);
 
     const handleChange = (event) => {
         setSearchOption({ ...searchOption, [event.target.name]: event.target.value });
     };
 
-    // set if a tag filter is applied
     const handleCheck = (event) => {
         setSearchOption({
             ...searchOption,
-            "tags":
-            {
+            "tags": {
                 ...searchOption.tags,
                 [event.target.name]: event.target.checked
             }
         });
     };
 
-    // filter data
     useEffect(() => {
-        // If the source hotel list is empty, don't filter yet
-        if (hotelList.length === 0) {
-            // Optionally set isLoaded to true to show "no results" instead of loading
-            dispatchDisplay({ type: 'setIsLoaded', payload: true });
+        if (hotelList.itemList.length === 0) {
+            dispatchDisplay({ type: 'setIsLoaded' });
             return;
         }
 
-        // Set loading state before starting the debounced filter
         dispatchDisplay({ type: 'setIsLoading' });
 
-        // only apply tag filter that is set to true
         const filteredTags = Object.keys(searchOption.tags).filter(key => searchOption.tags[key] === true);
 
         debouncedFilterData({
             type: "filterData",
-            payload: { data: hotelList, minRating: searchOption.rating, location: searchOption.location, searchTags: filteredTags, priceRange: searchOption.price, numberOfGuest: searchOption.numberOfGuest }
+            payload: {
+                data: hotelList,
+                minRating: searchOption.rating,
+                searchTags: filteredTags,
+                priceRange: searchOption.price,
+                numberOfGuest: searchOption.numberOfGuest
+            }
         });
-        // Make sure debouncedFilterData is stable (using useCallback in useDebounce)
-    }, [hotelList, debouncedFilterData, searchOption.rating, searchOption.location, searchOption.tags, searchOption.price, searchOption.numberOfGuest]);
+    }, [hotelList, debouncedFilterData, searchOption.rating, searchOption.tags, searchOption.price, searchOption.numberOfGuest]);
 
     return (
         <Box sx={{ backgroundColor: 'grey.50', minHeight: '100vh' }}>
             <Container maxWidth="xl" sx={{ py: 3 }}>
-                <Box sx={{ my: 3, justifySelf: 'center' }} >
+                <Box sx={{ my: 3, justifySelf: 'center' }}>
                     <SearchBar />
                 </Box>
                 <Divider sx={{ my: 3 }} />
@@ -367,7 +345,7 @@ function ViewHotels() {
                             <Stack spacing={3}>
                                 {displayData.itemList.map((item) => (
                                     <Card
-                                        key={item._id}
+                                        key={item.id}
                                         elevation={2}
                                         sx={{
                                             borderRadius: 2,
@@ -381,53 +359,64 @@ function ViewHotels() {
                                         <CardContent sx={{ p: 3 }}>
                                             <Grid container spacing={3}>
                                                 <Grid size={{ xs: 12, sm: 4 }}>
-                                                    <Link to={`/Hotels/${item._id}`} style={{ textDecoration: 'none' }}>
-                                                       <Box sx={{ position: 'relative', width: '100%', height: 200, borderRadius: 1, overflow: 'hidden' }}>
-                    
-                     {Array.isArray(item.photo) && item.photo.length > 0 ? (
-                        <SlickSlider
-                            dots={true}
-                            infinite={true}
-                            speed={500}
-                            slidesToShow={1}
-                            slidesToScroll={1}
-                            arrows={true}
-                            autoplay={true}
-                            autoplaySpeed={3000}
-                        >
-                            {item.photo.map((img, idx) => (
-                                <Box key={idx} sx={{ width: '100%', height: 200 }}>
-                                    <CardMedia
-                                        component="img"
-                                        image={img}
-                                        alt={`${item.hotelName} ${idx + 1}`}
-                                        sx={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                        }}
-                                    />
-                                </Box>
-                            ))}
-                        </SlickSlider>
-                    ) : (
-                        <CardMedia
-                            component="img"
-                            height="200"
-                            image={item.photo}
-                            alt={item.hotelName}
-                            sx={{
-                                borderRadius: 1,
-                                objectFit: 'cover',
-                                transition: 'transform 0.3s ease-in-out',
-                                '&:hover': {
-                                    transform: 'scale(1.02)'
-                                }
-                            }}
-                        />
-                    )}
-                    
-                </Box>
+                                                    <Link to={`/Hotels/${item.id}`} style={{ textDecoration: 'none' }}>
+                                                        <Box sx={{ position: 'relative', width: '100%', height: 200, borderRadius: 1, overflow: 'hidden' }}>
+                                                            {Array.isArray(item.thumbnials) && item.thumbnials.length > 0 ? (
+                                                                item.thumbnials.length > 1 ? (
+                                                                    <SlickSlider
+                                                                        dots={true}
+                                                                        infinite={true}
+                                                                        speed={500}
+                                                                        slidesToShow={1}
+                                                                        slidesToScroll={1}
+                                                                        arrows={true}
+                                                                        autoplay={true}
+                                                                        autoplaySpeed={3000}
+                                                                    >
+                                                                        {item.thumbnials.map((img, idx) => (
+                                                                            <Box key={idx} sx={{ width: '100%', height: 200 }}>
+                                                                                <CardMedia
+                                                                                    component="img"
+                                                                                    image={img}
+                                                                                    alt={`${item.name} ${idx + 1}`}
+                                                                                    sx={{
+                                                                                        width: '100%',
+                                                                                        height: '100%',
+                                                                                        objectFit: 'cover',
+                                                                                    }}
+                                                                                />
+                                                                            </Box>
+                                                                        ))}
+                                                                    </SlickSlider>
+                                                                ) : (
+                                                                    <CardMedia
+                                                                        component="img"
+                                                                        height="200"
+                                                                        image={item.thumbnials[0]}
+                                                                        alt={item.name}
+                                                                        sx={{
+                                                                            borderRadius: 1,
+                                                                            objectFit: 'cover',
+                                                                            transition: 'transform 0.3s ease-in-out',
+                                                                            '&:hover': {
+                                                                                transform: 'scale(1.02)'
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                )
+                                                            ) : (
+                                                                <CardMedia
+                                                                    component="img"
+                                                                    height="200"
+                                                                    image="/placeholder-hotel.jpg"
+                                                                    alt={item.name}
+                                                                    sx={{
+                                                                        borderRadius: 1,
+                                                                        objectFit: 'cover',
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </Box>
                                                     </Link>
                                                 </Grid>
                                                 <Grid size={{ xs: 12, sm: 8 }}>
@@ -436,36 +425,44 @@ function ViewHotels() {
                                                             <Box>
                                                                 <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
                                                                     <Link
-                                                                        to={`/Hotels/${item._id}`}
+                                                                        to={`/Hotels/${item.id}`}
                                                                         style={{
                                                                             textDecoration: 'none',
                                                                             color: 'inherit',
-                                                                            '&:hover': { color: 'primary.main' }
                                                                         }}
                                                                     >
-                                                                        {item.hotelName}
+                                                                        {item.name}
                                                                     </Link>
                                                                 </Typography>
 
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                                                                     <LocationOnIcon color="action" sx={{ fontSize: 20 }} />
                                                                     <Typography variant="body2" color="text.secondary">
-                                                                        {item.address.street}, {item.address.city}
+                                                                        {searchOption.location}
                                                                     </Typography>
                                                                 </Box>
+
+                                                                {item.rooms?.room_basis && (
+                                                                    <Chip
+                                                                        label={item.rooms.room_basis}
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        sx={{ mr: 1 }}
+                                                                    />
+                                                                )}
                                                             </Box>
 
-                                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                                                                <Rating value={item.rating} precision={0.5} readOnly size="regular" sx={{
-                                                                    color: 'secondary.main',
-                                                                }} />
-                                                                <Chip
-                                                                    label={item.rating}
-                                                                    color="primary"
-                                                                    size="regular"
-                                                                    sx={{ fontWeight: 'bold' }}
-                                                                />
-                                                            </Box>
+                                                            {item.rating && (
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                                                                    <Rating value={item.rating} precision={0.5} readOnly size="small" />
+                                                                    <Chip
+                                                                        label={item.rating}
+                                                                        color="primary"
+                                                                        size="small"
+                                                                        sx={{ fontWeight: 'bold' }}
+                                                                    />
+                                                                </Box>
+                                                            )}
                                                         </Box>
 
                                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
@@ -474,17 +471,22 @@ function ViewHotels() {
                                                                     Starting from
                                                                 </Typography>
                                                                 <Typography variant="h6" color="primary.main" sx={{ fontWeight: 'bold' }}>
-                                                                    ${Math.min(...item.rooms.filter(room => room.isActive).map(room => room.baseRate))}
+                                                                    ${item.rooms?.price || 0}
                                                                     <Typography component="span" variant="caption" color="text.secondary">
                                                                         /night
                                                                     </Typography>
                                                                 </Typography>
+                                                                {item.rooms?.taxesFees > 0 && (
+                                                                    <Typography variant="caption" color="text.secondary" display="block">
+                                                                        +${item.rooms.taxesFees} taxes & fees
+                                                                    </Typography>
+                                                                )}
                                                             </Box>
 
                                                             <Button
                                                                 variant="contained"
                                                                 component={Link}
-                                                                to={`/Hotels/${item._id}`}
+                                                                to={`/Hotels/${item.id}`}
                                                                 sx={{
                                                                     borderRadius: 2,
                                                                     px: 3,
@@ -500,13 +502,15 @@ function ViewHotels() {
                                                 </Grid>
                                             </Grid>
                                         </CardContent>
-                                    </Card>)
-                                )}
-                            </Stack>)}
-                    </Grid >
-                </Grid >
-            </Container >
-        </Box>);
-};
+                                    </Card>
+                                ))}
+                            </Stack>
+                        )}
+                    </Grid>
+                </Grid>
+            </Container>
+        </Box>
+    );
+}
 
 export default ViewHotels;
