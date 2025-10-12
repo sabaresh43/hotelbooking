@@ -23,13 +23,22 @@ const HotelOverview = ({ hotel }) => {
                    [];
     const mainImage = images[0] || 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg';
 
-    // ✅ Parse facilities from GoGlobal HTML string
-    const parseFacilities = (facilitiesString) => {
-        if (!facilitiesString) return [];
-        return facilitiesString
-            .split('<BR />')
-            .map(f => f.trim())
-            .filter(f => f.length > 0);
+    // ✅ Parse facilities from GoGlobal HTML string or array
+    const parseFacilities = (facilitiesData) => {
+        if (!facilitiesData) return [];
+        
+        // If it's already an array, return it
+        if (Array.isArray(facilitiesData)) return facilitiesData;
+        
+        // If it's a string, parse it
+        if (typeof facilitiesData === 'string') {
+            return facilitiesData
+                .split('<BR />')
+                .map(f => f.trim())
+                .filter(f => f.length > 0);
+        }
+        
+        return [];
     };
 
     const hotelFacilities = parseFacilities(hotel.HotelFacilities);

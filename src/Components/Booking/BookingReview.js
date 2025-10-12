@@ -4,54 +4,109 @@ import BookingContext from "./BookingContext";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
-import { createBooking } from "../../helpers/bookings";;
+import hotelService from "../../services/hotel.service";
 
 function BookingReview({ prevStep }) {
     const { bookingData, dispatch } = useContext(BookingContext);
     const sessionKey = useSelector(state => state.auth.sessionKey);
     const navigate = useNavigate();
-    const [bookingDetail, setBookingDetail] = useState(null);
     const [isBookingFailed, setIsBookingFailed] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const goBack = () => {
         prevStep();
         navigate(-1);
-    }
+    };
+
+    // ✅ Helper to get title from name
+    const getTitleFromName = (firstName) => {
+        const commonMaleNames = ['john', 'james', 'robert', 'michael', 'william', 'david', 'jim'];
+        const lowerName = firstName.toLowerCase();
+        return commonMaleNames.includes(lowerName) ? 'MR.' : 'MRS.';
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // if log in, save the user id
-        // save order time
-        // save only hotel Id and room Id
-        const roomIdList = bookingData.rooms.map(room => room.RoomId);
-        const hotelId = bookingData.hotel._id;
+        setIsSubmitting(true);
+        setIsBookingFailed(false);
 
-        setBookingDetail({
-            ...bookingData,
-            hotel: hotelId,
-            rooms: roomIdList,
-            userId: sessionKey || '',
-            time: dayjs()
-        });
-        dispatch({ type: "setIsBookingSuccess" }); // make the order details not visible
-        navigate("../success", { state: { bookingData } });
-        // if (bookingDetail) {
-        //     const { isBookingSuccess, ...pureBookingData } = bookingDetail;
-        //     // const isBookingCreated = await createBooking(pureBookingData);
+        try {
+            // ✅ Get room data (assuming single room booking)
+            const room = bookingData.rooms[0];
+            
+            // ✅ Prepare guests array
+            const guests = [];
+            
+            // Primary guest from clientInfo
+            guests.push({
+                title: getTitleFromName(bookingData.clientInfo.firstName),
+                firstName: bookingData.clientInfo.firstName.toUpperCase(),
+                lastName: bookingData.clientInfo.lastName.toUpperCase()
+            });
 
-        //     // if (isBookingCreated) {
-        //     //     dispatch({ type: "setIsBookingSuccess" }); // make the order details not visible
-        //     //     navigate("../success", { state: { bookingData } });
+            // Add additional guests if numberOfGuest > 1
+            for (let i = 1; i < bookingData.numberOfGuest; i++) {
+                guests.push({
+                    title: "MR.",
+                    firstName: "GUEST",
+                    lastName: ` Added`
+                });
+            }
 
-        //     // } else {
-        //     //     dispatch({ type: "setIsBookingFailed" });
-        //     //     setIsBookingFailed(true); // set the alert to visible
-        //     // }
-        // } else {
-        //     setIsBookingFailed(true); // set the alert to visible
-        //     return;
-        // }
-    }
+            // ✅ Prepare booking payload
+            const bookingPayload = {
+                roomCode: room.HotelSearchCode,
+                fromDate: dayjs(bookingData.from).format('YYYY-MM-DD'),
+                toDate: dayjs(bookingData.to).format('YYYY-MM-DD'),
+                rooms: [
+                    {
+                        adults: bookingData.numberOfGuest,
+                        guests: guests
+                    }
+                ],
+                currency: room.Currency || 'USD',
+                country: 'IN'
+            };
+
+            console.log('Submitting booking:', bookingPayload);
+
+            // ✅ Call booking API
+            const bookingResponse = await hotelService.bookHotel(bookingPayload);
+
+            console.log('Booking response:', bookingResponse);
+
+            if (bookingResponse.success) {
+                // ✅ Store booking confirmation in context
+                dispatch({
+                    type: 'setBookingConfirmation',
+                    payload: {
+                        data: bookingResponse.data
+                    }
+                });
+
+                // ✅ Mark booking as successful
+                dispatch({ type: 'setIsBookingSuccess' });
+
+                // ✅ Navigate to success page with booking data
+                navigate("../success", { 
+                    state: { 
+                        bookingData: {
+                            ...bookingData,
+                            confirmation: bookingResponse.data
+                        }
+                    } 
+                });
+            } else {
+                setIsBookingFailed(true);
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            setIsBookingFailed(true);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <Container maxWidth="md">
@@ -62,49 +117,50 @@ function BookingReview({ prevStep }) {
                             Personal Details
                         </Typography>
                         <Grid container columnSpacing={0} rowSpacing={1}>
-                            <Grid size={6} >
-                                <Typography variant="body1" >
+                            <Grid size={6}>
+                                <Typography variant="body1">
                                     First Name
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
-                                <Typography variant="body1" >
+                            <Grid size={6}>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.firstName}
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
-                                <Typography variant="body1" >
+                            <Grid size={6}>
+                                <Typography variant="body1">
                                     Last Name
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
-                                <Typography variant="body1" >
+                            <Grid size={6}>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.lastName}
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
+                            <Grid size={6}>
                                 <Typography variant="body1">
                                     Email
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
+                            <Grid size={6}>
                                 <Typography variant="body1">
                                     {bookingData.clientInfo.email}
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
+                            <Grid size={6}>
                                 <Typography variant="body1">
                                     Phone
                                 </Typography>
                             </Grid>
-                            <Grid size={6} >
-                                <Typography variant="body1" >
+                            <Grid size={6}>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.phone}
                                 </Typography>
                             </Grid>
                         </Grid>
                     </CardContent>
                 </Card>
+
                 <Card sx={{ boxShadow: 3, px: 1 }}>
                     <CardContent>
                         <Grid container columnSpacing={0} rowSpacing={1}>
@@ -129,32 +185,32 @@ function BookingReview({ prevStep }) {
                                     </Typography>
                                 </Grid>
                                 <Grid container size={12} columnSpacing={0} rowSpacing={1}>
-                                    <Grid size={6} >
+                                    <Grid size={6}>
                                         <Typography variant="body1" gutterBottom>
                                             Card Holder Name
                                         </Typography>
                                     </Grid>
-                                    <Grid size={6} >
+                                    <Grid size={6}>
                                         <Typography variant="body1" gutterBottom>
                                             {bookingData.cardInfo.cardName}
                                         </Typography>
                                     </Grid>
-                                    <Grid size={6} >
+                                    <Grid size={6}>
                                         <Typography variant="body1" gutterBottom>
                                             Card Number
                                         </Typography>
                                     </Grid>
-                                    <Grid size={6} >
+                                    <Grid size={6}>
                                         <Typography variant="body1" gutterBottom>
                                             {"xxxx-xxxx-xxxx-" + bookingData.cardInfo.cardNumber.slice(-4)}
                                         </Typography>
                                     </Grid>
-                                    <Grid size={6} >
+                                    <Grid size={6}>
                                         <Typography variant="body1" gutterBottom>
                                             Expiry Date
                                         </Typography>
                                     </Grid>
-                                    <Grid size={6} >
+                                    <Grid size={6}>
                                         <Typography variant="body1" gutterBottom>
                                             {`${bookingData.cardInfo.expDate.substring(0, 2)}/${bookingData.cardInfo.expDate.substring(2)}`}
                                         </Typography>
@@ -164,28 +220,72 @@ function BookingReview({ prevStep }) {
                         </Grid>
                     </CardContent>
                 </Card>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}> {/* Use flexbox to align the button */}
+
+                {/* ✅ Show booking summary */}
+                <Card sx={{ boxShadow: 3, px: 1 }}>
+                    <CardContent>
+                        <Typography variant="h6" color="text.secondary" gutterBottom>
+                            Booking Summary
+                        </Typography>
+                        <Stack spacing={1}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography>Hotel:</Typography>
+                                <Typography fontWeight={600}>{bookingData.hotel.name || bookingData.hotel.hotelName}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography>Room:</Typography>
+                                <Typography>{bookingData.rooms[0].Description}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography>Duration:</Typography>
+                                <Typography>{bookingData.duration} night{bookingData.duration > 1 ? 's' : ''}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography>Guests:</Typography>
+                                <Typography>{bookingData.numberOfGuest} adult{bookingData.numberOfGuest > 1 ? 's' : ''}</Typography>
+                            </Box>
+                            <Divider sx={{ my: 1 }} />
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="h6" color="primary">Total:</Typography>
+                                <Typography variant="h6" color="primary" fontWeight={700}>
+                                    {bookingData.rooms[0].Currency} {bookingData.totalPrice.toFixed(2)}
+                                </Typography>
+                            </Box>
+                        </Stack>
+                    </CardContent>
+                </Card>
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button
                         size="large"
                         onClick={goBack}
                         color="primary"
-                        sx={{ mr: 2, alignSelf: 'flex-end' }}  // Align the button to the end of the flex container
+                        disabled={isSubmitting}
+                        sx={{ mr: 2, alignSelf: 'flex-end' }}
                     >
                         Back
                     </Button>
                     <Button
-                        variant="contained" size="large"
+                        variant="contained"
+                        size="large"
                         onClick={handleSubmit}
                         color="primary"
-                        sx={{ alignSelf: 'flex-end' }}  // Align the button to the end of the flex container
+                        disabled={isSubmitting}
+                        sx={{ alignSelf: 'flex-end' }}
                     >
-                        Confirm
+                        {isSubmitting ? 'Processing...' : 'Confirm Booking'}
                     </Button>
                 </Box>
-                {isBookingFailed && <Alert severity="error">"Something went wrong, please try again"</Alert>}
+                
+                {isBookingFailed && (
+                    <Alert severity="error">
+                        Booking failed. Please try again or contact support.
+                    </Alert>
+                )}
             </Stack>
         </Container>
     );
 }
 
 export default BookingReview;
+

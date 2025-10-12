@@ -65,8 +65,33 @@ getHotelDetails: async (hotelId, searchOptions) => {
         console.log("Hotel details response:", response.data);
        return response.data?.data || response.data;
     }
-}
-};
+},
 
+bookHotel: async (bookingData) => {
+        if (BASE_URL) {
+            const payload = {
+                roomCode: bookingData.roomCode,
+                fromDate: bookingData.fromDate,
+                toDate: bookingData.toDate,
+                rooms: bookingData.rooms,
+                currency: bookingData.currency || 'USD',
+                country: bookingData.country || 'IN'
+            };
+
+            console.log("Booking API payload:", payload);
+
+            const response = await api.post('/hotels/goglobal/booking', payload, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            console.log("Booking API response:", response.data);
+            return response.data;
+        }
+
+        // Fallback to internal booking
+        const response = await api.post('/bookings', bookingData);
+        return response.data;
+    }
+};
 
 export default hotelService;

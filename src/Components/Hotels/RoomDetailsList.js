@@ -22,7 +22,6 @@ import "slick-carousel/slick/slick-theme.css";
 
 
 
-
 function RoomDetailsList({ rooms }) {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const role = useSelector(state => state.auth.role);
@@ -36,13 +35,45 @@ function RoomDetailsList({ rooms }) {
             return;
         }
 
+        // ✅ Normalize room structure for BookingContext
+        const normalizedRoom = {
+            // GoGlobal fields
+            HotelSearchCode: room.HotelSearchCode,
+            RoomId: room.HotelSearchCode, // Use as unique ID
+            roomId: room.HotelSearchCode,
+            
+            // Room details
+            Description: room.Rooms?.[0] || 'Standard Room',
+            RoomBasis: room.RoomBasis,
+            
+            // Pricing
+            baseRate: room.TotalPrice || 0,
+            TotalPrice: room.TotalPrice || 0,
+            Currency: room.Currency || 'USD',
+            
+            // Additional info
+            NonRef: room.NonRef,
+            CxlDeadLine: room.CxlDeadLine,
+            Availability: room.Availability,
+            Special: room.Special,
+            Fee: room.Fee,
+            
+            // For display compatibility
+            sleepsCount: bookingData.numberOfGuest || 2,
+            tags: room.Special ? [room.Special] : [],
+            
+            // Cancellation
+            CancellationPolicies: room.CancellationPolicies,
+            Remark: room.Remark
+        };
+
         const totalPrice = (room.TotalPrice || 0) * bookingData.duration;
 
         dispatch({
             type: "setBookingDetails",
             payload: {
                 data: {
-                    rooms: [room],
+                    rooms: [normalizedRoom],
                     totalPrice
                 }
             }
@@ -59,7 +90,6 @@ function RoomDetailsList({ rooms }) {
 
             <Stack spacing={3} sx={{ mb: 5 }}>
                 {rooms.map((room, index) => {
-                    // ✅ Extract room details from GoGlobal structure
                     const roomName = room.Rooms?.[0] || 'Standard Room';
                     const totalPrice = room.TotalPrice || 0;
                     const currency = room.Currency || 'USD';
@@ -82,7 +112,7 @@ function RoomDetailsList({ rooms }) {
                                         objectFit: 'cover',
                                     }}
                                 />
-                                {availability > 0 && (
+                                {availability > 0 && availability <= 5 && (
                                     <Chip
                                         label={`Only ${availability} left`}
                                         color="warning"
