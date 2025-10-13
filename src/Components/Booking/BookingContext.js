@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
 
-const initialBookingData = {
-};
+const initialBookingData = {};
 
 const BookingContext = createContext();
 
@@ -21,37 +20,46 @@ const bookingReducer = (state, action) => {
                 ...state,
                 rooms: action.payload.data.rooms,
                 totalPrice: action.payload.data.totalPrice
-            }
+            };
         case 'setClientInfo':
             return {
                 ...state,
                 clientInfo: action.payload.data
-            }
+            };
         case 'setCardInfo':
             return {
                 ...state,
                 cardInfo: action.payload.data
-            }
+            };
+        // ✅ NEW: Store booking confirmation response
+        case 'setBookingConfirmation':
+            return {
+                ...state,
+                bookingConfirmation: action.payload.data
+            };
         case 'setIsBookingSuccess':
             return {
                 ...state,
                 isBookingSuccess: true
-            }
+            };
         case 'setIsBookingFailed':
             return {
                 ...state,
                 isBookingSuccess: false
-            }
-        default: return state;
+            };
+        default: 
+            return state;
     }
 };
 
 export const BookingContextProvider = ({ children }) => {
     const [bookingData, dispatch] = useReducer(bookingReducer, initialBookingData);
 
-    return (<BookingContext.Provider value={{ bookingData, dispatch }}>
-        {children}
-    </BookingContext.Provider>);
-}
+    return (
+        <BookingContext.Provider value={{ bookingData, dispatch }}>
+            {children}
+        </BookingContext.Provider>
+    );
+};
 
 export default BookingContext;

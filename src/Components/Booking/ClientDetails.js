@@ -249,25 +249,54 @@ function ClientDetails({ nextStep }) {
                     </CardContent>
                 </Card>
 
-                {bookingData.rooms.map((room) => {
-                    return (<Card key={room.roomId} sx={{ boxShadow: 3, p: 1 }}>
-                        <CardContent
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
-                            <Typography gutterBottom variant="h6" fontWeight="500">
-                                {room.Description}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                                Max guests: {Array.from({ length: room.sleepsCount }).map((_, k) => (
-                                    <PersonIcon key={k} sx={{ verticalAlign: "bottom" }} />
-                                ))}
-                            </Typography>
-                            {room.tags && room.tags.map((tag) => (
-                                <Chip sx={{ mr: 1, textTransform: 'capitalize' }} label={tag} key={tag} color="primary" variant="outlined" />
-                            ))}
-                        </CardContent></Card>);
-                }
-                )
-                }
+             {bookingData.rooms.map((room, index) => {
+    return (
+        <Card key={room.roomId || room.RoomId || room.HotelSearchCode || index} sx={{ boxShadow: 3, p: 1 }}>
+            <CardContent sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <Typography gutterBottom variant="h6" fontWeight="500">
+                    {room.Description || room.Rooms?.[0] || 'Standard Room'}
+                </Typography>
+                
+                {room.RoomBasis && (
+                    <Chip 
+                        label={room.RoomBasis} 
+                        color="secondary" 
+                        variant="outlined" 
+                        sx={{ mb: 1 }}
+                    />
+                )}
+                
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    Max guests: {Array.from({ length: room.sleepsCount || bookingData.numberOfGuest }).map((_, k) => (
+                        <PersonIcon key={k} sx={{ verticalAlign: "bottom" }} />
+                    ))}
+                </Typography>
+                
+                {room.tags && room.tags.length > 0 && room.tags.map((tag, i) => (
+                    <Chip 
+                        sx={{ mr: 1, textTransform: 'capitalize' }} 
+                        label={tag} 
+                        key={i} 
+                        color="primary" 
+                        variant="outlined" 
+                    />
+                ))}
+                
+                {room.Special && (
+                    <Typography variant="body2" color="primary" sx={{ mt: 1 }}>
+                        ✓ {room.Special}
+                    </Typography>
+                )}
+                
+                {!room.NonRef && (
+                    <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
+                        ✓ Free Cancellation until {room.CxlDeadLine}
+                    </Typography>
+                )}
+            </CardContent>
+        </Card>
+    );
+})}
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}> {/* Use flexbox to align the button */}
                     <Button
