@@ -70,6 +70,7 @@ getHotelDetails: async (hotelId, searchOptions) => {
 bookHotel: async (bookingData) => {
         if (BASE_URL) {
             const payload = {
+                 hotelId: bookingData.hotelId, 
                 roomCode: bookingData.roomCode,
                 fromDate: bookingData.fromDate,
                 toDate: bookingData.toDate,

@@ -58,6 +58,7 @@ function BookingReview({ prevStep }) {
 
             // ✅ Prepare booking payload
             const bookingPayload = {
+                 hotelId: bookingData.hotel.id,
                 roomCode: room.HotelSearchCode,
                 fromDate: dayjs(bookingData.from).format('YYYY-MM-DD'),
                 toDate: dayjs(bookingData.to).format('YYYY-MM-DD'),
