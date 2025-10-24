@@ -6,19 +6,23 @@ import { Dashboard } from './Components/Dashboard';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import ProtectedAdminRoute from './ProtectedAdminRoute';
+import { SupplierProvider } from './helpers/SupplierProvider';
 
 function App() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Router>
-        <Routes>
-          <Route path="/*" element={<Home />} />
-          <Route path="/Dashboard/*" element={<ProtectedAdminRoute>
-            <Dashboard />
-          </ProtectedAdminRoute>} />
-        </Routes>
-      </Router>
+      <SupplierProvider>
+        <Router>
+          <Routes>
+            <Route path="/*" element={<Home />} />
+            <Route path="/Dashboard/*" element={<ProtectedAdminRoute>
+              <Dashboard />
+            </ProtectedAdminRoute>} />
+          </Routes>
+        </Router>
+      </SupplierProvider>
+
     </LocalizationProvider >
   );
 }

@@ -2,14 +2,25 @@ import React, { useState, useEffect, createContext } from 'react';
 import dayjs from 'dayjs';
 import { hotelService } from '../../services/hotel.service';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getSupplier } from '../../utils/getSupplier';
 
 const SearchContext = createContext();
+const SUPPLIER = getSupplier();
 
-const CITY_CODE_MAP = {
-    chennai: '1175',
-    delhi: '514',
-    bengaluru: '234',
+const cityOptions = {
+    goglobal: [
+        { label: "Chennai", code: "1175" },
+        { label: "Delhi", code: "514" },
+        { label: "Bengaluru", code: "234" },
+    ],
+    dida: [
+        { label: "Chennai", code: "553248633981715834" },
+        { label: "Delhi", code: "180000" },
+        { label: "Bengaluru", code: "553248633981715864" },
+    ],
 };
+
+const CITY_CODE_MAP = cityOptions[SUPPLIER] || cityOptions.default;
 
 const getCityByCode = (code) => {
     const entry = Object.entries(CITY_CODE_MAP).find(([_, value]) => value === code);
@@ -20,16 +31,17 @@ const STORAGE_KEY = 'hotelSearchParams';
 
 export const SearchContextProvider = ({ children }) => {
     const location = useLocation();
+  
 
     // Initialize search options from URL params, localStorage, or defaults
     const [searchOption, setSearchOption] = useState(() => {
         const params = new URLSearchParams(location.search);
         const stored = localStorage.getItem(STORAGE_KEY);
         const storedOptions = stored ? JSON.parse(stored) : null;
-        
+
         const cityCode = params.get('cityCode') || storedOptions?.cityCode;
         const cityName = getCityByCode(cityCode) || 'Chennai';
-        
+
         const defaultOptions = {
             location: cityName,
             cityCode: cityCode || CITY_CODE_MAP[cityName.toLowerCase()],

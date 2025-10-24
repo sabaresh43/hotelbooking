@@ -13,10 +13,10 @@ export default function Footer() {
                 <Grid container spacing={4}>
                     <Grid size={{ xs: 12, md: 3 }}>
                         <Typography variant="h5" gutterBottom>
-                            ConnectXenia
+                            DESTIIN
                         </Typography>
                         <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                            Booking across the globe with ConnectXenia
+                            Booking across the globe with DESTIIN
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 0.5 }}>
                             <IconButton size="large" sx={{ color: 'grey.50' }}>
@@ -73,7 +73,7 @@ export default function Footer() {
                             About
                         </Typography>
                         <Box component="ul" sx={{ listStyle: 'none', p: 0 }}>
-                            {['About ConnectXenia', 'Contact us'].map((item, index) =>
+                            {['About DESTIIN', 'Contact us'].map((item, index) =>
                             (
                                 <Box component="li" key={item} mb={1}>
                                     <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'grey.50', }}>

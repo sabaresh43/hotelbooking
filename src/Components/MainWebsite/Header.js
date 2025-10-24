@@ -45,7 +45,7 @@ function MainHeader() {
 
     return (
         <Box sx={{ width: '100%' }} >
-            <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
+            <AppBar position="static" sx={{ backgroundColor: '#062a4eff', boxShadow: 1 }}>
                 <Toolbar sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr auto 1fr',
