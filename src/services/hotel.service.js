@@ -1,15 +1,14 @@
+import { useSupplier } from '../helpers/SupplierProvider';
 import api from './api.config';
+import { getSupplier } from '../utils/getSupplier';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const SUPPLIER = getSupplier();
 
 export const hotelService = {
+  
     // Get all hotels
-    getAllHotels: async () => {
-        const response = await api.get('/hotels');
-        return response.data;
-    },
-
-    // Search hotels with filters - will call external GoGlobal POST when configured
+    // Search hotels with filters - will call external supplier POST when configured
     searchHotels: async (options) => {
         // If GO_GLOBAL_URL is configured, POST to it using the payload shape provided
         if (BASE_URL) {
@@ -25,7 +24,7 @@ export const hotelService = {
             console.log("payload", payload);
 
 
-            const response = await api.post('/hotels/goglobal', payload, {
+            const response = await api.post(`/hotels/${SUPPLIER}`, payload, {
                 headers: { 'Content-Type': 'application/json' }
             });
             // Assume the external API returns an array of hotels in response.data
@@ -41,6 +40,7 @@ export const hotelService = {
     // Get hotel details by ID with search parameters
 // Get hotel details by ID with search parameters
 getHotelDetails: async (hotelId, searchOptions) => {
+    
     if (BASE_URL) {
         const payload = {
             country: 'IN',
@@ -58,7 +58,7 @@ getHotelDetails: async (hotelId, searchOptions) => {
         console.log("Hotel ID:", hotelId);
         
         // ✅ Correct endpoint with hotelId in the path
-        const response = await api.post(`/hotels/goglobal/${hotelId}`, payload, {
+        const response = await api.post(`/hotels/${SUPPLIER}/${hotelId}`, payload, {
             headers: { 'Content-Type': 'application/json' }
         });
         
@@ -75,12 +75,13 @@ bookHotel: async (bookingData) => {
                 toDate: bookingData.toDate,
                 rooms: bookingData.rooms,
                 currency: bookingData.currency || 'USD',
-                country: bookingData.country || 'IN'
+                country: bookingData.country || 'IN',
+                contact: bookingData.contact 
             };
 
             console.log("Booking API payload:", payload);
 
-            const response = await api.post('/hotels/goglobal/booking', payload, {
+            const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
                 headers: { 'Content-Type': 'application/json' }
             });
 

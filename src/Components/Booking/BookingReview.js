@@ -13,6 +13,7 @@ function BookingReview({ prevStep }) {
     const [isBookingFailed, setIsBookingFailed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [error, setError] = useState(null);
 
     const goBack = () => {
         prevStep();
@@ -30,14 +31,15 @@ function BookingReview({ prevStep }) {
         event.preventDefault();
         setIsSubmitting(true);
         setIsBookingFailed(false);
+        setError(null);
 
         try {
             // ✅ Get room data (assuming single room booking)
             const room = bookingData.rooms[0];
-            
+
             // ✅ Prepare guests array
             const guests = [];
-            
+
             // Primary guest from clientInfo
             guests.push({
                 title: getTitleFromName(bookingData.clientInfo.firstName),
@@ -66,7 +68,15 @@ function BookingReview({ prevStep }) {
                     }
                 ],
                 currency: room.Currency || 'USD',
-                country: 'IN'
+                country: 'IN',
+                contact: {
+                    Name: {
+                        First: bookingData.clientInfo.firstName,
+                        Last: bookingData.clientInfo.lastName
+                    },
+                    Email: bookingData.clientInfo.email,
+                    Phone: bookingData.clientInfo.phone
+                }
             };
 
             console.log('Submitting booking:', bookingPayload);
@@ -89,13 +99,13 @@ function BookingReview({ prevStep }) {
                 dispatch({ type: 'setIsBookingSuccess' });
 
                 // ✅ Navigate to success page with booking data
-                navigate("../success", { 
-                    state: { 
+                navigate("../success", {
+                    state: {
                         bookingData: {
                             ...bookingData,
                             confirmation: bookingResponse.data
                         }
-                    } 
+                    }
                 });
             } else {
                 setIsBookingFailed(true);
@@ -276,7 +286,7 @@ function BookingReview({ prevStep }) {
                         {isSubmitting ? 'Processing...' : 'Confirm Booking'}
                     </Button>
                 </Box>
-                
+
                 {isBookingFailed && (
                     <Alert severity="error">
                         Booking failed. Please try again or contact support.

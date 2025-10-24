@@ -15,6 +15,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonIcon from '@mui/icons-material/Person';
 import Grid from '@mui/material/Grid';
 import { Autocomplete } from "@mui/material";
+import { getSupplier } from "../../utils/getSupplier";
 
 
 function SearchBar() {
@@ -23,6 +24,7 @@ function SearchBar() {
     const [minDate, setMinDate] = useState(dayjs().add(1, 'day'));
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const SUPPLIER = getSupplier();
 
     useEffect(() => {
         if (searchOption.from) {
@@ -30,13 +32,26 @@ function SearchBar() {
         }
     }, [searchOption.from]);
 
+
     const handleCityChange = (event, newValue) => {
-        const cities = [
-            { label: "Chennai", code: "1175" },
-            { label: "Delhi", code: "514" },
-            { label: "Bengaluru", code: "234" },
-        ];
+        const cityOptions = {
+            goglobal: [
+                { label: "Chennai", code: "1175" },
+                { label: "Delhi", code: "514" },
+                { label: "Bengaluru", code: "234" },
+            ],
+            dida: [
+                { label: "Chennai", code: "553248633981715834" },
+                { label: "Delhi", code: "180000" },
+                { label: "Bengaluru", code: "553248633981715864" },
+            ],
+        };
+
+        const cities = cityOptions[SUPPLIER] || cityOptions.default;
+        console.log("citiesss",cities);
         
+
+
         const selectedCity = cities.find(c => c.label === newValue);
         setSearchOption({
             ...searchOption,
@@ -61,7 +76,7 @@ function SearchBar() {
             alert('Please select a city');
             return;
         }
-        
+
         if (!searchOption.from || !searchOption.to) {
             alert('Please select dates');
             return;
@@ -73,9 +88,9 @@ function SearchBar() {
             from: searchOption.from.format('YYYY-MM-DD'),
             to: searchOption.to.format('YYYY-MM-DD'),
         };
-        
+
         console.log("Searching with:", formattedSearchOption);
-        
+
         navigate('/hotels', { state: { searchOption: formattedSearchOption } });
     };
 
