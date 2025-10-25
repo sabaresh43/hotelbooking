@@ -58,13 +58,13 @@ export default function BookingSuccess() {
                                 Booking Reference
                             </Typography>
                             <Typography variant="h6" fontWeight="bold" color="success.main">
-                                {confirmation.GoReference}
+                                {confirmation.BookingId}
                             </Typography>
                             <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
                                 Confirmation Code
                             </Typography>
                             <Typography variant="body1" fontWeight="bold">
-                                {confirmation.ClientBookingCode}
+                                {confirmation.ClientReference}
                             </Typography>
                         </Box>
                     )}
