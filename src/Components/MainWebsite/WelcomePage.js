@@ -72,7 +72,7 @@ export const WelcomePage = () => {
                         <Typography variant="h5" color="inherit">
                             Make it a trip to remember in a holiday home
                         </Typography>
-                       <Box sx={{ my: 3, justifySelf: 'center' }}>
+                       <Box sx={{ my: 3, justifySelf: 'center',width: '100%' }}>
                                            <SearchBar />
                                        </Box>
                     </Stack>

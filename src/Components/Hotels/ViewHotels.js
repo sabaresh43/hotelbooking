@@ -222,7 +222,7 @@ function ViewHotels() {
                                         name="price"
                                         min={0}
                                         step={1}
-                                        max={3000}
+                                        max={10000}
                                         value={searchOption.price}
                                         onChange={handleChange}
                                         valueLabelDisplay="auto"

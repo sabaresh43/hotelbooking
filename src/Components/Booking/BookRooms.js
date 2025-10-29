@@ -47,28 +47,29 @@ function BookRooms() {
     const theme = useTheme();
     const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-    const methods = useForm({
-        defaultValues: {
-            clientInfo: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: ''
-            },
-            cardInfo: {
-                cardName: '',
-                cardNumber: '',
-                expDate: '',
-                cvv: '',
-                address: {
-                    street: '',
-                    city: '',
-                    province: '',
-                    country: ''
-                }
+const methods = useForm({
+    defaultValues: {
+        clientInfo: {
+            title: 'MR.',
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: ''
+        },
+        cardInfo: {
+            cardName: '',
+            cardNumber: '',
+            expDate: '',
+            cvv: '',
+            address: {
+                street: '',
+                city: '',
+                province: '',
+                country: ''
             }
         }
-    });
+    }
+});
 
     useEffect(() => {
         const loadUserProfile = async () => {
@@ -172,24 +173,25 @@ function BookRooms() {
                                                     <Typography variant="body2">Until 12:00</Typography>
                                                 </Box>
                                             </Stack>
-                                            <Typography color="text.secondary" mt={2}>Total length of stay:</Typography>
-                                            <Typography variant="body1">{bookingData.duration} {bookingData.duration > 1 ? "nights" : "night"}</Typography>
                                             <Typography color="text.secondary" mt={1}>You selected</Typography>
-                                            <Typography variant="body1">{bookingData.rooms.length} {bookingData.rooms.length > 1 ? "rooms" : "room"} for {bookingData.numberOfGuest} {bookingData.numberOfGuest > 1 ? "guests" : "guest"}</Typography>
-                                            {bookingData.rooms.map((room, index) => (
-                                                <Box key={room.RoomId || room.HotelSearchCode || index} sx={{ mt: 1, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
-                                                    <Typography variant="body2" fontWeight={600}>
-                                                        {room.Description || room.Rooms?.[0] || 'Room'}
-                                                    </Typography>
-                                                    {room.RoomBasis && (
-                                                        <Chip
-                                                            label={room.RoomBasis}
-                                                            size="small"
-                                                            sx={{ mt: 0.5 }}
-                                                        />
-                                                    )}
-                                                </Box>
-                                            ))}
+<Typography variant="body1">
+    {bookingData.rooms.length} × {bookingData.rooms[0]?.Description || 'Room'}
+</Typography>
+<Box sx={{ mt: 1, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
+    <Typography variant="body2" fontWeight={600}>
+        {bookingData.rooms.length} {bookingData.rooms.length > 1 ? "rooms" : "room"} of this type
+    </Typography>
+    <Typography variant="body2">
+        {bookingData.rooms[0]?.Description || bookingData.rooms[0]?.Rooms?.[0] || 'Room'}
+    </Typography>
+    {bookingData.rooms[0]?.RoomBasis && (
+        <Chip
+            label={bookingData.rooms[0].RoomBasis}
+            size="small"
+            sx={{ mt: 0.5 }}
+        />
+    )}
+</Box>
                                         </CardContent>
                                     </Card>
                                     <Card sx={{ boxShadow: 3 }}>

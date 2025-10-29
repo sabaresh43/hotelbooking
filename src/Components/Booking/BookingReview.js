@@ -27,97 +27,135 @@ function BookingReview({ prevStep }) {
         return commonMaleNames.includes(lowerName) ? 'MR.' : 'MRS.';
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setIsSubmitting(true);
-        setIsBookingFailed(false);
-        setError(null);
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setIsBookingFailed(false);
+    setError(null);
 
-        try {
-            // ✅ Get room data (assuming single room booking)
-            const room = bookingData.rooms[0];
+    try {
+        // ✅ All rooms are the same type, use first one as template
+        const selectedRoom = bookingData.rooms[0];
+        
+        // ✅ Calculate total payable amount for ALL rooms
+        let totalPayableAmount = 0;
+        
+        bookingData.rooms.forEach(room => {
+            const basePrice = parseFloat(room.TotalPrice || room.baseRate || 0);
+            const nonInclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Not Inclusive") || [];
+            const totalTax = nonInclusiveTaxes.reduce((sum, tax) => sum + parseFloat(tax.Amount || 0), 0);
+            totalPayableAmount += basePrice + totalTax;
+        });
 
-            // ✅ Prepare guests array
-            const guests = [];
+        // ✅ Prepare rooms array - one entry per room with proper occupancy
+        const roomsPayload = bookingData.occupancy.map((roomOccupancy, roomIndex) => {
+            // Prepare guests for this room
+            let guests = [];
+            
+            if (roomIndex === 0) {
+                // First room gets collected guest details
+                if (bookingData.clientInfo.guests && bookingData.clientInfo.guests.length > 0) {
+                    guests = bookingData.clientInfo.guests.map(guest => ({
+                        title: guest.title,
+                        firstName: guest.firstName.toUpperCase(),
+                        lastName: guest.lastName.toUpperCase()
+                    }));
+                } else {
+                    guests.push({
+                        title: bookingData.clientInfo.title || "MR.",
+                        firstName: bookingData.clientInfo.firstName.toUpperCase(),
+                        lastName: bookingData.clientInfo.lastName.toUpperCase()
+                    });
+                }
+                
+                // Fill remaining adults
+                while (guests.length < roomOccupancy.adults) {
+                    guests.push({
+                        title: "MR.",
+                        firstName: "GUEST",
+                        lastName: `${guests.length + 1}`
+                    });
+                }
+            } else {
+                // Other rooms: placeholder guests
+                for (let i = 0; i < roomOccupancy.adults; i++) {
+                    guests.push({
+                        title: "MR.",
+                        firstName: "GUEST",
+                        lastName: `${i + 1}`
+                    });
+                }
+            }
+            
+            return {
+                adults: roomOccupancy.adults,
+                children: roomOccupancy.childAges?.length || 0,
+                childAges: roomOccupancy.childAges || [],
+                guests: guests,
+                roomCode: selectedRoom.HotelSearchCode
+            };
+        });
 
-            // Primary guest from clientInfo
-            guests.push({
-                title: getTitleFromName(bookingData.clientInfo.firstName),
-                firstName: bookingData.clientInfo.firstName.toUpperCase(),
-                lastName: bookingData.clientInfo.lastName.toUpperCase()
+        // ✅ Prepare booking payload with payable_amount
+        const bookingPayload = {
+            hotelId: bookingData.hotel.id,
+            roomCode: selectedRoom.HotelSearchCode,
+            fromDate: dayjs(bookingData.from).format('YYYY-MM-DD'),
+            toDate: dayjs(bookingData.to).format('YYYY-MM-DD'),
+            rooms: roomsPayload,
+            currency: selectedRoom.Currency || 'USD',
+            country: 'IN',
+            payable_amount: parseFloat(totalPayableAmount.toFixed(2)),  // ✅ Total amount to pay
+            contact: {
+                Name: {
+                    First: bookingData.clientInfo.firstName,
+                    Last: bookingData.clientInfo.lastName
+                },
+                Email: bookingData.clientInfo.email,
+                Phone: bookingData.clientInfo.phone
+            }
+        };
+
+        console.log('Submitting booking:', bookingPayload);
+        console.log('Total Payable Amount:', totalPayableAmount);
+
+        const bookingResponse = await hotelService.bookHotel(bookingPayload);
+
+        console.log('Booking response:', bookingResponse);
+
+        if (bookingResponse.success) {
+            // ✅ Pass total price to confirmation
+            dispatch({
+                type: 'setBookingConfirmation',
+                payload: {
+                    data: {
+                        ...bookingResponse.data,
+                        totalPayableAmount: totalPayableAmount  // ✅ Store total
+                    }
+                }
             });
 
-            // Add additional guests if numberOfGuest > 1
-            for (let i = 1; i < bookingData.numberOfGuest; i++) {
-                guests.push({
-                    title: "MR.",
-                    firstName: "GUEST",
-                    lastName: ` Added`
-                });
-            }
+            dispatch({ type: 'setIsBookingSuccess' });
 
-            // ✅ Prepare booking payload
-            const bookingPayload = {
-                hotelId: bookingData.hotel.id,
-                roomCode: room.HotelSearchCode,
-                fromDate: dayjs(bookingData.from).format('YYYY-MM-DD'),
-                toDate: dayjs(bookingData.to).format('YYYY-MM-DD'),
-                rooms: [
-                    {
-                        adults: bookingData.numberOfGuest,
-                        guests: guests
+            navigate("../success", {
+                state: {
+                    bookingData: {
+                        ...bookingData,
+                        totalPrice: totalPayableAmount,  // ✅ Pass calculated total
+                        confirmation: bookingResponse.data
                     }
-                ],
-                currency: room.Currency || 'USD',
-                country: 'IN',
-                contact: {
-                    Name: {
-                        First: bookingData.clientInfo.firstName,
-                        Last: bookingData.clientInfo.lastName
-                    },
-                    Email: bookingData.clientInfo.email,
-                    Phone: bookingData.clientInfo.phone
                 }
-            };
-
-            console.log('Submitting booking:', bookingPayload);
-
-            // ✅ Call booking API
-            const bookingResponse = await hotelService.bookHotel(bookingPayload);
-
-            console.log('Booking response:', bookingResponse);
-
-            if (bookingResponse.success) {
-                // ✅ Store booking confirmation in context
-                dispatch({
-                    type: 'setBookingConfirmation',
-                    payload: {
-                        data: bookingResponse.data
-                    }
-                });
-
-                // ✅ Mark booking as successful
-                dispatch({ type: 'setIsBookingSuccess' });
-
-                // ✅ Navigate to success page with booking data
-                navigate("../success", {
-                    state: {
-                        bookingData: {
-                            ...bookingData,
-                            confirmation: bookingResponse.data
-                        }
-                    }
-                });
-            } else {
-                setIsBookingFailed(true);
-            }
-        } catch (error) {
-            console.error('Booking error:', error);
+            });
+        } else {
             setIsBookingFailed(true);
-        } finally {
-            setIsSubmitting(false);
         }
-    };
+    } catch (error) {
+        console.error('Booking error:', error);
+        setIsBookingFailed(true);
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
     return (
         <Container maxWidth="md">
@@ -243,10 +281,19 @@ function BookingReview({ prevStep }) {
                                 <Typography>Hotel:</Typography>
                                 <Typography fontWeight={600}>{bookingData.hotel.name || bookingData.hotel.hotelName}</Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography>Room:</Typography>
-                                <Typography>{bookingData.rooms[0].Description}</Typography>
-                            </Box>
+                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+                <Typography fontWeight={600}>Rooms:</Typography>
+                {bookingData.rooms.map((room, index) => (
+                    <Box key={index} sx={{ pl: 2 }}>
+                        <Typography variant="body2">
+                            • Room {index + 1}: {room.Description}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            {room.RoomBasis}
+                        </Typography>
+                    </Box>
+                ))}
+            </Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography>Check-in:</Typography>
                                 <Typography>{dayjs(bookingData.from).format('MMM D, YYYY')}</Typography>

@@ -70,10 +70,17 @@ export const HotelDisplayProvider = ({ children, searchOptions }) => {
         let responseData = [];
 
         try {
+             const occupancyPayload = options.occupancy?.map(occ => ({
+            adults: occ.adults,
+            roomCount: occ.roomCount,
+            childAges: occ.childAges || []
+        })) || [{ adults: options.numberOfGuest || 2, roomCount: 1, childAges: [] }];
+
             const payload = {
                 ...options,
                 fromDate: options.from,
-                toDate: options.to
+                toDate: options.to,
+                 occupancy: occupancyPayload 
             };
 
             console.log("Payload being sent:", payload);

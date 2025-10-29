@@ -42,16 +42,20 @@ export const hotelService = {
     getHotelDetails: async (hotelId, searchOptions) => {
 
         if (BASE_URL) {
+             const occupancyPayload = searchOptions.occupancy?.map(occ => ({
+                adults: occ.adults,
+                roomCount: occ.roomCount,
+                childAges: occ.childAges || []
+            })) || [{ adults: searchOptions.numberOfGuest || 2, roomCount: 1, childAges: [] }];
+
             const payload = {
                 country: 'IN',
                 fromDate: searchOptions.from || searchOptions.fromDate,
                 toDate: searchOptions.to || searchOptions.toDate,
                 sort: 1,
                 currency: searchOptions.currency || 'EUR',
-                occupancy: searchOptions.occupancy || [{
-                    adults: searchOptions.numberOfGuest || 2,
-                    roomCount: 1
-                }]
+                occupancy: occupancyPayload
+              
             };
 
             console.log("Hotel details payload:", payload);

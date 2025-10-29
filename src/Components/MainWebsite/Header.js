@@ -84,7 +84,7 @@ function MainHeader() {
                         ) : (
                             <>
                                 {role === 'admin' && (
-                                    <Button color="primary" component={Link} to="/Dashboard" variant="outlined">
+                                    <Button color="white" component={Link} to="/Dashboard" variant="outlined">
                                         Dashboard
                                     </Button>
                                 )}

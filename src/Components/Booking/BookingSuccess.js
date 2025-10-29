@@ -10,7 +10,7 @@ export default function BookingSuccess() {
     const location = useLocation();
     const bookingData = location.state?.bookingData;
     const confirmation = bookingData?.confirmation;
-    
+
     console.log('Booking Data:', bookingData);
     console.log('Confirmation:', confirmation);
 
@@ -18,18 +18,34 @@ export default function BookingSuccess() {
         reward();
     }, [reward]);
 
-    // ✅ Calculate tax breakdown safely
-    const room = bookingData?.rooms?.[0];
-    const allTaxes = room?.Tax || [];
-    const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
-    const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
-    const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + (parseFloat(tax.Amount) || 0), 0);
-    const basePrice = parseFloat(room?.TotalPrice || room?.baseRate || 0);
-    const currency = confirmation?.Currency || room?.Currency || 'USD';
+    // ✅ Calculate total guests across all rooms
+    const totalAdults = bookingData?.occupancy?.reduce((sum, occ) => sum + occ.adults, 0) || bookingData?.numberOfGuest || 0;
+    const totalChildren = bookingData?.occupancy?.reduce((sum, occ) => sum + occ.childAges.length, 0) || 0;
+    const totalRooms = bookingData?.rooms?.length || 0;
+
+    // ✅ Calculate total price for all rooms
+const calculateTotalPrice = () => {
+    if (bookingData?.totalPrice) {
+        return bookingData.totalPrice;  // Use passed total
+    }
     
-    // ✅ Safe total price calculation
-    const totalPaid = parseFloat(confirmation?.TotalPrice || bookingData?.totalPrice || 0);
-    const isValidTotal = !isNaN(totalPaid) && totalPaid > 0;
+    if (!bookingData?.rooms) return 0;
+    
+    return bookingData.rooms.reduce((sum, room) => {
+        const basePrice = parseFloat(room.TotalPrice || room.baseRate || 0);
+        const taxes = room.Tax?.filter(t => t.Inclusive === "Not Inclusive")
+            .reduce((taxSum, tax) => taxSum + (parseFloat(tax.Amount) || 0), 0) || 0;
+        return sum + basePrice + taxes;
+    }, 0);
+};
+
+const totalPaid = parseFloat(
+    confirmation?.TotalPrice || 
+    confirmation?.totalPayableAmount || 
+    calculateTotalPrice()
+);
+const isValidTotal = !isNaN(totalPaid) && totalPaid > 0;
+const currency = confirmation?.Currency || bookingData?.rooms?.[0]?.Currency || 'USD';
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', px: 6, paddingBottom: 6 }}>
@@ -93,32 +109,52 @@ export default function BookingSuccess() {
                             <Typography>
                                 <strong>Hotel:</strong> {confirmation?.HotelName || bookingData.hotel?.name || bookingData.hotel?.hotelName}
                             </Typography>
+
+                            {/* ✅ Show ALL rooms */}
+                            <Box>
+                                <Typography fontWeight="bold" sx={{ mb: 1 }}>Rooms:</Typography>
+                                <Box sx={{ pl: 2, p: 1.5, bgcolor: 'grey.50', borderRadius: 1 }}>
+                                    <Typography variant="body1" fontWeight={600}>
+                                        {bookingData.rooms.length} × {bookingData.rooms[0]?.Description || bookingData.rooms[0]?.Rooms?.[0] || 'Standard Room'}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {bookingData.rooms[0]?.RoomBasis}
+                                    </Typography>
+
+                                    {/* ✅ Show occupancy for each room */}
+                                    {bookingData.occupancy?.map((occ, index) => (
+                                        <Typography key={index} variant="body2" color="text.secondary">
+                                            Room: {occ.adults} adult{occ.adults > 1 ? 's' : ''}
+                                            {occ.childAges.length > 0 &&
+                                                `, ${occ.childAges.length} child${occ.childAges.length > 1 ? 'ren' : ''} (ages: ${occ.childAges.join(', ')})`
+                                            }
+                                        </Typography>
+                                    ))}
+                                </Box>
+                            </Box>
+                            {/* ✅ Show total guests */}
                             <Typography>
-                                <strong>Room:</strong> {confirmation?.Rooms?.RoomType?.Room?.Category || bookingData.rooms?.[0]?.Description}
+                                <strong>Total Guests:</strong> {totalAdults} adult{totalAdults > 1 ? 's' : ''}
+                                {totalChildren > 0 && `, ${totalChildren} child${totalChildren > 1 ? 'ren' : ''}`}
                             </Typography>
-                            <Typography>
-                                <strong>Room Basis:</strong> {confirmation?.RoomBasis || bookingData.rooms?.[0]?.RoomBasis}
-                            </Typography>
-                            <Typography>
-                                <strong>Guests:</strong> {bookingData.numberOfGuest || 2} adult{(bookingData.numberOfGuest || 2) > 1 ? 's' : ''}
-                            </Typography>
+
                             <Typography>
                                 <strong>Duration:</strong> {confirmation?.Nights || bookingData.duration} night{(confirmation?.Nights || bookingData.duration) > 1 ? 's' : ''}
                             </Typography>
                             <Typography>
-                                <strong>Check-in:</strong> {confirmation?.ArrivalDate 
-                                    ? dayjs(confirmation.ArrivalDate).format('dddd, MMMM D, YYYY') 
-                                    : bookingData.from 
-                                        ? (typeof bookingData.from === 'string' 
+                                <strong>Check-in:</strong> {confirmation?.ArrivalDate
+                                    ? dayjs(confirmation.ArrivalDate).format('dddd, MMMM D, YYYY')
+                                    : bookingData.from
+                                        ? (typeof bookingData.from === 'string'
                                             ? dayjs(bookingData.from).format('dddd, MMMM D, YYYY')
-                                            : bookingData.from.$d 
+                                            : bookingData.from.$d
                                                 ? dayjs(bookingData.from.$d).format('dddd, MMMM D, YYYY')
                                                 : dayjs(bookingData.from).format('dddd, MMMM D, YYYY'))
                                         : 'N/A'
                                 }
                             </Typography>
                             <Typography>
-                                <strong>Check-out:</strong> {bookingData.to 
+                                <strong>Check-out:</strong> {bookingData.to
                                     ? (typeof bookingData.to === 'string'
                                         ? dayjs(bookingData.to).format('dddd, MMMM D, YYYY')
                                         : bookingData.to.$d
@@ -127,49 +163,63 @@ export default function BookingSuccess() {
                                     : 'N/A'
                                 }
                             </Typography>
-                            
+
                             <Divider sx={{ my: 2 }} />
-                            
-                            {/* ✅ Price breakdown - same style as BookRooms */}
+
+                            {/* ✅ Price breakdown for ALL rooms */}
                             <Card sx={{ boxShadow: 2 }}>
                                 <CardContent>
                                     <Typography variant="h6" gutterBottom>Price Summary</Typography>
-                                    
-                                    <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-                                        <Typography variant="body2">
-                                            Room price ({bookingData.duration} {bookingData.duration > 1 ? 'nights' : 'night'})
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {currency} {basePrice.toFixed(2)}
-                                        </Typography>
-                                    </Stack>
 
-                                    {/* ✅ Show inclusive taxes */}
-                                    {inclusiveTaxes.length > 0 && (
-                                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-                                            <Typography variant="caption" color="success.main">
-                                                Taxes & fees
-                                            </Typography>
-                                            <Typography variant="caption" color="success.main">
-                                                Included
-                                            </Typography>
-                                        </Stack>
-                                    )}
+                                    {bookingData.rooms?.map((room, index) => {
+                                        const allTaxes = room.Tax || [];
+                                        const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
+                                        const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
+                                        const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + (parseFloat(tax.Amount) || 0), 0);
+                                        const basePrice = parseFloat(room.TotalPrice || room.baseRate || 0);
 
-                                    {/* ✅ Show non-inclusive taxes */}
-                                    {nonInclusiveTaxes.length > 0 && (
-                                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-                                            <Typography variant="caption" color="warning.main">
-                                                Tax
-                                            </Typography>
-                                            <Typography variant="caption" color="warning.main">
-                                                {currency} {totalNonInclusiveTax.toFixed(2)}
-                                            </Typography>
-                                        </Stack>
-                                    )}
-                                    
-                                    <Divider sx={{ my: 1 }} />
-                                    
+                                        return (
+                                            <Box key={index} sx={{ mb: 2, pb: 2, borderBottom: index < bookingData.rooms.length - 1 ? '1px dashed #e0e0e0' : 'none' }}>
+                                                <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
+                                                    Room {index + 1}: {room.Description}
+                                                </Typography>
+
+                                                <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5, pl: 2 }}>
+                                                    <Typography variant="body2">
+                                                        Room price ({bookingData.duration} {bookingData.duration > 1 ? 'nights' : 'night'})
+                                                    </Typography>
+                                                    <Typography variant="body2">
+                                                        {currency} {basePrice.toFixed(2)}
+                                                    </Typography>
+                                                </Stack>
+
+                                                {inclusiveTaxes.length > 0 && (
+                                                    <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5, pl: 2 }}>
+                                                        <Typography variant="caption" color="success.main">
+                                                            Taxes & fees
+                                                        </Typography>
+                                                        <Typography variant="caption" color="success.main">
+                                                            Included
+                                                        </Typography>
+                                                    </Stack>
+                                                )}
+
+                                                {nonInclusiveTaxes.length > 0 && (
+                                                    <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5, pl: 2 }}>
+                                                        <Typography variant="caption" color="warning.main">
+                                                            Tax
+                                                        </Typography>
+                                                        <Typography variant="caption" color="warning.main">
+                                                            {currency} {totalNonInclusiveTax.toFixed(2)}
+                                                        </Typography>
+                                                    </Stack>
+                                                )}
+                                            </Box>
+                                        );
+                                    })}
+
+                                    <Divider sx={{ my: 2 }} />
+
                                     <Box sx={{ display: "flex", justifyContent: "space-between", bgcolor: "success.light", p: 2, borderRadius: 1 }}>
                                         <Typography variant="h6" color="black" fontWeight="bold">
                                             Total Paid
