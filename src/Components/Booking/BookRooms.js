@@ -125,8 +125,7 @@ const methods = useForm({
         // ✅ Handle both old and new hotel structures
         const hotelName = bookingData.hotel.name || bookingData.hotel.hotelName || 'Hotel';
         const hotelAddress = bookingData.hotel.address
-            ? `${bookingData.hotel.address.street}, ${bookingData.hotel.address.city}, ${bookingData.hotel.address.province}, ${bookingData.hotel.address.postalCode}, ${bookingData.hotel.address.country}`
-            : bookingData.hotel.location || 'Address not available';
+            ? bookingData.hotel.address: 'Address not available';
 
         return (
             <FormProvider {...methods}>

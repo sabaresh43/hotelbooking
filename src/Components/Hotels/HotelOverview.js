@@ -58,8 +58,7 @@ const HotelOverview = ({ hotel }) => {
 
     // ✅ Handle address - GoGlobal doesn't provide detailed address
     const fullAddress = hotel.address
-        ? `${hotel.address.street}, ${hotel.address.city}, ${hotel.address.province}, ${hotel.address.postalCode}, ${hotel.address.country}`
-        : hotel.location || 'Address not available';
+        ? hotel.address :'Address not available';
 
     const ratingInfo = getRatingCategory(parseFloat(hotelRating));
 

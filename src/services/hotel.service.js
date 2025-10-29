@@ -153,6 +153,8 @@ export const hotelService = {
         currency: bookingData.currency || "EUR",
         country: bookingData.country || "IN",
         contact: bookingData.contact,
+        payable_amount: bookingData.payable_amount,
+        occupancy: bookingData.occupancy,
       };
 
       console.log("Booking API payload:", payload);

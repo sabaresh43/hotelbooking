@@ -44,6 +44,7 @@ function HotelDetails() {
                     const normalizedHotel = {
                         id: detailsResponse.id,
                         name: detailsResponse.name,
+                        address: detailsResponse.address,
                         description: detailsResponse.description,
                         thumbnails: detailsResponse.thumbnails || [],
                         HotelFacilities: detailsResponse.HotelFacilities,
