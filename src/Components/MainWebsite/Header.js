@@ -17,14 +17,17 @@ import appLogo from '../../assets/appLogo.png'; // adjust the path based on your
 
 function MainHeader() {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    const role = useSelector(state => state.auth.role);
+    const employeeId = useSelector(state => state.auth.employeeId);
     const dispatch = useDispatch();
-    const handleLogout = async () => {
-        dispatch(logout());
-        await userLogout();
-    };
 
     const [openDialog, setOpenDialog] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleLogout = () => {
+        dispatch(logout());
+        handleClose();
+    };
 
     const handleDialogOpen = () => {
         setOpenDialog(true);
@@ -34,17 +37,16 @@ function MainHeader() {
         setOpenDialog(false);
     };
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
 
     return (
-        <Box sx={{ width: '100%' }} >
+        <Box sx={{ width: '100%' }}>
             <AppBar position="static" sx={{ backgroundColor: '#062a4eff', boxShadow: 1 }}>
                 <Toolbar sx={{
                     display: 'grid',
@@ -53,7 +55,6 @@ function MainHeader() {
                     px: 2,
                     minHeight: 64
                 }}>
-
                     {/* Empty Box to reserve left space */}
                     <Box />
 
@@ -67,47 +68,69 @@ function MainHeader() {
                             transition: 'transform 0.3s ease-in-out',
                         }
                     }}>
-                       
-                         <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
-                          <img src={appLogo} alt="App Logo" style={{ width: 140, height: 'auto', objectFit: 'contain' ,cursor: 'pointer'}} />
-     
-    </Link>
+                        <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
+                            <img 
+                                src={appLogo} 
+                                alt="App Logo" 
+                                style={{ 
+                                    width: 140, 
+                                    height: 'auto', 
+                                    objectFit: 'contain', 
+                                    cursor: 'pointer' 
+                                }} 
+                            />
+                        </Link>
                     </Box>
 
                     {/* Buttons on the right */}
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
                         {!isAuthenticated ? (
-                            <>
-                                {/* <Button color="primary" variant="outlined" onClick={handleDialogOpen}>Register</Button> */}
-                                <Button color="white" variant="outlined" onClick={handleDialogOpen}>Login</Button>
-                            </>
+                            <Button 
+                                color="inherit" 
+                                variant="outlined" 
+                                onClick={handleDialogOpen}
+                                sx={{ color: '#fff', borderColor: '#fff' }}
+                            >
+                                Login
+                            </Button>
                         ) : (
                             <>
-                                {role === 'admin' && (
-                                    <Button color="white" component={Link} to="/Dashboard" variant="outlined">
-                                        Dashboard
-                                    </Button>
-                                )}
+                                {/* ✅ Show employee ID */}
+                                <Box sx={{ 
+                                    color: '#fff', 
+                                    mr: 2, 
+                                    display: { xs: 'none', sm: 'block' },
+                                    fontSize: '0.9rem'
+                                }}>
+                                    {employeeId}
+                                </Box>
+
                                 <IconButton
-                                    id="basic-button"
-                                    aria-controls={open ? 'basic-menu' : undefined}
+                                    id="user-menu-button"
+                                    aria-controls={open ? 'user-menu' : undefined}
                                     aria-haspopup="true"
                                     aria-expanded={open ? 'true' : undefined}
                                     onClick={handleClick}
-                                    color="primary"
                                 >
-                                    <AccountCircleIcon />
+                                    <AccountCircleIcon sx={{ color: '#fff', fontSize: 32 }} />
                                 </IconButton>
+
                                 <Menu
-                                    id="basic-menu"
+                                    id="user-menu"
                                     anchorEl={anchorEl}
                                     open={open}
                                     onClose={handleClose}
-                                    MenuListProps={{ 'aria-labelledby': 'basic-button' }}
+                                    MenuListProps={{ 'aria-labelledby': 'user-menu-button' }}
                                 >
-                                    {role === 'user' && <MenuItem component={Link} to="/UserProfile">Profile</MenuItem>}
-                                    {role === 'user' && <MenuItem component={Link} to="/Bookings">My Bookings</MenuItem>}
-                                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                    {/* ✅ My Bookings */}
+                                    <MenuItem component={Link} to="/Bookings" onClick={handleClose}>
+                                        My Bookings
+                                    </MenuItem>
+
+                                    {/* ✅ Logout */}
+                                    <MenuItem onClick={handleLogout}>
+                                        Logout
+                                    </MenuItem>
                                 </Menu>
                             </>
                         )}
@@ -115,9 +138,9 @@ function MainHeader() {
                 </Toolbar>
             </AppBar>
 
-
             <LoginAndRegisterForm open={openDialog} onClose={handleDialogClose} />
-        </Box >);
+        </Box>
+    );
 }
 
 export default MainHeader;

@@ -3,18 +3,22 @@ import api from "./api.config";
 import { getSupplier } from "../utils/getSupplier";
 import bookingres from "../helpers/booking_res.json";
 import axios from "axios";
+import { get } from "react-hook-form";
+
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const FRAPPE_URL =
   "https://travel-site.m.frappe.cloud/api/method/destiin.destiin.doctype";
-const FRAPPE_TOKEN = "token 92ff0ef8f5fb1b6:54436a5f1092d34";
-const EMPLOYEE_ID = "HR-EMP-00001";
+
+const getEmployeeId = () => localStorage.getItem('employeeId') || "HR-EMP-00001";
+const getToken = () => localStorage.getItem('token') || "5f9e63e2eb95a8e:352254ca034c0d6";
+
 const SUPPLIER = getSupplier();
 
 // Activity tracking function
 export const trackActivity = async (bookingStage) => {
   try {
     const payload = {
-      employee_id: EMPLOYEE_ID,
+      employee_id: getEmployeeId(),
       booking_stage: bookingStage,
     };
 
@@ -23,7 +27,7 @@ export const trackActivity = async (bookingStage) => {
       payload,
       {
         headers: {
-          Authorization: FRAPPE_TOKEN,
+           Authorization: `token ${getToken()}`,
           "Content-Type": "application/json",
           Cookie:
             "full_name=Guest; sid=Guest; system_user=no; user_id=Guest; user_lang=en",
@@ -39,7 +43,7 @@ export const trackActivity = async (bookingStage) => {
 const updateBookingStatus = async (bookingStatus, paymentStatus) => {
   try {
     const payload = {
-      employee_id: EMPLOYEE_ID,
+      employee_id: getEmployeeId(),
       data: {
         booking_status: bookingStatus,
         payment_status: paymentStatus,
@@ -51,7 +55,7 @@ const updateBookingStatus = async (bookingStatus, paymentStatus) => {
       payload,
       {
         headers: {
-          Authorization: FRAPPE_TOKEN,
+           Authorization: `token ${getToken()}`,
           "Content-Type": "application/json",
           Cookie:
             "full_name=Guest; sid=Guest; system_user=yes; user_id=Guest; user_image=",

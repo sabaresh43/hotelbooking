@@ -231,7 +231,7 @@ function RoomDetailsList({ rooms }) {
 
                                     {nonInclusiveTaxes.length > 0 && (
                                         <Typography variant="caption" color="warning.main">
-                                            Includes {currency} {(totalNonInclusiveTax * totalRoomsNeeded).toFixed(2)} taxes
+                                            + {currency} {(totalNonInclusiveTax * totalRoomsNeeded).toFixed(2)} taxes
                                         </Typography>
                                     )}
 

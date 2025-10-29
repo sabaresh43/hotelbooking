@@ -44,8 +44,15 @@ const handleSubmit = async (event) => {
             const basePrice = parseFloat(room.TotalPrice || room.baseRate || 0);
             const nonInclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Not Inclusive") || [];
             const totalTax = nonInclusiveTaxes.reduce((sum, tax) => sum + parseFloat(tax.Amount || 0), 0);
-            totalPayableAmount += basePrice + totalTax;
+            
+            // ✅ Also include Fee array
+            const fees = room.Fee || [];
+            const totalFees = fees.reduce((sum, fee) => sum + parseFloat(fee.Amount || 0), 0);
+            
+            totalPayableAmount += basePrice + totalTax + totalFees;
         });
+
+        console.log('💰 Calculated Total Payable Amount:', totalPayableAmount);
 
         // ✅ Prepare rooms array - one entry per room with proper occupancy
         const roomsPayload = bookingData.occupancy.map((roomOccupancy, roomIndex) => {
@@ -116,33 +123,35 @@ const handleSubmit = async (event) => {
             }
         };
 
-        console.log('Submitting booking:', bookingPayload);
-        console.log('Total Payable Amount:', totalPayableAmount);
+        console.log('📤 Submitting booking:', bookingPayload);
 
         const bookingResponse = await hotelService.bookHotel(bookingPayload);
 
-        console.log('Booking response:', bookingResponse);
+        console.log('📥 Booking response:', bookingResponse);
 
         if (bookingResponse.success) {
-            // ✅ Pass total price to confirmation
             dispatch({
                 type: 'setBookingConfirmation',
                 payload: {
-                    data: {
-                        ...bookingResponse.data,
-                        totalPayableAmount: totalPayableAmount  // ✅ Store total
-                    }
+                    data: bookingResponse.data
                 }
             });
 
             dispatch({ type: 'setIsBookingSuccess' });
 
+            // ✅ CRITICAL: Pass calculated total explicitly in multiple places
+            console.log('✈️ Navigating with actualTotalPrice:', totalPayableAmount);
+            
             navigate("../success", {
                 state: {
                     bookingData: {
                         ...bookingData,
-                        totalPrice: totalPayableAmount,  // ✅ Pass calculated total
-                        confirmation: bookingResponse.data
+                        actualTotalPrice: totalPayableAmount,  // ✅ Pass calculated total
+                        totalPrice: totalPayableAmount,        // ✅ Also update this
+                        confirmation: {
+                            ...bookingResponse.data,
+                            actualTotalPrice: totalPayableAmount  // ✅ Also in confirmation
+                        }
                     }
                 }
             });

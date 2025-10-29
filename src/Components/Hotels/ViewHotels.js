@@ -489,7 +489,7 @@ function ViewHotels() {
                                                                         /night
                                                                     </Typography>
                                                                 </Typography>
-                                                                {item.rooms?.taxesFees > 0 && (
+                                                                {/* {item.rooms?.taxesFees > 0 && (
                                                                     <Typography variant="caption" color="text.secondary" display="block">
 
                                                                         {(() => {
@@ -503,7 +503,7 @@ function ViewHotels() {
                                                                         })()}
 
                                                                     </Typography>
-                                                                )}
+                                                                )} */}
                                                             </Box>
 
                                                             <Button
