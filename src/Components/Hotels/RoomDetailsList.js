@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { trackActivity } from '../../services/hotel.service';
 
 
 
@@ -96,6 +97,11 @@ function RoomDetailsList({ rooms }) {
                 }
             }
         });
+
+        // Track room selection activity
+        trackActivity("room_selected").catch((err) =>
+            console.error("Activity tracking failed:", err)
+        );
 
         // ✅ Navigate immediately
         navigate("booking");

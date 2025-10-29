@@ -4,7 +4,7 @@ import BookingContext from "./BookingContext";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
-import hotelService from "../../services/hotel.service";
+import hotelService, { trackActivity } from "../../services/hotel.service";
 
 function BookingReview({ prevStep }) {
     const { bookingData, dispatch } = useContext(BookingContext);
@@ -130,6 +130,12 @@ const handleSubmit = async (event) => {
         console.log('📥 Booking response:', bookingResponse);
 
         if (bookingResponse.success) {
+            // Track booking success
+            trackActivity("booking_success").catch((err) =>
+                console.error("Activity tracking failed:", err)
+            );
+
+            // ✅ Pass total price to confirmation
             dispatch({
                 type: 'setBookingConfirmation',
                 payload: {
@@ -156,10 +162,18 @@ const handleSubmit = async (event) => {
                 }
             });
         } else {
+            // Track booking failure
+            trackActivity("booking_failure").catch((err) =>
+                console.error("Activity tracking failed:", err)
+            );
             setIsBookingFailed(true);
         }
     } catch (error) {
         console.error('Booking error:', error);
+        // Track booking failure
+        trackActivity("booking_failure").catch((err) =>
+            console.error("Activity tracking failed:", err)
+        );
         setIsBookingFailed(true);
     } finally {
         setIsSubmitting(false);

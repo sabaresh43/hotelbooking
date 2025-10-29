@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import SearchContext from "./SearchContext";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getSupplier } from "../../utils/getSupplier";
+import { trackActivity } from "../../services/hotel.service";
 
 // Example supplier getter — replace with your real implementation
 // import { getSupplier } from '../utils/supplier';
@@ -146,6 +147,12 @@ console.log("SUPPLIER", SUPPLIER);
             alert("Please select ages for all children.");
             return;
         }
+        
+        // Track hotel search activity
+        trackActivity("hotel_search").catch((err) =>
+            console.error("Activity tracking failed:", err)
+        );
+        
         navigate("/hotels", { state: { searchOption: formattedSearchOption } });
     };
 
