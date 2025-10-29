@@ -48,7 +48,7 @@ export const SearchContextProvider = ({ children }) => {
             from: dayjs(params.get('from') || storedOptions?.from || undefined),
             to: dayjs(params.get('to') || storedOptions?.to || undefined).add(1, 'day'),
             numberOfGuest: parseInt(params.get('guests') || storedOptions?.numberOfGuest || 1),
-            price: storedOptions?.price || [0, 500],
+            price: storedOptions?.price || [0, 3000],
             tags: storedOptions?.tags || {
                 parking: false,
                 wifi: false,

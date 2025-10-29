@@ -78,8 +78,8 @@ function MainHeader() {
                     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                         {!isAuthenticated ? (
                             <>
-                                <Button color="primary" variant="outlined" onClick={handleDialogOpen}>Register</Button>
-                                <Button color="primary" variant="outlined" onClick={handleDialogOpen}>Login</Button>
+                                {/* <Button color="primary" variant="outlined" onClick={handleDialogOpen}>Register</Button> */}
+                                <Button color="white" variant="outlined" onClick={handleDialogOpen}>Login</Button>
                             </>
                         ) : (
                             <>

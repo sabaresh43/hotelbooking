@@ -58,7 +58,7 @@ function BookingReview({ prevStep }) {
 
             // ✅ Prepare booking payload
             const bookingPayload = {
-                 hotelId: bookingData.hotel.id,
+                hotelId: bookingData.hotel.id,
                 roomCode: room.HotelSearchCode,
                 fromDate: dayjs(bookingData.from).format('YYYY-MM-DD'),
                 toDate: dayjs(bookingData.to).format('YYYY-MM-DD'),
@@ -248,6 +248,14 @@ function BookingReview({ prevStep }) {
                                 <Typography>{bookingData.rooms[0].Description}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography>Check-in:</Typography>
+                                <Typography>{dayjs(bookingData.from).format('MMM D, YYYY')}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography>Check-out:</Typography>
+                                <Typography>{dayjs(bookingData.to).format('MMM D, YYYY')}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography>Duration:</Typography>
                                 <Typography>{bookingData.duration} night{bookingData.duration > 1 ? 's' : ''}</Typography>
                             </Box>
@@ -255,9 +263,53 @@ function BookingReview({ prevStep }) {
                                 <Typography>Guests:</Typography>
                                 <Typography>{bookingData.numberOfGuest} adult{bookingData.numberOfGuest > 1 ? 's' : ''}</Typography>
                             </Box>
+
+                            <Divider sx={{ my: 1 }} />
+
+                            {/* ✅ Price breakdown */}
+                            {bookingData.rooms.map((room, index) => {
+                                const allTaxes = room.Tax || [];
+                                const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
+                                const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
+                                const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0);
+                                const basePrice = room.TotalPrice || room.baseRate || 0;
+                                const currency = room.Currency || 'USD';
+
+                                return (
+                                    <Box key={index}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography>Room price:</Typography>
+                                            <Typography>{currency} {basePrice.toFixed(2)}</Typography>
+                                        </Box>
+
+                                        {inclusiveTaxes.length > 0 && (
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Typography variant="body2" color="success.main">
+                                                    Taxes & fees:
+                                                </Typography>
+                                                <Typography variant="body2" color="success.main">
+                                                    Included
+                                                </Typography>
+                                            </Box>
+                                        )}
+
+                                        {nonInclusiveTaxes.length > 0 && (
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Taxes (at property):
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {currency} {totalNonInclusiveTax.toFixed(2)}
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                );
+                            })}
+
                             <Divider sx={{ my: 1 }} />
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant="h6" color="primary">Total:</Typography>
+                                <Typography variant="h6" color="primary">Total to Pay Now:</Typography>
                                 <Typography variant="h6" color="primary" fontWeight={700}>
                                     {bookingData.rooms[0].Currency} {bookingData.totalPrice.toFixed(2)}
                                 </Typography>

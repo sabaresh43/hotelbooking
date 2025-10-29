@@ -72,11 +72,11 @@ export const WelcomePage = () => {
                         <Typography variant="h5" color="inherit">
                             Make it a trip to remember in a holiday home
                         </Typography>
-                        <Box>
-                            <SearchBar />
-                        </Box>
+                       <Box sx={{ my: 3, justifySelf: 'center' }}>
+                                           <SearchBar />
+                                       </Box>
                     </Stack>
-                   
+
                 </Container>
             </Box>
         </React.Fragment >);

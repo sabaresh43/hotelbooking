@@ -1,4 +1,4 @@
-import  { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     Card,
     Typography,
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 
 import BookingContext from '../Booking/BookingContext';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "slick-carousel/slick/slick.css";
@@ -34,6 +34,19 @@ function RoomDetailsList({ rooms }) {
             setOpenDialog(true);
             return;
         }
+        let roomBasePrice = room.TotalPrice || 0; // Already for full duration
+        let totalNonInclusiveTax = 0;
+
+        // Add non-inclusive taxes to the total
+        if (room.Tax && room.Tax.length > 0) {
+            room.Tax.forEach(tax => {
+                if (tax.Inclusive === "Not Inclusive") {
+                    totalNonInclusiveTax += tax.Amount;
+                }
+            });
+        }
+
+        const finalTotalPrice = roomBasePrice + totalNonInclusiveTax;
 
         // ✅ Normalize room structure for BookingContext
         const normalizedRoom = {
@@ -41,40 +54,43 @@ function RoomDetailsList({ rooms }) {
             HotelSearchCode: room.HotelSearchCode,
             RoomId: room.HotelSearchCode, // Use as unique ID
             roomId: room.HotelSearchCode,
-            
+
             // Room details
             Description: room.Rooms?.[0] || 'Standard Room',
             RoomBasis: room.RoomBasis,
-            
+
             // Pricing
             baseRate: room.TotalPrice || 0,
             TotalPrice: room.TotalPrice || 0,
             Currency: room.Currency || 'USD',
-            
+
+            // Tax information
+            Tax: room.Tax || [],
+            Fee: room.Fee || [],
+
             // Additional info
             NonRef: room.NonRef,
             CxlDeadLine: room.CxlDeadLine,
             Availability: room.Availability,
             Special: room.Special,
             Fee: room.Fee,
-            
+
             // For display compatibility
             sleepsCount: bookingData.numberOfGuest || 2,
             tags: room.Special ? [room.Special] : [],
-            
+
             // Cancellation
             CancellationPolicies: room.CancellationPolicies,
             Remark: room.Remark
         };
 
-        const totalPrice = (room.TotalPrice || 0) * bookingData.duration;
 
         dispatch({
             type: "setBookingDetails",
             payload: {
                 data: {
                     rooms: [normalizedRoom],
-                    totalPrice
+                    totalPrice: finalTotalPrice
                 }
             }
         });
@@ -94,10 +110,15 @@ function RoomDetailsList({ rooms }) {
                     const totalPrice = room.TotalPrice || 0;
                     const currency = room.Currency || 'USD';
                     const roomBasis = room.RoomBasis || 'Room Only';
-                    const availability = room.Availability || 0;
+                    const basePrice = room.TotalPrice || 0;
                     const isRefundable = !room.NonRef;
                     const special = room.Special || '';
-                    const taxFee = room.Fee?.find(f => f.Detail === 'tax_and_service_fee');
+
+                    // ✅ Calculate taxes
+                    const inclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Inclusive") || [];
+                    const nonInclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Not Inclusive") || [];
+                    const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0);
+                    const finalPrice = basePrice + totalNonInclusiveTax;
 
                     return (
                         <Card key={room.HotelSearchCode || index} sx={{ display: 'flex', borderRadius: 2, boxShadow: 3 }}>
@@ -112,14 +133,7 @@ function RoomDetailsList({ rooms }) {
                                         objectFit: 'cover',
                                     }}
                                 />
-                                {availability > 0 && availability <= 5 && (
-                                    <Chip
-                                        label={`Only ${availability} left`}
-                                        color="warning"
-                                        size="small"
-                                        sx={{ position: 'absolute', top: 10, right: 10 }}
-                                    />
-                                )}
+
                             </Box>
 
                             <Stack direction="row" justifyContent="space-between" alignItems="center" flex={1} p={2}>
@@ -143,7 +157,7 @@ function RoomDetailsList({ rooms }) {
 
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Chip
-                                            label={isRefundable ? "Free Cancellation" : "Non-Refundable"}
+                                            label={isRefundable ? "Eligable for Partial / Full Refund" : "Non-Refundable"}
                                             size="small"
                                             color={isRefundable ? "success" : "default"}
                                             variant="outlined"
@@ -171,9 +185,16 @@ function RoomDetailsList({ rooms }) {
                                         Total for {bookingData.duration} night{bookingData.duration > 1 ? 's' : ''}
                                     </Typography>
 
-                                    {taxFee && (
-                                        <Typography variant="caption" color="text.secondary">
-                                            + {taxFee.Currency} {taxFee.Amount} taxes & fees
+                                    {/* ✅ Show tax breakdown */}
+                                    {inclusiveTaxes.length > 0 && (
+                                        <Typography variant="caption" color="success.main">
+                                            (Taxes included)
+                                        </Typography>
+                                    )}
+
+                                    {nonInclusiveTaxes.length > 0 && (
+                                        <Typography variant="caption" color="warning.main">
+                                           Includes {currency} {totalNonInclusiveTax.toFixed(2)} taxes
                                         </Typography>
                                     )}
 

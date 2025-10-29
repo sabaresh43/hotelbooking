@@ -1,0 +1,76 @@
+{
+    "success": true,
+    "data": {
+        "GoBookingCode": "29763799",
+        "GoReference": "GO27591912-29763799-A(INT)",
+        "ClientBookingCode": "1761744809053",
+        "BookingStatus": {
+            "status": "Confirmed",
+            "desc": "Booking is finalized and active"
+        },
+        "TotalPrice": "204",
+        "Currency": "EUR",
+        "taxes": {
+            "tax": {
+                "type": "Tax And Fees",
+                "detail": "mandatory_tax",
+                "amount": "23.19",
+                "currency": "EUR",
+                "inclusive": "false"
+            }
+        },
+        "fees": {
+            "fee": [
+                {
+                    "type": "Other",
+                    "detail": "tax_and_service_fee",
+                    "amount": "14.16",
+                    "currency": "EUR",
+                    "inclusive": "true"
+                },
+                {
+                    "type": "Other",
+                    "detail": "property_fee",
+                    "amount": "4.61",
+                    "currency": "EUR",
+                    "inclusive": "true"
+                }
+            ]
+        },
+        "HotelId": "1219277",
+        "HotelName": "PRINCESS HOTEL",
+        "HotelSearchCode": "26561762/538756872618358341/1",
+        "RoomType": "",
+        "RoomBasis": "ROOM ONLY",
+        "ArrivalDate": "2025-11-12",
+        "CancellationDeadline": "2025-11-07",
+        "Nights": "11",
+        "NoAlternativeHotel": "1",
+        "Leader": {
+            "LeaderPersonID": "1"
+        },
+        "Rooms": {
+            "RoomType": {
+                "Adults": "1",
+                "Room": {
+                    "RoomID": "1",
+                    "Category": "Shared Dormitory Mixed Dorm Shared Bathroom (1 Bed In 4 Person Dorm)",
+                    "PersonName": {
+                        "PersonID": "1",
+                        "Title": "MRS.",
+                        "FirstName": "SDFBC",
+                        "LastName": "CXVC"
+                    }
+                }
+            }
+        },
+        "Preferences": {
+            "AdjoiningRooms": "",
+            "ConnectingRooms": "",
+            "LateArrival": ""
+        },
+        "Remark": "Bed types are not guaranteed:Shared Dormitory, Mixed Dorm, Shared Bathroom (1 bed in 4 person dorm) - 1 Twin Bed(room for 1 adults )<BR />23.19 EUR will be paid locally at the hotel(tax_and_service_fee,property_fee)CXL charges apply as follows: STARTING 07/11/2025 CXL-PENALTY FEE IS 100.00% OF BOOKING PRICE., Bed types are not guaranteed:Shared Dormitory, Mixed Dorm, Shared Bathroom (1 bed in 4 person dorm) - 1 Twin Bed(room for 1 adults ) 23.19 EUR will be paid locally at the hotel(tax_and_service_fee,property_fee)<br /><br /><p><b>National Ratings</b></p><p> This property does not have a Netherlands Tourist Board rating. For the benefit of our customers, we have provided a rating based on our rating system.</p><br /><p><b>Know Before You Go:</b></p><p> <ul>  <li>Only registered guests are allowed in the guestrooms. </li> <li>Some facilities may have restricted access. Guests can contact the property for details using the contact information on the booking confirmation. </li><li>Contactless check-in and contactless check-out are available.</li> </ul></p><br /><p><b>Fees:</b></p><p> <ul> <li>Fee for wired internet in public areas: EUR 1 (for 30 minutes, rates may vary)</li></ul> <p>The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. </p></p><br /><p><b>Mandatory Fees and Taxes:</b></p><p> <p>You'll be asked to pay the following charges at the property. Fees may include applicable taxes:</p> <ul><li>An effective city/local tax rate of 12.50 percent will be charged</li></ul> <p>We have included all charges provided to us by the property. </p></p><br /><p><b>Checkin Instructions:</b></p><p> <ul>  <li>Extra-person charges may apply and vary depending on property policy</li><li>Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges</li><li>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed</li><li>Special cancellation policies or charges may apply for group reservations (more than 8 rooms for the same property / stay dates)</li><li>This property accepts credit cards; cash is not accepted</li><li>Noise-free guestrooms cannot be guaranteed</li>  </ul></p><br /><p><b>Special Checkin Instructions:</b></p><p> The front desk is open daily from 8 AM - 11 PM. To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. If you are planning to arrive after 9:00 PM please contact the property in advance using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. The front desk is staffed during limited hours. For any questions, please contact the property using the information on the booking confirmation.</p><br /><p><b>Checkin Time:</b></p><p> 3:00 PM</p><br /><p><b>Checkin End Time:</b></p><p> 9:00 PM</p><br /><p><b>Checkin Minimum Age:</b></p><p> 18</p><br /><p><b>Checkout Time:</b></p><p> 10:30 AM</p><br /><p><b>Room Name:</b></p><p> Shared Dormitory, Mixed Dorm, Shared Bathroom (1 bed in 4 person dorm)</p><br /><p><b>Room Description:</b></p><p> <p><strong>1 Twin Bed</strong></p><p><b>Internet</b> - Free WiFi </p><p><b>Entertainment</b> - 24-inch TV with cable channels</p><p><b>Sleep</b> - Bed sheets </p><p><b>Bathroom</b> - Shared bathroom, towels, and a hair dryer (on request)</p><p><b>Practical</b> - Laptop-compatible safe and desk</p><p><b>Comfort</b> - Daily housekeeping and heating</p><p><b>Need to Know</b> - Shared accommodations</p><p>Non-Smoking</p></p><br />CXL charges apply as follows: STARTING 07/11/2025 CXL-PENALTY FEE IS 100.00% OF BOOKING PRICE., **PACKAGE RATE**, Free WiFi, <p><b>National Ratings</b></p><p> This property does not have a Netherlands Tourist Board rating. For the benefit of our customers, we have provided a rating based on our rating system.</p><br /><p><b>Know Before You Go:</b></p><p> <ul>  <li>Only registered guests are allowed in the guestrooms. </li> <li>Some facilities may have restricted access. Guests can contact the property for details using the contact information on the booking confirmation. </li><li>Contactless check-in and contactless check-out are available.</li> </ul></p><br /><p><b>Fees:</b></p><p> <ul> <li>Fee for wired internet in public areas: EUR 1 (for 30 minutes, rates may vary)</li></ul> <p>The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. </p></p><br /><p><b>Mandatory Fees and Taxes:</b></p><p> <p>You'll be asked to pay the following charges at the property. Fees may include applicable taxes:</p> <ul><li>An effective city/local tax rate of 12.50 percent will be charged</li></ul> <p>We have included all charges provided to us by the property. </p></p><br /><p><b>Checkin Instructions:</b></p><p> <ul>  <li>Extra-person charges may apply and vary depending on property policy</li><li>Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges</li><li>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed</li><li>Special cancellation policies or charges may apply for group reservations (more than 8 rooms for the same property / stay dates)</li><li>This property accepts credit cards; cash is not accepted</li><li>Noise-free guestrooms cannot be guaranteed</li>  </ul></p><br /><p><b>Special Checkin Instructions:</b></p><p> The front desk is open daily from 8 AM - 11 PM. To make arrangements for check-in please contact the property at least 24 hours before arrival using the information on the booking confirmation. If you are planning to arrive after 9:00 PM please contact the property in advance using the information on the booking confirmation. Guests must contact the property in advance for check-in instructions. The front desk is staffed during limited hours. For any questions, please contact the property using the information on the booking confirmation.</p><br /><p><b>Checkin Time:</b></p><p> 3:00 PM</p><br /><p><b>Checkin End Time:</b></p><p> 9:00 PM</p><br /><p><b>Checkin Minimum Age:</b></p><p> 18</p><br /><p><b>Checkout Time:</b></p><p> 10:30 AM</p><br /><p><b>Room Name:</b></p><p> Shared Dormitory, Mixed Dorm, Shared Bathroom (1 bed in 4 person dorm)</p><br /><p><b>Room Description:</b></p><p> <p><strong>1 Twin Bed</strong></p><p><b>Internet</b> - Free WiFi </p><p><b>Entertainment</b> - 24-inch TV with cable channels</p><p><b>Sleep</b> - Bed sheets </p><p><b>Bathroom</b> - Shared bathroom, towels, and a hair dryer (on request)</p><p><b>Practical</b> - Laptop-compatible safe and desk</p><p><b>Comfort</b> - Daily housekeeping and heating</p><p><b>Need to Know</b> - Shared accommodations</p><p>Non-Smoking</p></p><br />, <b>TAXES:</b><BR />Tax And Fees<BR />Details: 23.19 EUR Not Inclusive<BR />Description: mandatory_tax<BR /><b>FEES:</b><BR />Other<BR />Details: 14.16 EUR Inclusive<BR />Description: tax_and_service_fee<BR />Other<BR />Details: 4.61 EUR Inclusive<BR />Description: property_fee",
+        "BookingId": "29763799",
+        "ClientReference": "1761744809053"
+    }
+}

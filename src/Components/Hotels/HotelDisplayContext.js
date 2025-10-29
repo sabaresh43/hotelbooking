@@ -7,11 +7,17 @@ const HotelDisplayContext = createContext();
 
 const initialHotelList = {
     itemList: [],
-    cityList: []
+    cityList: [],
+    loading: false 
 };
 
 const hotelListReducer = (state, action) => {
     switch (action.type) {
+         case "setLoading":  // ✅ ADD this case
+            return {
+                ...state,
+                loading: true
+            };
         case "initialize": {
             const data = Array.isArray(action.payload?.data)
                 ? action.payload.data
@@ -21,6 +27,7 @@ const hotelListReducer = (state, action) => {
                 ...state,
                 itemList: data,
                 cityList: [],
+                loading: false 
             };
         }
         default:
@@ -59,6 +66,7 @@ export const HotelDisplayProvider = ({ children, searchOptions }) => {
         }
 
         setLoading(true);
+        dispatch({ type: 'setLoading' }); 
         let responseData = [];
 
         try {

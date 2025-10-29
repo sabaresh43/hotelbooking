@@ -1,55 +1,139 @@
-import { Container, Typography, Box, TextField, Button, Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import EnterEmail from "./EnterEmail";
-import Register from "./Register";
-import Login from "./Login";
-import { LoginAndRegisterFormProvider } from "./LoginAndRegisterFormContext";
-import LoginSuccess from "./LoginSuccess";
-import RegisterSuccess from "./RegisterSuccess";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, createContext } from "react";
+import { Dialog, DialogContent, TextField, Button, Typography, Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../features/authSlice";
+
+const LoginAndRegisterFormContext = createContext();
+
+export const LoginAndRegisterFormProvider = ({ children }) => {
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  return (
+    <LoginAndRegisterFormContext.Provider value={{ loginData, setLoginData, errors, setErrors }}>
+      {children}
+    </LoginAndRegisterFormContext.Provider>
+  );
+};
 
 function LoginAndRegisterForm({ open, onClose }) {
-    const [currentStep, setCurrentStep] = useState('EnterEmail');
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
 
-    const handleNavigate = (step) => {
-        setCurrentStep(step);
-    };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    // if not login, when the dialog closed, return to the enter email page
-    const handleClose = () => {
-        if (!isAuthenticated) {
-            setCurrentStep('EnterEmail');
-        }
-        onClose();
+  const handleClose = () => {
+    if (!isAuthenticated) {
+      setEmail("");
+      setPassword("");
     }
+    onClose();
+  };
 
-    // when log out, return to the enter email page
-    useEffect(() => {
-        if (!isAuthenticated) {
-            setCurrentStep('EnterEmail');
-        }
-    }, [isAuthenticated])
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) return;
 
-    return (
-        <LoginAndRegisterFormProvider>
-            <Dialog
-                maxWidth="xs"
-                fullWidth={true}
-                open={open}
-                onClose={handleClose} >
-                <DialogContent>
-                    {currentStep === 'EnterEmail' && <EnterEmail handleNavigate={handleNavigate} onClose={handleClose} />}
-                    {currentStep === 'Register' && <Register handleNavigate={handleNavigate} onClose={handleClose} />}
-                    {currentStep === 'Login' && <Login handleNavigate={handleNavigate} onClose={handleClose} />}
-                    {currentStep === 'LoginSuccess' && <LoginSuccess handleNavigate={handleNavigate} onClose={handleClose} />}
-                    {currentStep === 'RegisterSuccess' && <RegisterSuccess handleNavigate={handleNavigate} onClose={handleClose} />}
-                </DialogContent>
-            </Dialog>
-        </LoginAndRegisterFormProvider>
-    );
+    try {
+      setLoading(true);
+      // Store locally
+      localStorage.setItem("userEmail", email);
 
-};
+      // Trigger Redux login (your existing logic)
+      await dispatch(login({ email, password }));
+
+      setLoading(false);
+      handleClose();
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
+  // Reset fields when logged out
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setEmail("");
+      setPassword("");
+    }
+  }, [isAuthenticated]);
+
+  return (
+    <LoginAndRegisterFormProvider>
+      <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose}>
+        <DialogContent>
+          <Box
+            component="form"
+            onSubmit={handleLogin}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              p: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              align="center"
+              sx={{
+                fontWeight: 700,
+                color: "primary.main",
+                mb: 1,
+              }}
+            >
+              Sign In
+            </Typography>
+
+            <TextField
+              label="Email"
+              type="email"
+              fullWidth
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{
+                "& .MuiOutlinedInput-root": { borderRadius: 2 },
+              }}
+            />
+
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{
+                "& .MuiOutlinedInput-root": { borderRadius: 2 },
+              }}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              sx={{
+                backgroundColor: "#062a4eff",
+                color: "#fff",
+                py: 1.25,
+                borderRadius: 2,
+                fontWeight: 600,
+                textTransform: "none",
+                "&:hover": { backgroundColor: "#092847ff" },
+              }}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </LoginAndRegisterFormProvider>
+  );
+}
 
 export default LoginAndRegisterForm;
