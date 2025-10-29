@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { UserInfoReuseContext } from "./BookRooms";
 import { Skeleton } from "@mui/material";
+import { trackActivity } from "../../services/hotel.service";
 
 function ClientDetails({ nextStep }) {
     const { bookingData, dispatch } = useContext(BookingContext);
@@ -64,6 +65,11 @@ function ClientDetails({ nextStep }) {
                 }
             });
         }
+
+        // Track guest details entered
+        trackActivity("guest_details_entered").catch((err) =>
+            console.error("Activity tracking failed:", err)
+        );
 
         nextStep();
         navigate("payment");

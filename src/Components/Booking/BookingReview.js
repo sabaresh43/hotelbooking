@@ -106,6 +106,7 @@ const handleSubmit = async (event) => {
         // ✅ Prepare booking payload with payable_amount
         const bookingPayload = {
             hotelId: bookingData.hotel.id,
+            hotelName: bookingData.hotel.name || bookingData.hotel.hotelName || '',
             roomCode: selectedRoom.HotelSearchCode,
             fromDate: dayjs(bookingData.from).format('YYYY-MM-DD'),
             toDate: dayjs(bookingData.to).format('YYYY-MM-DD'),
