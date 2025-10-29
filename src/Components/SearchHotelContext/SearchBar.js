@@ -10,7 +10,9 @@ import {
     Typography,
     MenuItem,
     Select,
-    Popover
+    Popover,
+    Alert,
+    Snackbar,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
@@ -24,6 +26,9 @@ import SearchContext from "./SearchContext";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getSupplier } from "../../utils/getSupplier";
 import { trackActivity } from "../../services/hotel.service";
+import LoginAndRegisterForm from "../LoginAndRegister/LoginRegisterForm";
+import { useSelector } from 'react-redux';
+
 
 // Example supplier getter — replace with your real implementation
 // import { getSupplier } from '../utils/supplier';
@@ -36,10 +41,13 @@ export default function SearchBar() {
     const isXs = useMediaQuery(theme.breakpoints.down("sm"));
     const SUPPLIER = getSupplier();
     const [anchorEl, setAnchorEl] = useState(null);
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const [showLoginDialog, setShowLoginDialog] = useState(false);
+    const [showAuthAlert, setShowAuthAlert] = useState(false);
 
     const occupancy = searchOption.occupancy[0];
 
-console.log("SUPPLIER", SUPPLIER);
+    console.log("SUPPLIER", SUPPLIER);
 
     useEffect(() => {
         if (searchOption.from) {
@@ -109,16 +117,15 @@ console.log("SUPPLIER", SUPPLIER);
             return updated;
         });
     };
-    const handleIncrease = () =>
-        setSearchOption((prev) => ({ ...prev, numberOfGuest: prev.numberOfGuest + 1 }));
 
-    const handleDecrease = () => {
-        if (searchOption.numberOfGuest > 1) {
-            setSearchOption((prev) => ({ ...prev, numberOfGuest: prev.numberOfGuest - 1 }));
-        }
-    };
 
     const handleSearch = () => {
+        if (!isAuthenticated) {
+            setShowLoginDialog(true);
+            setShowAuthAlert(true);
+            return; // Stop here if not authenticated
+        }
+
         if (!searchOption.location && !searchOption.cityCode) {
             alert("Please select a city");
             return;
@@ -147,12 +154,12 @@ console.log("SUPPLIER", SUPPLIER);
             alert("Please select ages for all children.");
             return;
         }
-        
+
         // Track hotel search activity
         trackActivity("hotel_search").catch((err) =>
             console.error("Activity tracking failed:", err)
         );
-        
+
         navigate("/hotels", { state: { searchOption: formattedSearchOption } });
     };
 
@@ -423,6 +430,29 @@ console.log("SUPPLIER", SUPPLIER);
                     SEARCH
                 </Button>
             </Box>
+            <LoginAndRegisterForm
+                open={showLoginDialog}
+                onClose={() => setShowLoginDialog(false)}
+                onLoginSuccess={() => {
+                    setShowLoginDialog(false);
+                    setShowAuthAlert(false);
+                    // Retry search after login
+                    handleSearch();
+                }}
+            />
+
+            {/* ✅ Add Auth Alert */}
+            <Snackbar
+                open={showAuthAlert}
+                autoHideDuration={4000}
+                onClose={() => setShowAuthAlert(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert severity="warning" onClose={() => setShowAuthAlert(false)}>
+                    Please login to search for hotels
+                </Alert>
+            </Snackbar>
         </Box>
+
     );
 }

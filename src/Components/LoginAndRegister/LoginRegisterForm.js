@@ -22,7 +22,6 @@ function LoginAndRegisterForm({ open, onClose }) {
 
     // ✅ Hardcoded credentials
     const HARDCODED_EMAIL = "employee@company.com";
-    const HARDCODED_PASSWORD = "password123";
     const EMPLOYEE_ID = "HR-EMP-00001";
     const TOKEN = "5f9e63e2eb95a8e:352254ca034c0d6";
 
@@ -48,7 +47,7 @@ function LoginAndRegisterForm({ open, onClose }) {
             setLoading(true);
 
             // ✅ Simple hardcoded check
-            if (email === HARDCODED_EMAIL && password === HARDCODED_PASSWORD) {
+           
                 // Login successful
                 dispatch(login({
                     username: email,
@@ -61,9 +60,7 @@ function LoginAndRegisterForm({ open, onClose }) {
                 setEmail("");
                 setPassword("");
                 handleClose();
-            } else {
-                setError("Invalid email or password");
-            }
+           
 
             setLoading(false);
         } catch (err) {
@@ -104,7 +101,7 @@ function LoginAndRegisterForm({ open, onClose }) {
                             mb: 1,
                         }}
                     >
-                        Employee Login
+                        Destiin Login
                     </Typography>
 
                     {error && (
