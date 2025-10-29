@@ -44,6 +44,7 @@ function HotelDetails() {
                     const normalizedHotel = {
                         id: detailsResponse.id,
                         name: detailsResponse.name,
+                        address: detailsResponse.address,
                         description: detailsResponse.description,
                         thumbnails: detailsResponse.thumbnails || [],
                         HotelFacilities: detailsResponse.HotelFacilities,
@@ -75,6 +76,8 @@ function HotelDetails() {
         const from = dayjs(opts.from);
         const to = dayjs(opts.to);
         const duration = to.diff(from, 'day') || 1;
+            const totalAdults = opts.occupancy?.reduce((sum, room) => sum + room.adults, 0) || opts.numberOfGuest || 2;
+
 
         dispatch({
             type: "initialize", 
@@ -84,7 +87,8 @@ function HotelDetails() {
                     from: from,
                     to: to,
                     duration: duration,
-                    numberOfGuest: opts.numberOfGuest || 2
+                    numberOfGuest: totalAdults,  // ✅ Total adults from all rooms
+                occupancy: opts.occupancy 
                 }
             }
         });

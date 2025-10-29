@@ -16,20 +16,20 @@ const HotelOverview = ({ hotel }) => {
     const hotelName = hotel.name || hotel.hotelName || 'Hotel';
     const description = hotel.description || 'No description available';
     const hotelRating = hotel.rating || hotel.Rating || 0;
-    
+
     // ✅ Extract images from thumbnails array or use photo
-    const images = hotel.thumbnails?.map(thumb => thumb.value) || 
-                   (Array.isArray(hotel.photo) ? hotel.photo : [hotel.photo]) || 
-                   [];
+    const images = hotel.thumbnails?.map(thumb => thumb.value) ||
+        (Array.isArray(hotel.photo) ? hotel.photo : [hotel.photo]) ||
+        [];
     const mainImage = images[0] || 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg';
 
     // ✅ Parse facilities from GoGlobal HTML string or array
     const parseFacilities = (facilitiesData) => {
         if (!facilitiesData) return [];
-        
+
         // If it's already an array, return it
         if (Array.isArray(facilitiesData)) return facilitiesData;
-        
+
         // If it's a string, parse it
         if (typeof facilitiesData === 'string') {
             return facilitiesData
@@ -37,14 +37,14 @@ const HotelOverview = ({ hotel }) => {
                 .map(f => f.trim())
                 .filter(f => f.length > 0);
         }
-        
+
         return [];
     };
 
     const hotelFacilities = parseFacilities(hotel.HotelFacilities);
     const roomFacilities = parseFacilities(hotel.RoomFacilities);
     const allFacilities = [...hotelFacilities, ...roomFacilities];
-    
+
     // ✅ Combine tags from old structure with facilities from new structure
     const tags = hotel.tags || allFacilities.slice(0, 15); // Limit to 15 for display
 
@@ -58,8 +58,7 @@ const HotelOverview = ({ hotel }) => {
 
     // ✅ Handle address - GoGlobal doesn't provide detailed address
     const fullAddress = hotel.address
-        ? `${hotel.address.street}, ${hotel.address.city}, ${hotel.address.province}, ${hotel.address.postalCode}, ${hotel.address.country}`
-        : hotel.location || 'Address not available';
+        ? hotel.address : 'Address not available';
 
     const ratingInfo = getRatingCategory(parseFloat(hotelRating));
 
@@ -216,6 +215,7 @@ const HotelOverview = ({ hotel }) => {
                                 {hotelName}
                             </Typography>
 
+
                             <Typography
                                 variant="body1"
                                 sx={{
@@ -224,10 +224,12 @@ const HotelOverview = ({ hotel }) => {
                                     fontSize: '1.1rem',
                                     mt: 2
                                 }}
-                            >
-                                {description.replace(/<BR \/>/g, ' ').substring(0, 500)}
-                                {description.length > 500 ? '...' : ''}
-                            </Typography>
+                                dangerouslySetInnerHTML={{
+                                    __html: description
+                                        .replace(/<br\s*\/?>/gi, '<br/>') // normalize <br>
+                                        .substring(0, 2000) + (description.length > 2000 ? '...' : '')
+                                }}
+                            />
                         </Box>
 
                         {/* Location Section */}

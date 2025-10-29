@@ -9,9 +9,7 @@ const SUPPLIER = getSupplier();
 
 const cityOptions = {
     goglobal: [
-        { label: "Chennai", code: "1175" },
-        { label: "Delhi", code: "514" },
-        { label: "Bengaluru", code: "234" },
+        { label: "Amsterdam", code: "75" },
     ],
     dida: [
         { label: "Chennai", code: "553248633981715834" },
@@ -31,7 +29,7 @@ const STORAGE_KEY = 'hotelSearchParams';
 
 export const SearchContextProvider = ({ children }) => {
     const location = useLocation();
-  
+
 
     // Initialize search options from URL params, localStorage, or defaults
     const [searchOption, setSearchOption] = useState(() => {
@@ -40,14 +38,20 @@ export const SearchContextProvider = ({ children }) => {
         const storedOptions = stored ? JSON.parse(stored) : null;
 
         const cityCode = params.get('cityCode') || storedOptions?.cityCode;
-        const cityName = getCityByCode(cityCode) || 'Chennai';
+        const cityName = getCityByCode(cityCode);
 
         const defaultOptions = {
             location: cityName,
             cityCode: cityCode || CITY_CODE_MAP[cityName.toLowerCase()],
             from: dayjs(params.get('from') || storedOptions?.from || undefined),
             to: dayjs(params.get('to') || storedOptions?.to || undefined).add(1, 'day'),
-            numberOfGuest: parseInt(params.get('guests') || storedOptions?.numberOfGuest || 1),
+            occupancy: storedOptions?.occupancy || [
+                {
+                    roomCount: 1,
+                    adults: 2,
+                    childAges: []
+                }
+            ],
             price: storedOptions?.price || [0, 3000],
             tags: storedOptions?.tags || {
                 parking: false,

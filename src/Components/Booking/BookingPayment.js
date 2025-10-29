@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid'; // Grid version 1
 import { UserInfoReuseContext } from "./BookRooms";
 import { useSelector } from "react-redux";
 import Skeleton from '@mui/material/Skeleton';
+import { trackActivity } from "../../services/hotel.service";
 
 function BookingPayment({ nextStep, prevStep }) {
     const { bookingData, dispatch } = useContext(BookingContext);
@@ -85,6 +86,11 @@ function BookingPayment({ nextStep, prevStep }) {
                 payload: { data: cardInfo }
             });
         }
+
+        // Track payment details entered
+        trackActivity("payment_details_entered").catch((err) =>
+            console.error("Activity tracking failed:", err)
+        );
 
         nextStep();
         navigate("../review");

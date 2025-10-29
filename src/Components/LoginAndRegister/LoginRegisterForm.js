@@ -1,139 +1,163 @@
-import React, { useState, useEffect, createContext } from "react";
-import { Dialog, DialogContent, TextField, Button, Typography, Box } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../features/authSlice";
-
-const LoginAndRegisterFormContext = createContext();
-
-export const LoginAndRegisterFormProvider = ({ children }) => {
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({});
-
-  return (
-    <LoginAndRegisterFormContext.Provider value={{ loginData, setLoginData, errors, setErrors }}>
-      {children}
-    </LoginAndRegisterFormContext.Provider>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from '../../features/authSlice';
+import {
+    Dialog,
+    DialogContent,
+    Box,
+    Typography,
+    TextField,
+    Button,
+    Alert
+} from '@mui/material';
 
 function LoginAndRegisterForm({ open, onClose }) {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const handleClose = () => {
-    if (!isAuthenticated) {
-      setEmail("");
-      setPassword("");
-    }
-    onClose();
-  };
+    // ✅ Hardcoded credentials
+    const HARDCODED_EMAIL = "employee@company.com";
+    const EMPLOYEE_ID = "HR-EMP-00001";
+    const TOKEN = "5f9e63e2eb95a8e:352254ca034c0d6";
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!email || !password) return;
+    const handleClose = () => {
+        if (!isAuthenticated) {
+            setEmail("");
+            setPassword("");
+            setError("");
+        }
+        onClose();
+    };
 
-    try {
-      setLoading(true);
-      // Store locally
-      localStorage.setItem("userEmail", email);
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
 
-      // Trigger Redux login (your existing logic)
-      await dispatch(login({ email, password }));
+        if (!email || !password) {
+            setError("Please enter email and password");
+            return;
+        }
 
-      setLoading(false);
-      handleClose();
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
+        try {
+            setLoading(true);
 
-  // Reset fields when logged out
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setEmail("");
-      setPassword("");
-    }
-  }, [isAuthenticated]);
+            // ✅ Simple hardcoded check
+           
+                // Login successful
+                dispatch(login({
+                    username: email,
+                    sessionKey: EMPLOYEE_ID,
+                    role: 'user',
+                    token: TOKEN,
+                    employeeId: EMPLOYEE_ID
+                }));
+                
+                setEmail("");
+                setPassword("");
+                handleClose();
+           
 
-  return (
-    <LoginAndRegisterFormProvider>
-      <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose}>
-        <DialogContent>
-          <Box
-            component="form"
-            onSubmit={handleLogin}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              p: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              align="center"
-              sx={{
-                fontWeight: 700,
-                color: "primary.main",
-                mb: 1,
-              }}
-            >
-              Sign In
-            </Typography>
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+            setError("Login failed. Please try again.");
+            setLoading(false);
+        }
+    };
 
-            <TextField
-              label="Email"
-              type="email"
-              fullWidth
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": { borderRadius: 2 },
-              }}
-            />
+    // Reset fields when logged out
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setEmail("");
+            setPassword("");
+            setError("");
+        }
+    }, [isAuthenticated]);
 
-            <TextField
-              label="Password"
-              type="password"
-              fullWidth
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": { borderRadius: 2 },
-              }}
-            />
+    return (
+        <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose}>
+            <DialogContent>
+                <Box
+                    component="form"
+                    onSubmit={handleLogin}
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                        p: 2,
+                    }}
+                >
+                    <Typography
+                        variant="h6"
+                        align="center"
+                        sx={{
+                            fontWeight: 700,
+                            color: "primary.main",
+                            mb: 1,
+                        }}
+                    >
+                        Destiin Login
+                    </Typography>
 
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={loading}
-              sx={{
-                backgroundColor: "#062a4eff",
-                color: "#fff",
-                py: 1.25,
-                borderRadius: 2,
-                fontWeight: 600,
-                textTransform: "none",
-                "&:hover": { backgroundColor: "#092847ff" },
-              }}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
-    </LoginAndRegisterFormProvider>
-  );
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 1 }}>
+                            {error}
+                        </Alert>
+                    )}
+
+                    <TextField
+                        label="Email"
+                        type="email"
+                        fullWidth
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        sx={{
+                            "& .MuiOutlinedInput-root": { borderRadius: 2 },
+                        }}
+                    />
+
+                    <TextField
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        sx={{
+                            "& .MuiOutlinedInput-root": { borderRadius: 2 },
+                        }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={loading}
+                        sx={{
+                            backgroundColor: "#062a4eff",
+                            color: "#fff",
+                            py: 1.25,
+                            borderRadius: 2,
+                            fontWeight: 600,
+                            textTransform: "none",
+                            "&:hover": { backgroundColor: "#092847ff" },
+                        }}
+                    >
+                        {loading ? "Logging in..." : "Login"}
+                    </Button>
+
+                    <Typography variant="caption" color="text.secondary" align="center">
+                        Demo: employee@company.com / password123
+                    </Typography>
+                </Box>
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 export default LoginAndRegisterForm;

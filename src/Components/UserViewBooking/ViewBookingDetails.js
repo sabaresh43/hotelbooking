@@ -30,8 +30,8 @@ function ViewBookingDetails() {
                         <Stack direction="row" alignItems="center" spacing={1}>
                             <LocationOnIcon color="action" />
                             <Typography variant="body2" color="text.secondary">
-                                {location.state.bookingDetails.hotel.Address
-                                    ? `${location.state.bookingDetails.hotel.Address.StreetAddress}, ${location.state.bookingDetails.hotel.Address.City}, ${location.state.bookingDetails.hotel.Address.StateProvince}, ${location.state.bookingDetails.hotel.Address.PostalCode}, ${location.state.bookingDetails.hotel.Address.Country}`
+                                {location.state.bookingDetails.hotel.address
+                                    ?location.state.bookingDetails.hotel.address 
                                     : 'Address not available'}
                             </Typography>
                         </Stack>

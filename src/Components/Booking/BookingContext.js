@@ -13,6 +13,7 @@ const bookingReducer = (state, action) => {
                 to: action.payload.data.to,
                 duration: action.payload.data.duration,
                 numberOfGuest: action.payload.data.numberOfGuest,
+                occupancy: action.payload.data.occupancy, 
                 isBookingSuccess: false
             };
         case 'setBookingDetails':

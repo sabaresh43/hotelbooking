@@ -22,6 +22,7 @@ import { Skeleton } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SlickSlider from "react-slick";
+import { trackActivity } from "../../services/hotel.service";
 
 const facilityIcons = {
     wifi: <WifiIcon sx={{ fontSize: 20, color: 'primary.main' }} />,
@@ -222,7 +223,7 @@ function ViewHotels() {
                                         name="price"
                                         min={0}
                                         step={1}
-                                        max={3000}
+                                        max={10000}
                                         value={searchOption.price}
                                         onChange={handleChange}
                                         valueLabelDisplay="auto"
@@ -489,7 +490,7 @@ function ViewHotels() {
                                                                         /night
                                                                     </Typography>
                                                                 </Typography>
-                                                                {item.rooms?.taxesFees > 0 && (
+                                                                {/* {item.rooms?.taxesFees > 0 && (
                                                                     <Typography variant="caption" color="text.secondary" display="block">
 
                                                                         {(() => {
@@ -503,13 +504,18 @@ function ViewHotels() {
                                                                         })()}
 
                                                                     </Typography>
-                                                                )}
+                                                                )} */}
                                                             </Box>
 
                                                             <Button
                                                                 variant="contained"
                                                                 component={Link}
                                                                 to={`/Hotels/${item.id}`}
+                                                                onClick={() => {
+                                                                    trackActivity("view_hotel_details").catch((err) =>
+                                                                        console.error("Activity tracking failed:", err)
+                                                                    );
+                                                                }}
                                                                 sx={{
                                                                     borderRadius: 2,
                                                                     px: 3,

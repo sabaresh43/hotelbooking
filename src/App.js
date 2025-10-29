@@ -7,9 +7,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import ProtectedAdminRoute from './ProtectedAdminRoute';
 import { SupplierProvider } from './helpers/SupplierProvider';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import {restoreSession} from './features/authSlice';
+
 
 function App() {
+const dispatch = useDispatch();
 
+    // ✅ Restore session on app load
+    useEffect(() => {
+        dispatch(restoreSession());
+    }, [dispatch]);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <SupplierProvider>
