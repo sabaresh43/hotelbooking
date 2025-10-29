@@ -1,4 +1,4 @@
-import { Paper, Typography, Button, Box, Stack, Divider, Alert} from '@mui/material';
+import { Paper, Typography, Button, Box, Stack, Divider, Alert, Card, CardContent, } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ export default function BookingSuccess() {
     const { reward } = useReward('rewardId', 'confetti');
     const location = useLocation();
     const bookingData = location.state?.bookingData;
-    const confirmation = bookingData?.confirmation; // ✅ Get confirmation data
+    const confirmation = bookingData?.confirmation;
     
     console.log('Booking Data:', bookingData);
     console.log('Confirmation:', confirmation);
@@ -17,6 +17,19 @@ export default function BookingSuccess() {
     useEffect(() => {
         reward();
     }, [reward]);
+
+    // ✅ Calculate tax breakdown safely
+    const room = bookingData?.rooms?.[0];
+    const allTaxes = room?.Tax || [];
+    const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
+    const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
+    const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + (parseFloat(tax.Amount) || 0), 0);
+    const basePrice = parseFloat(room?.TotalPrice || room?.baseRate || 0);
+    const currency = confirmation?.Currency || room?.Currency || 'USD';
+    
+    // ✅ Safe total price calculation
+    const totalPaid = parseFloat(confirmation?.TotalPrice || bookingData?.totalPrice || 0);
+    const isValidTotal = !isNaN(totalPaid) && totalPaid > 0;
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', px: 6, paddingBottom: 6 }}>
@@ -117,16 +130,56 @@ export default function BookingSuccess() {
                             
                             <Divider sx={{ my: 2 }} />
                             
-                            <Box sx={{ p: 2, bgcolor: 'success.light', borderRadius: 1 }}>
-                                <Typography variant="h6" color="success.dark">
-                                    <strong>Total Paid:</strong> {confirmation?.Currency || bookingData.rooms[0].Currency} {confirmation?.TotalPrice || bookingData.totalPrice}
-                                </Typography>
-                                {confirmation?.fees?.fee && (
-                                    <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
-                                        (Includes {confirmation.fees.fee.currency} {confirmation.fees.fee.amount} in taxes & fees)
-                                    </Typography>
-                                )}
-                            </Box>
+                            {/* ✅ Price breakdown - same style as BookRooms */}
+                            <Card sx={{ boxShadow: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>Price Summary</Typography>
+                                    
+                                    <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+                                        <Typography variant="body2">
+                                            Room price ({bookingData.duration} {bookingData.duration > 1 ? 'nights' : 'night'})
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {currency} {basePrice.toFixed(2)}
+                                        </Typography>
+                                    </Stack>
+
+                                    {/* ✅ Show inclusive taxes */}
+                                    {inclusiveTaxes.length > 0 && (
+                                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+                                            <Typography variant="caption" color="success.main">
+                                                Taxes & fees
+                                            </Typography>
+                                            <Typography variant="caption" color="success.main">
+                                                Included
+                                            </Typography>
+                                        </Stack>
+                                    )}
+
+                                    {/* ✅ Show non-inclusive taxes */}
+                                    {nonInclusiveTaxes.length > 0 && (
+                                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+                                            <Typography variant="caption" color="warning.main">
+                                                Tax
+                                            </Typography>
+                                            <Typography variant="caption" color="warning.main">
+                                                {currency} {totalNonInclusiveTax.toFixed(2)}
+                                            </Typography>
+                                        </Stack>
+                                    )}
+                                    
+                                    <Divider sx={{ my: 1 }} />
+                                    
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", bgcolor: "success.light", p: 2, borderRadius: 1 }}>
+                                        <Typography variant="h6" color="black" fontWeight="bold">
+                                            Total Paid
+                                        </Typography>
+                                        <Typography variant="h6" color="black" fontWeight="bold">
+                                            {isValidTotal ? `${currency} ${totalPaid.toFixed(2)}` : 'N/A'}
+                                        </Typography>
+                                    </Box>
+                                </CardContent>
+                            </Card>
 
                             {/* ✅ Cancellation policy */}
                             {confirmation?.CancellationDeadline && (

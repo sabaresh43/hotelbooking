@@ -360,7 +360,7 @@ function BookingPayment({ nextStep, prevStep }) {
                                 control={control}
                                 name="cardInfo.address.province"
                                 defaultValue=""
-                                rules={{ required: { value: true, message: 'Invalid input' }, pattern: { value: /^(?:AB|BC|MB|N[BLTSU]|ON|PE|QC|SK|YT){1}$/, message: "Province format is wrong, it should be 2 upper case letters" } }}
+                                rules={{ required: { value: true, message: 'Province is required' } }}
                                 render={({ field: { name, value, onChange }, fieldState: { error }, formState }) => (
                                     <TextField
                                         margin="normal"
@@ -372,7 +372,8 @@ function BookingPayment({ nextStep, prevStep }) {
                                         variant="standard"
                                         type="text"
                                         error={!!error}
-                                        helperText={error ? error.message : "2 upper case letters, e.g. \"ON\""}
+                                        helperText={error ? error.message : "e.g. \"Ontario\" or \"ON\""}
+
                                         value={value}
                                         onChange={onChange}
                                     />
@@ -384,12 +385,7 @@ function BookingPayment({ nextStep, prevStep }) {
                                 control={control}
                                 name="cardInfo.address.postalCode"
                                 defaultValue=""
-                                rules={{
-                                    required: { value: true, message: 'Invalid input' }, pattern: {
-                                        value: /^([ABCEGHJKLMNPRSTVXY][0-9][A-Z](?: [0-9][A-Z][0-9])?)$/
-                                        , message: "Postal code format is incorrect, it should be like \"M1A 1M1\" or \"M1A1M1\""
-                                    }
-                                }}
+                                rules={{ required: { value: true, message: 'Postal code is required' } }}
                                 render={({ field: { name, value, onChange }, fieldState: { error }, formState }) => (
                                     <TextField
                                         margin="normal"
@@ -401,7 +397,7 @@ function BookingPayment({ nextStep, prevStep }) {
                                         variant="standard"
                                         type="text"
                                         error={!!error}
-                                        helperText={error ? error.message : "e.g. \"M1A 1M1\""}
+                                        helperText={error ? error.message : "e.g. \"M1A 1M1\" or \"123456\""}
                                         value={value}
                                         onChange={onChange}
                                     />

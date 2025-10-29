@@ -65,7 +65,7 @@ const displayDataReducer = (state, action) => {
 
                 // Filter by price range
                 if (roomPrice < priceRange[0] || roomPrice > priceRange[1]) {
-                    console.log(`Hotel ${hotel.name} price ${roomPrice} not in range $${priceRange[0]} - $${priceRange[1]}`);
+                    console.log(`Hotel ${hotel.name} price ${roomPrice} not in range €${priceRange[0]} - €${priceRange[1]}`);
                     return false;
                 }
 
@@ -134,6 +134,11 @@ function ViewHotels() {
     };
 
     useEffect(() => {
+
+        if (hotelList.loading) {
+            dispatchDisplay({ type: 'setIsLoading' });
+            return;
+        }
         if (hotelList.itemList.length === 0) {
             dispatchDisplay({ type: 'setIsLoaded' });
             return;
@@ -217,11 +222,11 @@ function ViewHotels() {
                                         name="price"
                                         min={0}
                                         step={1}
-                                        max={500}
+                                        max={3000}
                                         value={searchOption.price}
                                         onChange={handleChange}
                                         valueLabelDisplay="auto"
-                                        valueLabelFormat={(value) => `$${value}`}
+                                        valueLabelFormat={(value) => `€${value}`}
                                         sx={{ my: 1, mx: 'auto', justifyContent: 'center', width: '95%' }}
                                     />
                                 </Box>
@@ -361,19 +366,19 @@ function ViewHotels() {
                                                 <Grid size={{ xs: 12, sm: 4 }}>
                                                     <Link to={`/Hotels/${item.id}`} style={{ textDecoration: 'none' }}>
                                                         <Box sx={{ position: 'relative', width: '100%', height: 200, borderRadius: 1, overflow: 'hidden' }}>
-                                                            {Array.isArray(item.thumbnials) && item.thumbnials.length > 0 ? (
-                                                                item.thumbnials.length > 1 ? (
+                                                            {Array.isArray(item.thumbnails) && item.thumbnails.length > 0 ? (
+                                                                item.thumbnails.length > 1 ? (
                                                                     <SlickSlider
                                                                         dots={true}
                                                                         infinite={true}
-                                                                        speed={500}
+                                                                        speed={1000}
                                                                         slidesToShow={1}
                                                                         slidesToScroll={1}
                                                                         arrows={true}
                                                                         autoplay={true}
                                                                         autoplaySpeed={3000}
                                                                     >
-                                                                        {item.thumbnials.map((img, idx) => (
+                                                                        {item.thumbnails.map((img, idx) => (
                                                                             <Box key={idx} sx={{ width: '100%', height: 200 }}>
                                                                                 <CardMedia
                                                                                     component="img"
@@ -392,7 +397,7 @@ function ViewHotels() {
                                                                     <CardMedia
                                                                         component="img"
                                                                         height="200"
-                                                                        image={item.thumbnials[0]}
+                                                                        image={item.thumbnails[0]}
                                                                         alt={item.name}
                                                                         sx={{
                                                                             borderRadius: 1,
@@ -471,14 +476,32 @@ function ViewHotels() {
                                                                     Starting from
                                                                 </Typography>
                                                                 <Typography variant="h6" color="primary.main" sx={{ fontWeight: 'bold' }}>
-                                                                    ${item.rooms?.price || 0}
+                                                                    {(() => {
+                                                                        const currencySymbolMap = {
+                                                                            USD: '$',
+                                                                            INR: '₹',
+                                                                            EUR: '€',
+                                                                        };
+                                                                        const symbol = currencySymbolMap[item.rooms.currency?.toUpperCase()] || item.rooms.currency;
+                                                                        return `${symbol} ${item.rooms?.price || 0}`;
+                                                                    })()}
                                                                     <Typography component="span" variant="caption" color="text.secondary">
                                                                         /night
                                                                     </Typography>
                                                                 </Typography>
                                                                 {item.rooms?.taxesFees > 0 && (
                                                                     <Typography variant="caption" color="text.secondary" display="block">
-                                                                        +${item.rooms.taxesFees} taxes & fees
+
+                                                                        {(() => {
+                                                                            const currencySymbolMap = {
+                                                                                USD: '$',
+                                                                                INR: '₹',
+                                                                                EUR: '€',
+                                                                            };
+                                                                            const symbol = currencySymbolMap[item.rooms.currency?.toUpperCase()] || item.rooms.currency;
+                                                                            return `${symbol} ${item.rooms?.taxesFees || 0} taxes & fees`;
+                                                                        })()}
+
                                                                     </Typography>
                                                                 )}
                                                             </Box>

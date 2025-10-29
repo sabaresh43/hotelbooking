@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CircularProgress, Container, Divider, Stack, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { Box, Card, CardContent, CircularProgress, Container, Divider, Stack, Step, StepLabel,Alert, Stepper, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import BookingContext from "./BookingContext";
@@ -12,7 +12,7 @@ import BookingSuccess from "./BookingSuccess";
 import AdminRestrictedRoute from "../../AdminRestrictedRoute";
 import { useSelector } from "react-redux";
 import { findUserById } from "../../helpers/users";
-import { useMediaQuery, useTheme ,Chip} from "@mui/material";
+import { useMediaQuery, useTheme, Chip } from "@mui/material";
 
 const steps = ['Booking details', 'Payment details', 'Review your booking'];
 
@@ -123,7 +123,7 @@ function BookRooms() {
     } else {
         // ✅ Handle both old and new hotel structures
         const hotelName = bookingData.hotel.name || bookingData.hotel.hotelName || 'Hotel';
-        const hotelAddress = bookingData.hotel.address 
+        const hotelAddress = bookingData.hotel.address
             ? `${bookingData.hotel.address.street}, ${bookingData.hotel.address.city}, ${bookingData.hotel.address.province}, ${bookingData.hotel.address.postalCode}, ${bookingData.hotel.address.country}`
             : bookingData.hotel.location || 'Address not available';
 
@@ -182,9 +182,9 @@ function BookRooms() {
                                                         {room.Description || room.Rooms?.[0] || 'Room'}
                                                     </Typography>
                                                     {room.RoomBasis && (
-                                                        <Chip 
-                                                            label={room.RoomBasis} 
-                                                            size="small" 
+                                                        <Chip
+                                                            label={room.RoomBasis}
+                                                            size="small"
                                                             sx={{ mt: 0.5 }}
                                                         />
                                                     )}
@@ -195,26 +195,52 @@ function BookRooms() {
                                     <Card sx={{ boxShadow: 3 }}>
                                         <CardContent>
                                             <Typography variant="h6" gutterBottom>Your price summary</Typography>
-                                            {bookingData.rooms.map((room, index) => (
-                                                <Box key={index} sx={{ mb: 1 }}>
-                                                    <Stack direction="row" justifyContent="space-between">
-                                                        <Typography variant="body2">Room price ({bookingData.duration} nights)</Typography>
-                                                        <Typography variant="body2">
-                                                            {room.Currency || 'USD'} {(room.TotalPrice || room.baseRate || 0).toFixed(2)}
-                                                        </Typography>
-                                                    </Stack>
-                                                    {room.Fee && room.Fee.length > 0 && (
+                                            {bookingData.rooms.map((room, index) => {
+                                                // ✅ Calculate tax breakdown
+                                                const allTaxes = room.Tax || [];
+            const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
+            const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
+            const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0);
+            const basePrice = room.TotalPrice || room.baseRate || 0;
+            const currency = room.Currency || 'USD';
+                                                return (
+                                                    <Box key={index} sx={{ mb: 2 }}>
                                                         <Stack direction="row" justifyContent="space-between">
-                                                            <Typography variant="caption" color="text.secondary">
-                                                                Taxes & Fees
+                                                            <Typography variant="body2">
+                                                                Room price ({bookingData.duration} {bookingData.duration > 1 ? 'nights' : 'night'})
                                                             </Typography>
-                                                            <Typography variant="caption" color="text.secondary">
-                                                                {room.Fee[0].Currency} {room.Fee[0].Amount}
+                                                            <Typography variant="body2">
+                                                                {room.Currency || 'USD'} {basePrice.toFixed(2)}
                                                             </Typography>
                                                         </Stack>
-                                                    )}
-                                                </Box>
-                                            ))}
+
+                                                        {/* ✅ Show inclusive taxes */}
+                                                        {inclusiveTaxes.length > 0 && (
+                                                            <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
+                                                                <Typography variant="caption" color="success.main">
+                                                                    Taxes & fees 
+                                                                </Typography>
+                                                                <Typography variant="caption" color="success.main">
+                                                                    Included
+                                                                </Typography>
+                                                            </Stack>
+                                                        )}
+
+                                                        {/* ✅ Show non-inclusive taxes */}
+                                                        {nonInclusiveTaxes.length > 0 && (
+                                                            <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
+                                                                <Typography variant="caption" color="warning.main">
+                                                                    Tax
+                                                                </Typography>
+                                                                <Typography variant="caption" color="warning.main">
+                                                                    {room.Currency || 'USD'} {totalNonInclusiveTax.toFixed(2)}
+                                                                </Typography>
+                                                            </Stack>
+                                                        )}
+                                                    </Box>
+                                                );
+                                            })}
+                                           
                                             <Divider sx={{ my: 1 }} />
                                             <Box sx={{ display: "flex", flexWrap: 'wrap', justifyContent: "space-between", bgcolor: "primary.main", color: "common.white", p: 2, borderRadius: 1 }}>
                                                 <Typography variant="h5">Total Price</Typography>
