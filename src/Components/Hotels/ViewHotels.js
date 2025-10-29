@@ -22,6 +22,7 @@ import { Skeleton } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SlickSlider from "react-slick";
+import { trackActivity } from "../../services/hotel.service";
 
 const facilityIcons = {
     wifi: <WifiIcon sx={{ fontSize: 20, color: 'primary.main' }} />,
@@ -510,6 +511,11 @@ function ViewHotels() {
                                                                 variant="contained"
                                                                 component={Link}
                                                                 to={`/Hotels/${item.id}`}
+                                                                onClick={() => {
+                                                                    trackActivity("view_hotel_details").catch((err) =>
+                                                                        console.error("Activity tracking failed:", err)
+                                                                    );
+                                                                }}
                                                                 sx={{
                                                                     borderRadius: 2,
                                                                     px: 3,
