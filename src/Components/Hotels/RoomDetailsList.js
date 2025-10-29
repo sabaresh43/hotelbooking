@@ -231,7 +231,7 @@ function RoomDetailsList({ rooms }) {
                                     {/* ✅ Show tax info */}
                                     {inclusiveTaxes.length > 0 && (
                                         <Typography variant="caption" color="success.main">
-                                            (Taxes included)
+                                            (inclusive of taxes {currency} {inclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0) * totalRoomsNeeded})
                                         </Typography>
                                     )}
 

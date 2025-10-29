@@ -222,7 +222,7 @@ const methods = useForm({
                                                                     Taxes & fees 
                                                                 </Typography>
                                                                 <Typography variant="caption" color="success.main">
-                                                                    Included
+                                                                    Included {currency} {inclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0)}
                                                                 </Typography>
                                                             </Stack>
                                                         )}
