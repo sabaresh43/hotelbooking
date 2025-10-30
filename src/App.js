@@ -10,6 +10,7 @@ import { SupplierProvider } from './helpers/SupplierProvider';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {restoreSession} from './features/authSlice';
+import { UserViewBookingContextProvider } from './Components/UserViewBooking/UserViewBookingContext';
 
 
 function App() {
@@ -22,7 +23,8 @@ const dispatch = useDispatch();
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <SupplierProvider>
-        <Router>
+        <UserViewBookingContextProvider>
+               <Router>
           <Routes>
             <Route path="/*" element={<Home />} />
             <Route path="/Dashboard/*" element={<ProtectedAdminRoute>
@@ -30,6 +32,7 @@ const dispatch = useDispatch();
             </ProtectedAdminRoute>} />
           </Routes>
         </Router>
+         </UserViewBookingContextProvider>
       </SupplierProvider>
 
     </LocalizationProvider >

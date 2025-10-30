@@ -45,7 +45,7 @@ export const trackActivity = async (bookingStage) => {
 export const createActivity = async (bookingStage) => {
   try {
     const payload = {
-      employee_id: getEmployeeId(),
+      employee: getEmployeeId(),
       booking_stage: bookingStage,
     };
 
@@ -72,10 +72,7 @@ const updateBookingStatus = async (bookingDetails) => {
   try {
     const payload = {
       employee_id: bookingDetails.employee_id || getEmployeeId(),
-      // employee_name:
-      //   bookingDetails.employee_name ||
-      //   localStorage.getItem("employeeName") ||
-      //   "Guest User",
+    
       booking_id: bookingDetails.booking_id || "",
       check_in_date: bookingDetails.check_in_date || "",
       check_out_date: bookingDetails.check_out_date || "",
@@ -92,7 +89,7 @@ const updateBookingStatus = async (bookingDetails) => {
     };
 
     await axios.post(
-      `${FRAPPE_URL}.employee_activity.employee_activity.create_booking`,
+      `${FRAPPE_URL}.travel_bookings.travel_bookings.create_booking`,
       payload,
       {
         headers: {
@@ -107,6 +104,30 @@ const updateBookingStatus = async (bookingDetails) => {
   } catch (error) {
     console.error("Failed to update booking status:", error);
   }
+};
+
+export const getUserBookings = async () => {
+    try {
+        const employeeId = getEmployeeId();
+        const token = getToken();
+
+        const response = await axios.post(
+            `${FRAPPE_URL}.travel_bookings.travel_bookings.get_all_bookings`,
+            { employee_id: employeeId },
+            {
+                headers: {
+                    Authorization: `token ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        console.log("📋 Bookings fetched:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch user bookings:", error);
+        throw error;
+    }
 };
 
 export const hotelService = {
@@ -207,9 +228,12 @@ export const hotelService = {
       console.log("Booking API response:", response);
 
       if (
-        response?.data?.BookingId &&
-        response.data.BookingStatus?.status === "Confirmed"
+       true
       ) {
+         const bookingResult = response?.data?.data || response?.data;
+        const roomName = bookingResult.Hotel?.RatePlanList?.[0]?.RoomName || 
+                           bookingData.rooms?.[0]?.roomCode || 
+                           bookingData.roomCode || "";
         updateBookingStatus({
           booking_id: response.data.BookingId,
           check_in_date: bookingData.fromDate,
@@ -222,7 +246,7 @@ export const hotelService = {
             ) || 0,
           hotel_name: bookingData.hotelName || "",
           supplier: SUPPLIER,
-          room_type:
+          room_type:roomName||
             bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
           payment_status: "Success",
           payment_method: "Card",
@@ -261,74 +285,24 @@ export const hotelService = {
   },
 
   // Get booking list by employee ID
-  getBookingsByEmployeeId: async (employeeId) => {
-    // ✅ HARDCODED RESPONSE FOR TESTING
-    const hardcodedResponse = {
-      success: true,
-      message: [
-        {
-          employee_id: "HR-EMP-00001",
-          employee_name: "John Doe",
-          booking_id: "15502615652",
-          supplier: "dida",
-          check_in_date: "2025-12-21",
-          check_out_date: "2025-12-24",
-          booking_status: "Success",
-          guest_count: 2,
-          hotel_name: "The Park Chennai",
-          room_type: "Deluxe Room Queen",
-          payment_status: "Success",
-          payment_method: "Card",
-          total_price: 299.07,
-          price: 299.07,
-          currency: "USD",
-        },
-        {
-          employee_id: "HR-EMP-00001",
-          employee_name: "John Doe",
-          booking_id: "29763799",
-          supplier: "goglobal",
-          check_in_date: "2025-11-12",
-          check_out_date: "2025-11-23",
-          booking_status: "Success",
-          guest_count: 1,
-          hotel_name: "PRINCESS HOTEL",
-          room_type: "Shared Dormitory Mixed Dorm",
-          payment_status: "Success",
-          payment_method: "Card",
-          total_price: 204.0,
-          price: 204.0,
-          currency: "EUR",
-        },
-      ],
-    };
-
-    console.log("📋 Returning hardcoded bookings:", hardcodedResponse);
-    return hardcodedResponse;
-
-    /* // 🔒 COMMENTED OUT - Real API call
-    try {
-      const response = await axios.get(
-        `${FRAPPE_URL}.employee_activity.employee_activity.get_bookings`,
-        {
-          params: {
-            employee_id: employeeId || getEmployeeId(),
-          },
-          headers: {
-            Authorization: `token ${getToken()}`,
-            "Content-Type": "application/json",
-          },
+   getUserBookings: async () => {
+        try {
+            const response = await getUserBookings();
+            return {
+                success: response.message?.success || false,
+                bookings: response.message?.data || [],
+                count: response.message?.count || 0
+            };
+        } catch (error) {
+            console.error("Failed to fetch bookings:", error);
+            return {
+                success: false,
+                bookings: [],
+                count: 0,
+                error: error.message
+            };
         }
-      );
-      console.log("Bookings fetched:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Failed to fetch bookings:", error);
-      return { message: [], success: false };
-    }
-    */
-  },
-
+    },
   // Get booking details by booking ID and supplier
   getBookingDetails: async (bookingId, supplier) => {
     try {
