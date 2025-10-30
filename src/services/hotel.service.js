@@ -42,6 +42,31 @@ export const trackActivity = async (bookingStage) => {
   }
 };
 
+export const createActivity = async (bookingStage) => {
+  try {
+    const payload = {
+      employee_id: getEmployeeId(),
+      booking_stage: bookingStage,
+    };
+
+    await axios.post(
+      `${FRAPPE_URL}.employee_activity.employee_activity.create_activity`,
+      payload,
+      {
+        headers: {
+          Authorization: `token ${getToken()}`,
+          "Content-Type": "application/json",
+          Cookie:
+            "full_name=Guest; sid=Guest; system_user=no; user_id=Guest; user_lang=en",
+        },
+      }
+    );
+    console.log("Activity tracked:", bookingStage);
+  } catch (error) {
+    console.error("Failed to track activity:", error);
+  }
+};
+
 // Booking status update function
 const updateBookingStatus = async (bookingDetails) => {
   try {

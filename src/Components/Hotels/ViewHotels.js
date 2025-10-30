@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, CardMedia, Checkbox, Container, Divider, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Paper, Rating, Slider, Stack, Switch, Typography, Chip, Card, CardContent } from "@mui/material";
 import SearchBar from "../SearchHotelContext/SearchBar";
 import HotelDisplayContext from "./HotelDisplayContext";
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useRef } from "react";
 import { Image } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import SearchContext from "../SearchHotelContext/SearchContext";
@@ -23,6 +23,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SlickSlider from "react-slick";
 import { trackActivity } from "../../services/hotel.service";
+
 
 const facilityIcons = {
     wifi: <WifiIcon sx={{ fontSize: 20, color: 'primary.main' }} />,
@@ -117,12 +118,36 @@ const displayDataReducer = (state, action) => {
 function ViewHotels() {
     const { dispatch, hotelList, reloadHotelList } = useContext(HotelDisplayContext);
     const [displayData, dispatchDisplay] = useReducer(displayDataReducer, initialDisplayData);
-    const { searchOption, setSearchOption } = useContext(SearchContext);
+    const { searchOption, setSearchOption,updatePriceRange} = useContext(SearchContext);
     const debouncedFilterData = useDebounce(dispatchDisplay, 1000);
+
+    // ✅ Get dynamic min/max from hotelList
+    const minPrice = hotelList.minPrice || 0;
+    const maxPrice = hotelList.maxPrice || 3000;
+
+    // ✅ Track if we've updated price range for this search
+    const priceUpdatedRef = useRef(false);
+
+    // ✅ Update price range when hotels load (only once per search)
+    useEffect(() => {
+        if (!hotelList.loading && hotelList.itemList.length > 0 && !priceUpdatedRef.current) {
+            if (minPrice >= 0 && maxPrice > minPrice) {
+                console.log('✅ Updating price range:', { minPrice, maxPrice });
+                updatePriceRange(minPrice, maxPrice);
+                priceUpdatedRef.current = true;
+            }
+        }
+
+        // Reset when new search starts
+        if (hotelList.loading) {
+            priceUpdatedRef.current = false;
+        }
+    }, [hotelList.loading, hotelList.itemList.length, minPrice, maxPrice]);
 
     const handleChange = (event) => {
         setSearchOption({ ...searchOption, [event.target.name]: event.target.value });
     };
+
 
     const handleCheck = (event) => {
         setSearchOption({
@@ -160,6 +185,11 @@ function ViewHotels() {
             }
         });
     }, [hotelList, debouncedFilterData, searchOption.rating, searchOption.tags, searchOption.price, searchOption.numberOfGuest]);
+
+    const getCurrencySymbol = () => {
+        const currency = hotelList.itemList[0]?.rooms?.currency || 'EUR';
+        return currency === 'USD' ? '$' : currency === 'INR' ? '₹' : '€';
+    };
 
     return (
         <Box sx={{ backgroundColor: 'grey.50', minHeight: '100vh' }}>
@@ -211,25 +241,36 @@ function ViewHotels() {
                                         borderRadius: 1
                                     }}>
                                         <Typography variant="text">
-                                            $ {searchOption.price[0]} - {searchOption.price[1]}
+                                            {getCurrencySymbol()} {searchOption.price[0]} - {searchOption.price[1]}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary">
+                                        {/* <Typography variant="caption" color="text.secondary">
                                             per night
-                                        </Typography>
+                                        </Typography> */}
                                     </Box>
 
                                     <Slider
                                         getAriaLabel={() => 'Price range'}
                                         name="price"
-                                        min={0}
-                                        step={1}
-                                        max={10000}
+                                        min={minPrice}  // ✅ Dynamic min from results
+                                        step={Math.max(1, Math.ceil((maxPrice - minPrice) / 100))}
+                                        max={maxPrice}  // ✅ Dynamic max from results
+
                                         value={searchOption.price}
                                         onChange={handleChange}
                                         valueLabelDisplay="auto"
                                         valueLabelFormat={(value) => `€${value}`}
                                         sx={{ my: 1, mx: 'auto', justifyContent: 'center', width: '95%' }}
                                     />
+
+                                     {/* ✅ Show min/max labels */}
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, px: 1 }}>
+                                        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                                            Min: {getCurrencySymbol()}{minPrice}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                                            Max: {getCurrencySymbol()}{maxPrice}
+                                        </Typography>
+                                    </Box>
                                 </Box>
 
                                 <Divider />
@@ -486,7 +527,7 @@ function ViewHotels() {
                                                                         const symbol = currencySymbolMap[item.rooms.currency?.toUpperCase()] || item.rooms.currency;
                                                                         return `${symbol} ${item.rooms?.price || 0}`;
                                                                     })()}
-                                                                   
+
                                                                 </Typography>
                                                                 {/* {item.rooms?.taxesFees > 0 && (
                                                                     <Typography variant="caption" color="text.secondary" display="block">
