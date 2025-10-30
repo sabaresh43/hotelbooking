@@ -8,7 +8,7 @@ const HotelDisplayContext = createContext();
 const initialHotelList = {
     itemList: [],
     cityList: [],
-    loading: false 
+    loading: false,
 };
 
 const hotelListReducer = (state, action) => {

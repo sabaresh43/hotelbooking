@@ -164,12 +164,12 @@ const methods = useForm({
                                                 <Box>
                                                     <Typography color="text.secondary">Check-in</Typography>
                                                     <Typography variant="subtitle1">{dayjs(bookingData.from).format('dddd, MMMM D, YYYY')}</Typography>
-                                                    <Typography variant="body2">From 16:00</Typography>
+                                                   
                                                 </Box>
                                                 <Box>
                                                     <Typography color="text.secondary">Check-out</Typography>
                                                     <Typography variant="subtitle1">{dayjs(bookingData.to).format('dddd, MMMM D, YYYY')}</Typography>
-                                                    <Typography variant="body2">Until 12:00</Typography>
+                                                   
                                                 </Box>
                                             </Stack>
                                             <Typography color="text.secondary" mt={1}>You selected</Typography>

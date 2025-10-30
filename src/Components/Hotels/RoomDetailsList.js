@@ -116,7 +116,7 @@ function RoomDetailsList({ rooms }) {
             {/* ✅ Info alert for multiple rooms */}
             {totalRoomsNeeded > 1 && (
                 <Alert severity="info" sx={{ mb: 3 }}>
-                    You are booking {totalRoomsNeeded} rooms. Select any room type and it will be booked {totalRoomsNeeded} times.
+                    You are booking {totalRoomsNeeded} rooms. Select any room type, {totalRoomsNeeded} rooms will be booked for the same.
                 </Alert>
             )}
 

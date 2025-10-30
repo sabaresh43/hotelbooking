@@ -79,16 +79,7 @@ function ClientDetails({ nextStep }) {
         setUseExistingInfo(event.target.checked);
     }
 
-    // check if phone number is valid
-    // const watchPhone = watch("clientInfo.phone");
-    // useEffect(() => {
-    //     const phoneNumberRegex = new RegExp('^[0-9]$');
-    //     if (watchPhone.trim() && !phoneNumberRegex.test(watchPhone.trim())) {
-    //         setError("clientInfo.phone", { type: "format", message: "Phone number should be digits" });
-    //     } else {
-    //         clearErrors("clientInfo.phone");
-    //     }
-    // }, [watchPhone]);
+
 
     if (!userInfoReuseData.isLoaded) {
         return (
@@ -228,7 +219,7 @@ function ClientDetails({ nextStep }) {
                                                 id={name}
                                                 label="First Name"
                                                 name={name}
-                                                autoComplete="firstName"
+                                                autoComplete="off"
                                                 type="text"
                                                 error={!!error}
                                                 helperText={error ? error.message : null}
@@ -252,7 +243,7 @@ function ClientDetails({ nextStep }) {
                                                 id={name}
                                                 label="Last Name"
                                                 name={name}
-                                                autoComplete="lastName"
+                                                autoComplete="off"
                                                 type="text"
                                                 error={!!error}
                                                 helperText={error ? error.message : null}
@@ -277,7 +268,7 @@ function ClientDetails({ nextStep }) {
                                         id={name}
                                         label="Email Address"
                                         name={name}
-                                        autoComplete="email"
+                                        autoComplete="off"
                                         type="email"
                                         error={!!error}
                                         helperText={error ? error.message : null}
@@ -292,7 +283,7 @@ function ClientDetails({ nextStep }) {
                                 defaultValue=""
                                 rules={{
                                     required: { value: true, message: 'Invalid input' },
-                                    pattern: { value: /^[0-9]{10}$/, message: "Phone number is invalid, it must be 10 digits without any space or other characters" }
+                                    pattern: { value: /^[0-9]+$/, message: "Phone number is invalid, it must be 10 digits without any space or other characters" }
                                 }}
                                 render={({ field: { name, value, onChange }, fieldState: { error } }) => (
                                     <TextField
@@ -302,7 +293,7 @@ function ClientDetails({ nextStep }) {
                                         id={name}
                                         label="Phone Number"
                                         name={name}
-                                        autoComplete="phone"
+                                        autoComplete="off"
                                         type="tel"
                                         error={!!error}
                                         helperText={error ? error.message : null}

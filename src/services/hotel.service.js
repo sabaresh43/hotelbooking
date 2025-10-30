@@ -12,7 +12,7 @@ const FRAPPE_URL =
 const getEmployeeId = () =>
   localStorage.getItem("employeeId") || "HR-EMP-00001";
 const getToken = () =>
-  localStorage.getItem("token") || "5f9e63e2eb95a8e:352254ca034c0d6";
+  localStorage.getItem("token") || "92ff0ef8f5fb1b6:54436a5f1092d34";
 
 const SUPPLIER = getSupplier();
 
@@ -47,7 +47,7 @@ const updateBookingStatus = async (bookingDetails) => {
   try {
     const payload = {
       employee_id: bookingDetails.employee_id || getEmployeeId(),
-      employee_name: bookingDetails.employee_name || localStorage.getItem("employeeName") || "Guest User",
+      // employee_name: bookingDetails.employee_name || localStorage.getItem("employeeName") || "Guest User",
       booking_id: bookingDetails.booking_id || "",
       check_in_date: bookingDetails.check_in_date || "",
       check_out_date: bookingDetails.check_out_date || "",
@@ -64,7 +64,7 @@ const updateBookingStatus = async (bookingDetails) => {
     };
 
     await axios.post(
-      `${FRAPPE_URL}.employee_activity.employee_activity.update_booking_status`,
+      `${FRAPPE_URL}.employee_activity.employee_activity.create_booking_status`,
       payload,
       {
         headers: {

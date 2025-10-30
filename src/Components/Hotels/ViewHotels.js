@@ -486,9 +486,7 @@ function ViewHotels() {
                                                                         const symbol = currencySymbolMap[item.rooms.currency?.toUpperCase()] || item.rooms.currency;
                                                                         return `${symbol} ${item.rooms?.price || 0}`;
                                                                     })()}
-                                                                    <Typography component="span" variant="caption" color="text.secondary">
-                                                                        /night
-                                                                    </Typography>
+                                                                   
                                                                 </Typography>
                                                                 {/* {item.rooms?.taxesFees > 0 && (
                                                                     <Typography variant="caption" color="text.secondary" display="block">
