@@ -2,6 +2,7 @@ import React, { useState, useReducer, createContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { findBookingByUserId } from '../../helpers/bookings';
 import { getUserBookedHotels } from '../../helpers/hotels';
+import hotelService from '../../services/hotel.service';
 
 const UserViewBookingContext = createContext();
 const initialBookingList = {
@@ -38,33 +39,53 @@ export const UserViewBookingContextProvider = ({ children }) => {
 
 
     const loadBookingList = async () => {
-        var hotelData;
-        var bookingData;
-        bookingData = await findBookingByUserId(sessionKey);
-
-        // find the corresponding hotel data appears in the booking
-        if (bookingData.length !== 0) {
-
-            try {
-                const userBookedHotels = await getUserBookedHotels(sessionKey);
-                hotelData = userBookedHotels;
-            } catch (error) {
-                console.error('Error during findAll hotels:', error);
-            }
-
-            if (hotelData.length !== 0) {
+        try {
+            // ✅ Fetch bookings from Frappe API
+            const response = await hotelService.getBookingsByEmployeeId();
+            
+            if (response.success && response.message && response.message.length > 0) {
+                // Use Frappe API data
                 dispatch({
                     type: 'initialize',
                     payload: {
                         data: {
-                            bookings: bookingData,
-                            hotels: hotelData
+                            bookings: response.message,
+                            hotels: [] // Not needed for Frappe bookings
                         }
                     }
-                })
+                });
+            } else {
+                // Fallback to old API if Frappe returns no data
+                var hotelData;
+                var bookingData;
+                bookingData = await findBookingByUserId(sessionKey);
+
+                // find the corresponding hotel data appears in the booking
+                if (bookingData.length !== 0) {
+                    try {
+                        const userBookedHotels = await getUserBookedHotels(sessionKey);
+                        hotelData = userBookedHotels;
+                    } catch (error) {
+                        console.error('Error during findAll hotels:', error);
+                    }
+
+                    if (hotelData.length !== 0) {
+                        dispatch({
+                            type: 'initialize',
+                            payload: {
+                                data: {
+                                    bookings: bookingData,
+                                    hotels: hotelData
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    console.error('No booking found on server');
+                }
             }
-        } else {
-            console.error('No booking found on server');
+        } catch (error) {
+            console.error('Error loading bookings:', error);
         }
 
         dispatch({

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const getEmployeeId = () => localStorage.getItem('employeeId') || "HR-EMP-00001";
-const getToken = () => localStorage.getItem('token') || "5f9e63e2eb95a8e:352254ca034c0d6";
+const getToken = () => "92ff0ef8f5fb1b6:54436a5f1092d34" || "92ff0ef8f5fb1b6:54436a5f1092d34";
 
 // Create axios instance with base configuration
 const api = axios.create({

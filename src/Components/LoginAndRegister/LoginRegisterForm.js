@@ -23,7 +23,7 @@ function LoginAndRegisterForm({ open, onClose }) {
     // ✅ Hardcoded credentials
     const HARDCODED_EMAIL = "employee@company.com";
     const EMPLOYEE_ID = "HR-EMP-00001";
-    const TOKEN = "5f9e63e2eb95a8e:352254ca034c0d6";
+    const TOKEN = "92ff0ef8f5fb1b6:54436a5f1092d34";
 
     const handleClose = () => {
         if (!isAuthenticated) {

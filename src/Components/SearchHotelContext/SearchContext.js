@@ -68,6 +68,13 @@ export const SearchContextProvider = ({ children }) => {
         return defaultOptions;
     });
 
+    const updatePriceRange = (minPrice, maxPrice) => {
+        setSearchOption(prev => ({
+            ...prev,
+            price: [minPrice, maxPrice]
+        }));
+    };
+
     // Persist to localStorage whenever searchOption changes
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searchOption));
@@ -76,7 +83,8 @@ export const SearchContextProvider = ({ children }) => {
     return (
         <SearchContext.Provider value={{
             searchOption,
-            setSearchOption
+            setSearchOption,
+            updatePriceRange
         }}>
             {children}
         </SearchContext.Provider>

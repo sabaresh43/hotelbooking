@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import SearchContext from "./SearchContext";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getSupplier } from "../../utils/getSupplier";
-import { trackActivity } from "../../services/hotel.service";
+import { createActivity } from "../../services/hotel.service";
 import LoginAndRegisterForm from "../LoginAndRegister/LoginRegisterForm";
 import { useSelector } from 'react-redux';
 
@@ -156,7 +156,7 @@ export default function SearchBar() {
         }
 
         // Track hotel search activity
-        trackActivity("hotel_search").catch((err) =>
+        createActivity("hotel_search").catch((err) =>
             console.error("Activity tracking failed:", err)
         );
 

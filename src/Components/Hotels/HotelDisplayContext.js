@@ -8,7 +8,9 @@ const HotelDisplayContext = createContext();
 const initialHotelList = {
     itemList: [],
     cityList: [],
-    loading: false 
+    loading: false,
+        minPrice: 0,      // ✅ Add
+    maxPrice: 3000,
 };
 
 const hotelListReducer = (state, action) => {
@@ -23,11 +25,29 @@ const hotelListReducer = (state, action) => {
                 ? action.payload.data
                 : [];
 
+
+            let minPrice = 0;
+            let maxPrice = 3000;
+
+            if (data.length > 0) {
+                const prices = data
+                    .map(hotel => hotel.rooms?.price || 0)
+                    .filter(price => price > 0);
+
+                if (prices.length > 0) {
+                    minPrice = Math.floor(Math.min(...prices));
+                    maxPrice = Math.ceil(Math.max(...prices));
+                    console.log('💰 Price range calculated:', { minPrice, maxPrice, hotels: data.length });
+                }
+            }
+
             return {
                 ...state,
                 itemList: data,
                 cityList: [],
-                loading: false 
+                loading: false ,
+                 minPrice,   // ✅ Store min
+                maxPrice    // ✅ Store max
             };
         }
         default:
