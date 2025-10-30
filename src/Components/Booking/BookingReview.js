@@ -359,7 +359,7 @@ const handleSubmit = async (event) => {
                                                     Taxes & fees:
                                                 </Typography>
                                                 <Typography variant="body2" color="success.main">
-                                                    Included
+                                                    Included {totalNonInclusiveTax}
                                                 </Typography>
                                             </Box>
                                         )}

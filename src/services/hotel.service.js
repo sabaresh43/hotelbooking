@@ -174,75 +174,19 @@ export const hotelService = {
       };
 
       console.log("Booking API payload:", payload);
-      if (SUPPLIER === "goglobal") {
-        const response = bookingres;
-        //  const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
-        //             headers: { 'Content-Type': 'application/json' }
-        //         });
 
-        console.log("Booking API response:", response);
-
-        if (
-          response?.data?.BookingId &&
-          response.data.BookingStatus?.status === "Confirmed"
-        ) {
-          updateBookingStatus({
-            booking_id: response.data.BookingId,
-            check_in_date: bookingData.fromDate,
-            check_out_date: bookingData.toDate,
-            booking_status: "Success",
-            guest_count:
-              bookingData.rooms?.reduce(
-                (sum, room) => sum + (room.adults || 0),
-                0
-              ) || 0,
-            hotel_name: bookingData.hotelName || "",
-            supplier: SUPPLIER,
-            room_type:
-              bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
-            payment_status: "Success",
-            payment_method: "Card",
-            total_price: bookingData.payable_amount || 0,
-            price: bookingData.payable_amount || 0,
-            currency: bookingData.currency || "USD",
-          }).catch((err) => console.error("Async booking update failed:", err));
-        } else {
-          updateBookingStatus({
-            booking_id: response?.data?.BookingId || "",
-            check_in_date: bookingData.fromDate,
-            check_out_date: bookingData.toDate,
-            booking_status: "Failure",
-            guest_count:
-              bookingData.rooms?.reduce(
-                (sum, room) => sum + (room.adults || 0),
-                0
-              ) || 0,
-            hotel_name: bookingData.hotelName || "",
-            supplier: SUPPLIER,
-            room_type:
-              bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
-            payment_status: "Pending",
-            payment_method: "Card",
-            total_price: bookingData.payable_amount || 0,
-            price: bookingData.payable_amount || 0,
-            currency: bookingData.currency || "USD",
-          }).catch((err) => console.error("Async booking update failed:", err));
-        }
-
-        return response;
-      }
       const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log("Booking API response:", response.data);
+      console.log("Booking API response:", response);
 
       if (
-        response?.data?.data?.BookingId &&
-        response.data.data.BookingStatus?.status === "Confirmed"
+        response?.data?.BookingId &&
+        response.data.BookingStatus?.status === "Confirmed"
       ) {
         updateBookingStatus({
-          booking_id: response.data.data.BookingId,
+          booking_id: response.data.BookingId,
           check_in_date: bookingData.fromDate,
           check_out_date: bookingData.toDate,
           booking_status: "Success",
@@ -263,7 +207,7 @@ export const hotelService = {
         }).catch((err) => console.error("Async booking update failed:", err));
       } else {
         updateBookingStatus({
-          booking_id: response?.data?.data?.BookingId || "",
+          booking_id: response?.data?.BookingId || "",
           check_in_date: bookingData.fromDate,
           check_out_date: bookingData.toDate,
           booking_status: "Failure",
@@ -284,7 +228,7 @@ export const hotelService = {
         }).catch((err) => console.error("Async booking update failed:", err));
       }
 
-      return response.data;
+      return response;
     }
 
     let data = {};
