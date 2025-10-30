@@ -49,7 +49,7 @@ const handleSubmit = async (event) => {
             const fees = room.Fee || [];
             const totalFees = fees.reduce((sum, fee) => sum + parseFloat(fee.Amount || 0), 0);
             
-            totalPayableAmount += basePrice + totalTax + totalFees;
+            totalPayableAmount += basePrice + totalTax;
         });
 
         console.log('💰 Calculated Total Payable Amount:', totalPayableAmount);
@@ -130,7 +130,7 @@ const handleSubmit = async (event) => {
 
         console.log('📥 Booking response:', bookingResponse);
 
-        if (bookingResponse.success) {
+        if (bookingResponse.data.success) {
             // Track booking success
             trackActivity("booking_success").catch((err) =>
                 console.error("Activity tracking failed:", err)
@@ -359,7 +359,7 @@ const handleSubmit = async (event) => {
                                                     Taxes & fees:
                                                 </Typography>
                                                 <Typography variant="body2" color="success.main">
-                                                    Included {totalNonInclusiveTax}
+                                                    Included {currency} {inclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0)}
                                                 </Typography>
                                             </Box>
                                         )}

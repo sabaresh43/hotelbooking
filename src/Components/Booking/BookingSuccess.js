@@ -106,13 +106,13 @@ const calculateTotalPrice = () => {
                                 Booking Reference
                             </Typography>
                             <Typography variant="h6" fontWeight="bold" color="success.main">
-                                {confirmation.BookingId}
+                                {confirmation.data.BookingId}
                             </Typography>
                             <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
                                 Confirmation Code
                             </Typography>
                             <Typography variant="body1" fontWeight="bold">
-                                {confirmation.ClientReference}
+                                {confirmation.data.ClientReference}
                             </Typography>
                         </Box>
                     )}
@@ -217,7 +217,7 @@ const calculateTotalPrice = () => {
                                                             Taxes & fees
                                                         </Typography>
                                                         <Typography variant="caption" color="success.main">
-                                                            Included
+                                                            Included {currency} {inclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0)}
                                                         </Typography>
                                                     </Stack>
                                                 )}

@@ -1,14 +1,14 @@
-import React, { useState, useReducer, createContext, useEffect } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { findBookingByUserId } from '../../helpers/bookings';
-import { getUserBookedHotels } from '../../helpers/hotels';
 import hotelService from '../../services/hotel.service';
 
-const UserViewBookingContext = createContext();
+export const UserViewBookingContext = createContext();
+
 const initialBookingList = {
-    isLoaded: false,
     bookings: [],
-    hotels: []
+    hotels: [],
+    isLoaded: false,
+    error: null
 };
 
 const bookingListReducer = (state, action) => {
@@ -24,79 +24,77 @@ const bookingListReducer = (state, action) => {
                 ...state,
                 isLoaded: true
             };
-        default: return state;
+        case 'setError':
+            return {
+                ...state,
+                error: action.payload.error,
+                isLoaded: true
+            };
+        default: 
+            return state;
     }
 };
 
 export const UserViewBookingContextProvider = ({ children }) => {
     const sessionKey = useSelector(state => state.auth.sessionKey);
-    // store the data from backend
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const [bookingList, dispatch] = useReducer(bookingListReducer, initialBookingList);
 
     useEffect(() => {
-        loadBookingList();
-    }, []);
-
+        if (isAuthenticated) {
+            loadBookingList();
+        }
+    }, [isAuthenticated]);
 
     const loadBookingList = async () => {
         try {
-            // ✅ Fetch bookings from Frappe API
-            const response = await hotelService.getBookingsByEmployeeId();
+            console.log("🔄 Loading bookings from Frappe API...");
             
-            if (response.success && response.message && response.message.length > 0) {
-                // Use Frappe API data
+            // ✅ Try Frappe API first
+            const response = await hotelService.getUserBookings();
+            
+            if (response.success && response.bookings && response.bookings.length > 0) {
+                console.log("✅ Loaded bookings from Frappe:", response.bookings.length);
+                
                 dispatch({
                     type: 'initialize',
                     payload: {
                         data: {
-                            bookings: response.message,
+                            bookings: response.bookings,
                             hotels: [] // Not needed for Frappe bookings
                         }
                     }
                 });
-            } else {
-                // Fallback to old API if Frappe returns no data
-                var hotelData;
-                var bookingData;
-                bookingData = await findBookingByUserId(sessionKey);
-
-                // find the corresponding hotel data appears in the booking
-                if (bookingData.length !== 0) {
-                    try {
-                        const userBookedHotels = await getUserBookedHotels(sessionKey);
-                        hotelData = userBookedHotels;
-                    } catch (error) {
-                        console.error('Error during findAll hotels:', error);
-                    }
-
-                    if (hotelData.length !== 0) {
-                        dispatch({
-                            type: 'initialize',
-                            payload: {
-                                data: {
-                                    bookings: bookingData,
-                                    hotels: hotelData
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    console.error('No booking found on server');
-                }
-            }
+            } 
+           
         } catch (error) {
-            console.error('Error loading bookings:', error);
+            console.error('❌ Error loading bookings:', error);
+            dispatch({
+                type: 'setError',
+                payload: { error: error.message }
+            });
         }
 
         dispatch({
             type: 'setIsLoaded'
         });
-    }
+    };
+
+    const reloadBookings = () => {
+        dispatch({ type: 'initialize', payload: { data: { bookings: [], hotels: [] } } });
+        dispatch({ type: 'setIsLoaded' });
+        loadBookingList();
+    };
 
     return (
-        <UserViewBookingContext.Provider value={{ dispatch, bookingList }} >
+        <UserViewBookingContext.Provider value={{ 
+            dispatch, 
+            bookingList,
+            reloadBookings
+        }}>
             {children}
-        </UserViewBookingContext.Provider>);
+        </UserViewBookingContext.Provider>
+    );
 };
 
 export default UserViewBookingContext;
