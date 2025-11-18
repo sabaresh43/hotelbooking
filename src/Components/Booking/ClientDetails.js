@@ -19,6 +19,8 @@ function ClientDetails({ nextStep }) {
     const navigate = useNavigate();
 
     const onSubmit = (data, e) => {
+        console.log("dddd",data);
+        
         e.preventDefault();
         if (useExistingInfo) {
             if (userInfoReuseData.clientInfo) {
@@ -30,6 +32,8 @@ function ClientDetails({ nextStep }) {
                 console.error("Loading existing client Info failed");
                 return;
             }
+            console.log("userdata",userInfoReuseData.clientInfo);
+            
         } else {
             const clientInfo = getValues("clientInfo");
 

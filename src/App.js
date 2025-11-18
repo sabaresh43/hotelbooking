@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {restoreSession} from './features/authSlice';
 import { UserViewBookingContextProvider } from './Components/UserViewBooking/UserViewBookingContext';
+import PaymentCallback from '../src/Components/Booking/PaymentCallback';
 
 
 function App() {
@@ -30,6 +31,7 @@ const dispatch = useDispatch();
             <Route path="/Dashboard/*" element={<ProtectedAdminRoute>
               <Dashboard />
             </ProtectedAdminRoute>} />
+              <Route path="payment-callback" element={<PaymentCallback />} />
           </Routes>
         </Router>
          </UserViewBookingContextProvider>
