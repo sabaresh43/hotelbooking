@@ -6,6 +6,7 @@ import axios from "axios";
 import { get } from "react-hook-form";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const PAYMENT_API_URL = "https://hitpay-backend.vercel.app/api/hitpay";
 const FRAPPE_URL =
   "https://travel-site.m.frappe.cloud/api/method/destiin.destiin.doctype";
 
@@ -15,6 +16,13 @@ const getToken = () =>
   localStorage.getItem("token") || "92ff0ef8f5fb1b6:54436a5f1092d34";
 
 const SUPPLIER = getSupplier();
+
+const paymentClient = axios.create({
+    baseURL: PAYMENT_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    }
+});
 
 // Activity tracking function
 export const trackActivity = async (bookingStage) => {
@@ -130,7 +138,21 @@ export const getUserBookings = async () => {
     }
 };
 
+
+
 export const hotelService = {
+
+
+      // ✅ Create payment (NEW)
+    createPayment: async (paymentData) => {
+        try {
+            const response = await paymentClient.post('/create-payment', paymentData);
+            return response;
+        } catch (error) {
+            console.error('Payment creation failed:', error.response?.data || error.message);
+            throw error;
+        }
+    },
   // Get all hotels
   // Search hotels with filters - will call external supplier POST when configured
   searchHotels: async (options) => {
