@@ -103,7 +103,7 @@ const handleSubmit = async (event) => {
             };
         });
 
-        // ✅ Prepare booking payload to store in sessionStorage
+        // ✅ Prepare booking payload with payable_amount
         const bookingPayload = {
             hotelId: bookingData.hotel.id,
             hotelName: bookingData.hotel.name || bookingData.hotel.hotelName || '',
@@ -113,7 +113,7 @@ const handleSubmit = async (event) => {
             rooms: roomsPayload,
             currency: selectedRoom.Currency || 'USD',
             country: 'IN',
-            payable_amount: parseFloat(totalPayableAmount.toFixed(2)),
+            payable_amount: parseFloat(totalPayableAmount.toFixed(2)),  // ✅ Total amount to pay
             contact: {
                 Name: {
                     First: bookingData.clientInfo.firstName,
@@ -124,145 +124,171 @@ const handleSubmit = async (event) => {
             }
         };
 
-        // ✅ Store booking data in sessionStorage (will be used after payment callback)
-        sessionStorage.setItem('pendingBooking', JSON.stringify({
-            bookingPayload,
-            bookingData: {
-                ...bookingData,
-                actualTotalPrice: totalPayableAmount,
-                totalPrice: totalPayableAmount
-            }
-        }));
+        console.log('📤 Submitting booking:', bookingPayload);
 
-        console.log('📤 Stored booking data in sessionStorage');
+        const bookingResponse = await hotelService.bookHotel(bookingPayload);
 
-        // ✅ Create payment
-        const paymentPayload = {
-            amount: parseFloat(totalPayableAmount.toFixed(2)),
-            email: bookingData.clientInfo.email,
-            name: `${bookingData.clientInfo.firstName} ${bookingData.clientInfo.lastName}`,
-            phone: bookingData.clientInfo.phone,
-            purpose: `Hotel Booking - ${bookingData.hotel.name || bookingData.hotel.hotelName}`,
-            payment_methods: ["card", "paynow_online"]
-        };
+        console.log('📥 Booking response:', bookingResponse);
 
-        console.log('💳 Creating payment:', paymentPayload);
-
-        const paymentResponse = await hotelService.createPayment(paymentPayload);
-
-        console.log('💳 Payment response:', paymentResponse);
-
-        if (paymentResponse.data.payment_url) {
-            // Track payment initiation
-            trackActivity("payment_initiated").catch((err) =>
+        if (bookingResponse.data.success) {
+            // Track booking success
+            trackActivity("booking_success").catch((err) =>
                 console.error("Activity tracking failed:", err)
             );
 
-            // ✅ Store payment reference
-            sessionStorage.setItem('paymentReference', paymentResponse.data.payment_id);
+            // ✅ Pass total price to confirmation
+            dispatch({
+                type: 'setBookingConfirmation',
+                payload: {
+                    data: bookingResponse.data
+                }
+            });
 
-            // ✅ Redirect to payment URL
-            console.log('🔗 Redirecting to payment URL:', paymentResponse.data.payment_url);
-            window.location.href = paymentResponse.data.payment_url;
+            dispatch({ type: 'setIsBookingSuccess' });
+
+            // ✅ CRITICAL: Pass calculated total explicitly in multiple places
+            console.log('✈️ Navigating with actualTotalPrice:', totalPayableAmount);
+            
+            navigate("../success", {
+                state: {
+                    bookingData: {
+                        ...bookingData,
+                        actualTotalPrice: totalPayableAmount,  // ✅ Pass calculated total
+                        totalPrice: totalPayableAmount,        // ✅ Also update this
+                        confirmation: {
+                            ...bookingResponse.data,
+                            actualTotalPrice: totalPayableAmount  // ✅ Also in confirmation
+                        }
+                    }
+                }
+            });
         } else {
-            throw new Error('Payment URL not received from payment gateway');
+            // Track booking failure
+            trackActivity("booking_failure").catch((err) =>
+                console.error("Activity tracking failed:", err)
+            );
+            setIsBookingFailed(true);
         }
-
     } catch (error) {
-        console.error('❌ Payment creation failed:', error);
-        setIsSubmitting(false);
+        console.error('Booking error:', error);
+        // Track booking failure
+        trackActivity("booking_failure").catch((err) =>
+            console.error("Activity tracking failed:", err)
+        );
         setIsBookingFailed(true);
-        setError(error);
-        setErrorMessage(error.response?.data?.message || error.message || 'Payment initialization failed');
+    } finally {
+        setIsSubmitting(false);
     }
 };
 
     return (
-        <Container maxWidth="md" sx={{ mt: 4 }}>
-            <Stack spacing={4}>
+        <Container maxWidth="md">
+            <Stack direction="column" spacing={2}>
                 <Card sx={{ boxShadow: 3, px: 1 }}>
                     <CardContent>
                         <Typography variant="h6" color="text.secondary" gutterBottom>
-                            Guest Details
+                            Personal Details
                         </Typography>
-                        <Grid container spacing={4}>
+                        <Grid container columnSpacing={0} rowSpacing={1}>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     First Name
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.firstName}
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     Last Name
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.lastName}
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     Email
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.email}
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     Phone
                                 </Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="body1" gutterBottom>
+                                <Typography variant="body1">
                                     {bookingData.clientInfo.phone}
                                 </Typography>
                             </Grid>
-                            {/* Additional guest information */}
-                            {bookingData.clientInfo.guests && bookingData.clientInfo.guests.length > 0 && (
-                                <Grid size={12}>
-                                    <Divider sx={{ my: 2 }} />
-                                    <Typography variant="h6" color="text.secondary" gutterBottom>
-                                        Additional Guests
-                                    </Typography>
-                                    {bookingData.clientInfo.guests.map((guest, index) => (
-                                        <Grid container spacing={2} key={index} sx={{ mt: 1 }}>
-                                            <Grid size={4}>
-                                                <Typography variant="body2">
-                                                    Guest {index + 1}:
-                                                </Typography>
-                                            </Grid>
-                                            <Grid size={8}>
-                                                <Typography variant="body2">
-                                                    {guest.title} {guest.firstName} {guest.lastName}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            )}
                         </Grid>
                     </CardContent>
                 </Card>
 
                 <Card sx={{ boxShadow: 3, px: 1 }}>
                     <CardContent>
-                        <Typography variant="h6" color="text.secondary" gutterBottom>
-                            Payment Information
-                        </Typography>
-                        <Grid container spacing={2}>
-                            <Grid size={12}>
-                                <Alert severity="info">
-                                    You will be redirected to a secure payment page to complete your booking.
-                                </Alert>
+                        <Grid container columnSpacing={0} rowSpacing={1}>
+                            <Grid size={{ xs: 12, md: 6 }}>
+                                <Typography variant="h6" color="text.secondary" gutterBottom>
+                                    Billing Address
+                                </Typography>
+                                <Typography variant="body1" gutterBottom>
+                                    {bookingData.cardInfo.address.street}
+                                </Typography>
+                                <Typography variant="body1" gutterBottom>
+                                    {bookingData.cardInfo.address.city}, {bookingData.cardInfo.address.province}
+                                </Typography>
+                                <Typography variant="body1" gutterBottom>
+                                    {bookingData.cardInfo.address.postalCode}, {bookingData.cardInfo.address.country.toUpperCase()}
+                                </Typography>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 6 }} sx={{ mt: { xs: 2, md: 0 } }}>
+                                <Grid size={12}>
+                                    <Typography variant="h6" color="text.secondary" gutterBottom>
+                                        Payment Details
+                                    </Typography>
+                                </Grid>
+                                <Grid container size={12} columnSpacing={0} rowSpacing={1}>
+                                    <Grid size={6}>
+                                        <Typography variant="body1" gutterBottom>
+                                            Card Holder Name
+                                        </Typography>
+                                    </Grid>
+                                    <Grid size={6}>
+                                        <Typography variant="body1" gutterBottom>
+                                            {bookingData.cardInfo.cardName}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid size={6}>
+                                        <Typography variant="body1" gutterBottom>
+                                            Card Number
+                                        </Typography>
+                                    </Grid>
+                                    <Grid size={6}>
+                                        <Typography variant="body1" gutterBottom>
+                                            {"xxxx-xxxx-xxxx-" + bookingData.cardInfo.cardNumber.slice(-4)}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid size={6}>
+                                        <Typography variant="body1" gutterBottom>
+                                            Expiry Date
+                                        </Typography>
+                                    </Grid>
+                                    <Grid size={6}>
+                                        <Typography variant="body1" gutterBottom>
+                                            {`${bookingData.cardInfo.expDate.substring(0, 2)}/${bookingData.cardInfo.expDate.substring(2)}`}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -381,13 +407,13 @@ const handleSubmit = async (event) => {
                         disabled={isSubmitting}
                         sx={{ alignSelf: 'flex-end' }}
                     >
-                        {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
+                        {isSubmitting ? 'Processing...' : 'Confirm Booking'}
                     </Button>
                 </Box>
 
                 {isBookingFailed && (
                     <Alert severity="error">
-                        {errorMessage || 'Payment initialization failed. Please try again or contact support.'}
+                        Booking failed. Please try again or contact support.
                     </Alert>
                 )}
             </Stack>
@@ -396,3 +422,4 @@ const handleSubmit = async (event) => {
 }
 
 export default BookingReview;
+

@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CircularProgress, Container, Divider, Stack, Step, StepLabel, Alert, Stepper, Typography } from "@mui/material";
+import { Box, Card, CardContent, CircularProgress, Container, Divider, Stack, Step, StepLabel,Alert, Stepper, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import BookingContext from "./BookingContext";
@@ -47,29 +47,29 @@ function BookRooms() {
     const theme = useTheme();
     const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-    const methods = useForm({
-        defaultValues: {
-            clientInfo: {
-                title: 'MR.',
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: ''
-            },
-            cardInfo: {
-                cardName: '',
-                cardNumber: '',
-                expDate: '',
-                cvv: '',
-                address: {
-                    street: '',
-                    city: '',
-                    province: '',
-                    country: ''
-                }
+const methods = useForm({
+    defaultValues: {
+        clientInfo: {
+            title: 'MR.',
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: ''
+        },
+        cardInfo: {
+            cardName: '',
+            cardNumber: '',
+            expDate: '',
+            cvv: '',
+            address: {
+                street: '',
+                city: '',
+                province: '',
+                country: ''
             }
         }
-    });
+    }
+});
 
     useEffect(() => {
         const loadUserProfile = async () => {
@@ -125,7 +125,7 @@ function BookRooms() {
         // ✅ Handle both old and new hotel structures
         const hotelName = bookingData.hotel.name || bookingData.hotel.hotelName || 'Hotel';
         const hotelAddress = bookingData.hotel.address
-            ? bookingData.hotel.address : 'Address not available';
+            ? bookingData.hotel.address: 'Address not available';
 
         return (
             <FormProvider {...methods}>
@@ -164,33 +164,33 @@ function BookRooms() {
                                                 <Box>
                                                     <Typography color="text.secondary">Check-in</Typography>
                                                     <Typography variant="subtitle1">{dayjs(bookingData.from).format('dddd, MMMM D, YYYY')}</Typography>
-
+                                                   
                                                 </Box>
                                                 <Box>
                                                     <Typography color="text.secondary">Check-out</Typography>
                                                     <Typography variant="subtitle1">{dayjs(bookingData.to).format('dddd, MMMM D, YYYY')}</Typography>
-
+                                                   
                                                 </Box>
                                             </Stack>
                                             <Typography color="text.secondary" mt={1}>You selected</Typography>
-                                            <Typography variant="body1">
-                                                {bookingData.rooms.length} × {bookingData.rooms[0]?.Description || 'Room'}
-                                            </Typography>
-                                            <Box sx={{ mt: 1, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
-                                                <Typography variant="body2" fontWeight={600}>
-                                                    {bookingData.rooms.length} {bookingData.rooms.length > 1 ? "rooms" : "room"} of this type
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    {bookingData.rooms[0]?.Description || bookingData.rooms[0]?.Rooms?.[0] || 'Room'}
-                                                </Typography>
-                                                {bookingData.rooms[0]?.RoomBasis && (
-                                                    <Chip
-                                                        label={bookingData.rooms[0].RoomBasis}
-                                                        size="small"
-                                                        sx={{ mt: 0.5 }}
-                                                    />
-                                                )}
-                                            </Box>
+<Typography variant="body1">
+    {bookingData.rooms.length} × {bookingData.rooms[0]?.Description || 'Room'}
+</Typography>
+<Box sx={{ mt: 1, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
+    <Typography variant="body2" fontWeight={600}>
+        {bookingData.rooms.length} {bookingData.rooms.length > 1 ? "rooms" : "room"} of this type
+    </Typography>
+    <Typography variant="body2">
+        {bookingData.rooms[0]?.Description || bookingData.rooms[0]?.Rooms?.[0] || 'Room'}
+    </Typography>
+    {bookingData.rooms[0]?.RoomBasis && (
+        <Chip
+            label={bookingData.rooms[0].RoomBasis}
+            size="small"
+            sx={{ mt: 0.5 }}
+        />
+    )}
+</Box>
                                         </CardContent>
                                     </Card>
                                     <Card sx={{ boxShadow: 3 }}>
@@ -199,11 +199,11 @@ function BookRooms() {
                                             {bookingData.rooms.map((room, index) => {
                                                 // ✅ Calculate tax breakdown
                                                 const allTaxes = room.Tax || [];
-                                                const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
-                                                const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
-                                                const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0);
-                                                const basePrice = room.TotalPrice || room.baseRate || 0;
-                                                const currency = room.Currency || 'USD';
+            const inclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Inclusive");
+            const nonInclusiveTaxes = allTaxes.filter(t => t.Inclusive === "Not Inclusive");
+            const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0);
+            const basePrice = room.TotalPrice || room.baseRate || 0;
+            const currency = room.Currency || 'USD';
                                                 return (
                                                     <Box key={index} sx={{ mb: 2 }}>
                                                         <Stack direction="row" justifyContent="space-between">
@@ -219,7 +219,7 @@ function BookRooms() {
                                                         {inclusiveTaxes.length > 0 && (
                                                             <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.5 }}>
                                                                 <Typography variant="caption" color="success.main">
-                                                                    Taxes & fees
+                                                                    Taxes & fees 
                                                                 </Typography>
                                                                 <Typography variant="caption" color="success.main">
                                                                     Included {currency} {inclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0)}
@@ -241,7 +241,7 @@ function BookRooms() {
                                                     </Box>
                                                 );
                                             })}
-
+                                           
                                             <Divider sx={{ my: 1 }} />
                                             <Box sx={{ display: "flex", flexWrap: 'wrap', justifyContent: "space-between", bgcolor: "primary.main", color: "common.white", p: 2, borderRadius: 1 }}>
                                                 <Typography variant="h5">Total Price</Typography>
