@@ -33,6 +33,9 @@ function BookingReview({ prevStep }) {
 
             if (res?.message?.payment_url) {
                 localStorage.setItem('pendingBooking', JSON.stringify(bookingData));
+                localStorage.setItem('Payment_reference', res.message.payment_id);
+                console.log("Redirecting to payment URL:", res.message);
+                // navigate('data&status=completed')
                 window.location.href = res.message.payment_url;
                 return true;
             }
@@ -125,20 +128,23 @@ function BookingReview({ prevStep }) {
                 }
             };
 
+            localStorage.setItem('bookingPayload',JSON.stringify(bookingPayload));
+
             console.log("📤 Submitting booking:", bookingPayload);
 
             // 🔥 TRY BOOKING — BUT NO ERROR SHOWN IF FAILS
-            try {
-                const bookingResponse = await hotelService.bookHotel(bookingPayload);
-                console.log("📥 Booking response:", bookingResponse);
-            } catch (bookingError) {
-                console.error("❌ Booking failed — but continuing to payment");
-            }
+            // try {
+            //     const bookingResponse = await hotelService.bookHotel(bookingPayload);
+            //     console.log("📥 Booking response:", bookingResponse);
+            // } catch (bookingError) {
+            //     console.error("❌ Booking failed — but continuing to payment");
+            // }
 
             // 🔥 ALWAYS ATTEMPT PAYMENT
             const paymentSuccess = await handlePayment();
 
             if (paymentSuccess) {
+
                 trackActivity("booking_success").catch((err) =>
                     console.error("Activity tracking failed:", err)
                 );
