@@ -7,9 +7,12 @@ import dayjs from "dayjs";
 
 export default function BookingSuccess() {
     const { reward } = useReward('rewardId', 'confetti');
+    const datas  = JSON.parse( localStorage.getItem('pendingBooking'));
+    console.log('Local Storage bookingData:', datas);
     const location = useLocation();
-    const bookingData = location.state?.bookingData;
+    const bookingData = location.state?.bookingData || datas || null;
     const confirmation = bookingData?.confirmation;
+    console.log('🏨 Booking Confirmation Data:', confirmation);
     
     console.log('📄 Booking Data:', bookingData);
     console.log('✅ Confirmation:', confirmation);
@@ -68,6 +71,7 @@ const calculateTotalPrice = () => {
     const currency = confirmation?.Currency || bookingData?.rooms?.[0]?.Currency || 'USD';
 
     return (
+        <>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', px: 6, paddingBottom: 6 }}>
             <Paper
                 elevation={3}
@@ -283,5 +287,6 @@ const calculateTotalPrice = () => {
                 </Box>
             </Paper>
         </Box>
+        </>
     );
 }

@@ -13,8 +13,10 @@ import AdminRestrictedRoute from "../../AdminRestrictedRoute";
 import { useSelector } from "react-redux";
 import { findUserById } from "../../helpers/users";
 import { useMediaQuery, useTheme, Chip } from "@mui/material";
+import PaymentCallback from "./PaymentCallback";
 
-const steps = ['Booking details', 'Payment details', 'Review your booking'];
+// const steps = ['Booking details', 'Payment details', 'Review your booking'];
+const steps = ['Booking details', 'Review your booking'];
 
 export const UserInfoReuseContext = createContext();
 
@@ -256,8 +258,9 @@ const methods = useForm({
                                 <Routes>
                                     <Route path="/">
                                         <Route index element={<ClientDetails nextStep={nextStep} />} />
-                                        <Route path="payment" element={<BookingPayment nextStep={nextStep} prevStep={prevStep} />} />
+                                        {/* <Route path="payment" element={<BookingPayment nextStep={nextStep} prevStep={prevStep} />} /> */}
                                         <Route path="review" element={<BookingReview nextStep={nextStep} prevStep={prevStep} />} />
+
                                         <Route path="success" element={<BookingSuccess />} />
                                     </Route>
                                 </Routes>

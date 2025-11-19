@@ -134,32 +134,43 @@ export const hotelService = {
   // Get all hotels
   // Search hotels with filters - will call external supplier POST when configured
   searchHotels: async (options) => {
-    // If GO_GLOBAL_URL is configured, POST to it using the payload shape provided
-    if (BASE_URL) {
-      const payload = {
-        country: "IN",
-        cityCode: options.cityCode || options.location || "",
-        fromDate: options.fromDate || options.from?.format("YYYY-MM-DD"),
-        toDate: options.toDate || options.to?.format("YYYY-MM-DD"),
-        sort: options.sort || 1,
-        currency: options.currency || "EUR",
-        occupancy: options.occupancy || [
-          { adults: options.numberOfGuest || 2, roomCount: 1 },
-        ],
-      };
-      console.log("payload", payload);
+    const formatDate = (date) => {
+  if (!date) return "";
+  const d = new Date(date);
+  return !isNaN(d) ? d.toISOString().split("T")[0] : "";
+};
+  const payload = {
+    country: "IN",
+    cityCode: options.cityCode || options.location || "",
+    fromDate: formatDate(options.fromDate || options.from),
+    toDate: formatDate(options.toDate || options.to),
+    sort: options.sort || 1,
+    currency: options.currency || "EUR",
+    occupancy: options.occupancy || [
+      { adults: options.numberOfGuest || 2, roomCount: 1 },
+    ],
+  };
 
-      const response = await api.post(`/hotels/${SUPPLIER}`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-      // Assume the external API returns an array of hotels in response.data
-      return response.data;
-    }
+  console.log("payload", payload);
 
-    // Fallback to internal search endpoint
-    const response = await api.get("/hotels/search", { params: options });
+  if (BASE_URL) {
+    const response = await api.post(`/hotels/${SUPPLIER}`, payload, {
+      headers: { "Content-Type": "application/json" },
+    });
     return response.data;
-  },
+  }
+
+  // If using fallback, also format dates there
+  const response = await api.get("/hotels/search", {
+    params: {
+      ...options,
+      fromDate: payload.fromDate,
+      toDate: payload.toDate,
+    },
+  });
+
+  return response.data;
+},
 
   // Get hotel by ID
   // Get hotel details by ID with search parameters

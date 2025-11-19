@@ -73,21 +73,21 @@ function ClientDetails({ nextStep }) {
         trackActivity("guest_details_entered").catch((err) =>
             console.error("Activity tracking failed:", err)
         );
-(async () => {
-  const res = await paymentService.createPayment({
-    amount: bookingData.totalPrice ||10,
-    email: userData.email,
-    name: userData.firstName + " " + userData.lastName,
-    phone: userData.phone,
-  });
-console.log("Payment Service Response:", res);
-  if (res?.message?.payment_url) {
-    window.location.href = res.message.payment_url; // Redirect to HitPay checkout
-  }
-})();
+// (async () => {
+//   const res = await paymentService.createPayment({
+//     amount: bookingData.totalPrice ||10,
+//     email: userData.email,
+//     name: userData.firstName + " " + userData.lastName,
+//     phone: userData.phone,
+//   });
+// console.log("Payment Service Response:", res);
+//   if (res?.message?.payment_url) {
+//     window.location.href = res.message.payment_url; // Redirect to HitPay checkout
+//   }
+// })();
 
         nextStep();
-        // navigate("payment");
+        navigate("review");
     }
 
     const handleCheck = (event) => {
