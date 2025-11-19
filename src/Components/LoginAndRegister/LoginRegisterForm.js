@@ -21,6 +21,7 @@ function LoginAndRegisterForm({ open, onClose }) {
     const [loading, setLoading] = useState(false);
 
     // ✅ Hardcoded credentials
+    const HARDCODED_EMAIL = "employee@company.com";
     const EMPLOYEE_ID = "HR-EMP-00001";
     const TOKEN = "92ff0ef8f5fb1b6:54436a5f1092d34";
 
