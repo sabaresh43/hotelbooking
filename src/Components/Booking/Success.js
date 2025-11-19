@@ -24,7 +24,7 @@ export default function Success() {
   console.log('Success page loaded');
   return (
     <>
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', px: 6, paddingBottom: 6 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', px: 6, paddingBottom: 6, mt:4 }}>
                 <Paper
                     elevation={3}
                     sx={{
