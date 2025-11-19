@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { UserInfoReuseContext } from "./BookRooms";
 import { Skeleton } from "@mui/material";
 import { trackActivity } from "../../services/hotel.service";
+import paymentService from "../../services/paymentService";
 
 function ClientDetails({ nextStep }) {
     const { bookingData, dispatch } = useContext(BookingContext);
@@ -20,6 +21,8 @@ function ClientDetails({ nextStep }) {
 
     const onSubmit = (data, e) => {
         e.preventDefault();
+                        const userData = getValues("clientInfo")
+
         if (useExistingInfo) {
             if (userInfoReuseData.clientInfo) {
                 dispatch({
@@ -70,9 +73,21 @@ function ClientDetails({ nextStep }) {
         trackActivity("guest_details_entered").catch((err) =>
             console.error("Activity tracking failed:", err)
         );
+// (async () => {
+//   const res = await paymentService.createPayment({
+//     amount: bookingData.totalPrice ||10,
+//     email: userData.email,
+//     name: userData.firstName + " " + userData.lastName,
+//     phone: userData.phone,
+//   });
+// console.log("Payment Service Response:", res);
+//   if (res?.message?.payment_url) {
+//     window.location.href = res.message.payment_url; // Redirect to HitPay checkout
+//   }
+// })();
 
         nextStep();
-        navigate("payment");
+        navigate("review");
     }
 
     const handleCheck = (event) => {

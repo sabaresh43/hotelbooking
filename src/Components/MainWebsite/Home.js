@@ -10,6 +10,7 @@ import BookingHome from "../UserViewBooking/BookingHome";
 import ProtectedUserRoute from "../../ProtectedUserRoute";
 import UserProfileHome from "../UserProfile/UserProfileHome";
 import Footer from "./Footer";
+import Success from "../Booking/Success";
 
 function Home() {
 
@@ -19,6 +20,8 @@ function Home() {
             <Routes>
                 <Route index element={<WelcomePage />} />
                 <Route path="/Hotels/*" element={<HotelHome />} />
+                            <Route path="/success" element={<Success />} />
+                
                 <Route path="/UserProfile/*" element={<ProtectedUserRoute>
                     <UserProfileHome />
                 </ProtectedUserRoute>} />
