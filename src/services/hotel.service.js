@@ -215,81 +215,104 @@ export const hotelService = {
     }
   },
 
-  bookHotel: async (bookingData) => {
-    if (BASE_URL) {
-      const payload = {
-        hotelId: bookingData.hotelId,
-        roomCode: bookingData.roomCode,
-        fromDate: bookingData.fromDate,
-        toDate: bookingData.toDate,
-        rooms: bookingData.rooms,
-        currency: bookingData.currency || "EUR",
-        country: bookingData.country || "IN",
-        contact: bookingData.contact,
-        payable_amount: bookingData.payable_amount,
-        occupancy: bookingData.occupancy,
-      };
+ bookHotel: async (bookingData) => {
+  if (!BASE_URL) return;
 
-      console.log("Booking API payload:", payload);
+  try {
+    const payload = {
+      hotelId: bookingData.hotelId,
+      roomCode: bookingData.roomCode,
+      fromDate: bookingData.fromDate,
+      toDate: bookingData.toDate,
+      rooms: bookingData.rooms,
+      currency: bookingData.currency || "EUR",
+      country: bookingData.country || "IN",
+      contact: bookingData.contact,
+      payable_amount: bookingData.payable_amount,
+      occupancy: bookingData.occupancy,
+      payment_reference: bookingData.payment_reference || "",
+    };
 
-      const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
+    console.log("Booking API payload:", payload);
 
-      console.log("Booking API response:", response);
+    const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
+      headers: { "Content-Type": "application/json" },
+    });
 
-      if (
-       true
-      ) {
-         const bookingResult = response?.data?.data || response?.data;
-        const roomName = bookingResult.Hotel?.RatePlanList?.[0]?.RoomName || 
-                           bookingData.rooms?.[0]?.roomCode || 
-                           bookingData.roomCode || "";
-        updateBookingStatus({
-          booking_id: response.data.BookingId,
-          check_in_date: bookingData.fromDate,
-          check_out_date: bookingData.toDate,
-          booking_status: "Success",
-          guest_count:
-            bookingData.rooms?.reduce(
-              (sum, room) => sum + (room.adults || 0),
-              0
-            ) || 0,
-          hotel_name: bookingData.hotelName || "",
-          supplier: SUPPLIER,
-          room_type:roomName||
-            bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
-          payment_status: "Success",
-          payment_method: "Card",
-          total_price: bookingData.payable_amount || 0,
-          price: bookingData.payable_amount || 0,
-          currency: bookingData.currency || "USD",
-        }).catch((err) => console.error("Async booking update failed:", err));
-      } else {
-        updateBookingStatus({
-          booking_id: response?.data?.BookingId || "",
-          check_in_date: bookingData.fromDate,
-          check_out_date: bookingData.toDate,
-          booking_status: "Failure",
-          guest_count:
-            bookingData.rooms?.reduce(
-              (sum, room) => sum + (room.adults || 0),
-              0
-            ) || 0,
-          hotel_name: bookingData.hotelName || "",
-          supplier: SUPPLIER,
-          room_type:
-            bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
-          payment_status: "Pending",
-          payment_method: "Card",
-          total_price: bookingData.payable_amount || 0,
-          price: bookingData.payable_amount || 0,
-          currency: bookingData.currency || "USD",
-        }).catch((err) => console.error("Async booking update failed:", err));
-      }
+    console.log("Booking API response:", response);
 
-      return response;
+    const bookingResult = response?.data?.data || response?.data || {};
+
+    const roomName =
+      bookingResult?.Hotel?.RatePlanList?.[0]?.RoomName ||
+      bookingData?.rooms?.[0]?.roomName ||
+      bookingData.roomCode ||
+      "";
+
+    const isSuccess =
+      response?.data?.status?.toString().toLowerCase() === "success" ||
+      response?.data?.BookingId;
+
+    const bookingUpdatePayload = {
+      booking_id: response?.data?.BookingId || "",
+      check_in_date: bookingData.fromDate,
+      check_out_date: bookingData.toDate,
+      guest_count:
+        bookingData.rooms?.reduce(
+          (sum, room) => sum + (room.adults || 0),
+          0
+        ) || 0,
+      hotel_name: bookingData.hotelName || "",
+      supplier: SUPPLIER,
+      room_type: roomName,
+      total_price: bookingData.payable_amount || 0,
+      price: bookingData.payable_amount || 0,
+      currency: bookingData.currency || "USD",
+      payment_method: "Card",
+      payment_reference: bookingData.payment_reference || "",
+    };
+
+    if (isSuccess) {
+      bookingUpdatePayload.booking_status = "Success";
+      bookingUpdatePayload.payment_status = "Success";
+    } else {
+      bookingUpdatePayload.booking_status = "Failure";
+      bookingUpdatePayload.payment_status = "Pending";
     }
+
+    await updateBookingStatus(bookingUpdatePayload);
+
+    return response;
+  } catch (error) {
+    console.error("Booking API Error:", error);
+
+    // Send failure booking attempt also to DB
+    try {
+      await updateBookingStatus({
+        booking_id: "",
+        check_in_date: bookingData.fromDate,
+        check_out_date: bookingData.toDate,
+        booking_status: "Failure",
+        guest_count:
+          bookingData.rooms?.reduce(
+            (sum, room) => sum + (room.adults || 0),
+            0
+          ) || 0,
+        hotel_name: bookingData.hotelName || "",
+        supplier: SUPPLIER,
+        room_type: bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
+        payment_status: "Pending",
+        payment_method: "Card",
+        total_price: bookingData.payable_amount || 0,
+        price: bookingData.payable_amount || 0,
+        currency: bookingData.currency || "USD",
+        payment_reference: bookingData.payment_reference || "",
+      });
+    } catch (err) {
+      console.error("Failed to update booking status:", err);
+    }
+
+  }
 
     let data = {};
     return data;
