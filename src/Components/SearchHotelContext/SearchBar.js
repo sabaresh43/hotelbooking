@@ -36,7 +36,7 @@ import { useSelector } from 'react-redux';
 export default function SearchBar() {
     const navigate = useNavigate();
     const { searchOption, setSearchOption } = useContext(SearchContext);
-    const [minDate, setMinDate] = useState(dayjs().add(1, "day"));
+    const [minDate, setMinDate] = useState(dayjs());
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("sm"));
     const SUPPLIER = getSupplier();

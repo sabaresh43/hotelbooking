@@ -73,7 +73,7 @@ const updateBookingStatus = async (bookingDetails) => {
     const payload = {
       employee_id: bookingDetails.employee_id || getEmployeeId(),
     
-      booking_id: bookingDetails.booking_id || "",
+      booking_id: bookingDetails.booking_id || 15721065094,
       check_in_date: bookingDetails.check_in_date || "",
       check_out_date: bookingDetails.check_out_date || "",
       booking_status: bookingDetails.booking_status || "Pending",
@@ -86,6 +86,8 @@ const updateBookingStatus = async (bookingDetails) => {
       total_price: bookingDetails.total_price || 0,
       price: bookingDetails.price || 0,
       currency: bookingDetails.currency || "USD",
+      payment_reference: bookingDetails.payment_reference || "",
+
     };
 
     await axios.post(
@@ -254,7 +256,7 @@ export const hotelService = {
       response?.data?.BookingId;
 
     const bookingUpdatePayload = {
-      booking_id: response?.data?.BookingId || "",
+      booking_id: response?.data?.BookingId || 15721065094,
       check_in_date: bookingData.fromDate,
       check_out_date: bookingData.toDate,
       guest_count:
