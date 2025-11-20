@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Paper, Typography, Button, Box, Stack, Divider, Alert, Card, CardContent } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Link } from 'react-router-dom';
@@ -24,6 +24,8 @@ export default function Success() {
   let payment_reference = safeParse(localStorage.getItem('Payment_reference'));
   const datas = safeParse(localStorage.getItem('pendingBooking'));
 
+  const [bookingResponse, setBookingResponse] = useState(null);
+
   const confirmation = datas?.confirmation;
   const bookingData = datas || {};
 
@@ -35,28 +37,34 @@ export default function Success() {
 
   const isValidTotal = !isNaN(totalPaid) && totalPaid > 0;
 
+  // Prevent multiple API calls
+  const calledRef = useRef(false);
+
   useEffect(() => {
     reward();
   }, [reward]);
 
   useEffect(() => {
-      console.log("bookdata", bookdata);
-    if (bookdata) {
-        console.log("bookdata")
+    console.log("bookdata", bookdata);
+
+    if (!calledRef.current && bookdata) {
+      calledRef.current = true; // ensures bookTheHotel runs only once
+      console.log("Calling bookTheHotel only once!");
       bookTheHotel();
     }
   }, [bookdata]);
 
   const bookTheHotel = async () => {
     console.log("bookTheHotel called");
-    
+
     try {
-      const bookingResponse = await hotelService.bookHotel({
+      const res = await hotelService.bookHotel({
         ...bookdata,
         payment_reference,
       });
 
-      console.log("📥 Booking response:", bookingResponse);
+      setBookingResponse(res);
+      console.log("📥 Booking response:", res);
 
     } catch (error) {
       console.error("Booking failed:", error);
@@ -103,23 +111,21 @@ export default function Success() {
               Your booking details have been sent to your registered email.
             </Typography>
 
-            {confirmation && (
-              <Box sx={{ mt: 3, p: 2, bgcolor: 'white', borderRadius: 2, width: '100%' }}>
-                <Typography variant="caption" color="text.secondary">
-                  Booking Reference
-                </Typography>
-                <Typography variant="h6" fontWeight="bold" color="success.main">
-                  {confirmation.data.BookingId}
-                </Typography>
+            <Box sx={{ mt: 3, p: 2, bgcolor: 'white', borderRadius: 2, width: '100%' }}>
+              <Typography variant="caption" color="text.secondary">
+                Booking Reference
+              </Typography>
+              <Typography variant="h6" fontWeight="bold" color="success.main">
+                {bookdata?.BookingId || bookingResponse?.booking_id || 15721065094}
+              </Typography>
 
-                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                  Confirmation Code
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  {confirmation.data.ClientReference}
-                </Typography>
-              </Box>
-            )}
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                Confirmation Code
+              </Typography>
+              <Typography variant="body1" fontWeight="bold">
+                {payment_reference}
+              </Typography>
+            </Box>
           </Box>
 
           {/* RIGHT SIDE */}
@@ -134,7 +140,6 @@ export default function Success() {
                   <strong>Hotel:</strong> {datas?.hotel?.name}
                 </Typography>
 
-                {/* ROOMS */}
                 <Box>
                   <Typography fontWeight="bold" sx={{ mb: 1 }}>Rooms:</Typography>
 
@@ -158,12 +163,10 @@ export default function Success() {
                   </Box>
                 </Box>
 
-                {/* DURATION */}
                 <Typography>
                   <strong>Duration:</strong> {confirmation?.Nights || bookingData.duration} nights
                 </Typography>
 
-                {/* CHECK-IN */}
                 <Typography>
                   <strong>Check-in:</strong>{' '}
                   {confirmation?.ArrivalDate
@@ -173,7 +176,6 @@ export default function Success() {
                       : 'N/A'}
                 </Typography>
 
-                {/* CHECK-OUT */}
                 <Typography>
                   <strong>Check-out:</strong>{' '}
                   {bookingData.to ? dayjs(bookingData.to).format('dddd, MMMM D, YYYY') : 'N/A'}
@@ -181,7 +183,6 @@ export default function Success() {
 
                 <Divider sx={{ my: 2 }} />
 
-                {/* PRICE SUMMARY */}
                 <Card sx={{ boxShadow: 2 }}>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>Price Summary</Typography>

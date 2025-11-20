@@ -69,6 +69,7 @@ export const createActivity = async (bookingStage) => {
 
 // Booking status update function
 const updateBookingStatus = async (bookingDetails) => {
+  console.log("Updating booking status with details:", bookingDetails);
   try {
     const payload = {
       employee_id: bookingDetails.employee_id || getEmployeeId(),
@@ -86,7 +87,7 @@ const updateBookingStatus = async (bookingDetails) => {
       total_price: bookingDetails.total_price || 0,
       price: bookingDetails.price || 0,
       currency: bookingDetails.currency || "USD",
-      custom_payment_reference: bookingDetails.payment_reference || "",
+      custom_payment_reference: bookingDetails.payment_reference||bookingDetails?.custom_payment_reference || "",
 
     };
 
@@ -232,7 +233,7 @@ export const hotelService = {
       contact: bookingData.contact,
       payable_amount: bookingData.payable_amount,
       occupancy: bookingData.occupancy,
-      custom_payment_reference: bookingData.payment_reference || "",
+      custom_payment_reference: bookingData.payment_reference||bookingData?.custom_payment_reference || "",
     };
 
     console.log("Booking API payload:", payload);
@@ -271,7 +272,7 @@ export const hotelService = {
       price: bookingData.payable_amount || 0,
       currency: bookingData.currency || "USD",
       payment_method: "Card",
-      custom_payment_reference: bookingData.payment_reference || "",
+      custom_payment_reference: bookingData.payment_reference||bookingData.custom_payment_reference || "",
     };
 
     if (isSuccess) {
@@ -291,7 +292,7 @@ export const hotelService = {
     // Send failure booking attempt also to DB
     try {
       await updateBookingStatus({
-        booking_id: "",
+        booking_id: 15721065094|| "",
         check_in_date: bookingData.fromDate,
         check_out_date: bookingData.toDate,
         booking_status: "Failure",
@@ -308,7 +309,7 @@ export const hotelService = {
         total_price: bookingData.payable_amount || 0,
         price: bookingData.payable_amount || 0,
         currency: bookingData.currency || "USD",
-        custom_payment_reference: bookingData.payment_reference || "",
+        custom_payment_reference: bookingData.payment_reference||bookingData.custom_payment_reference || "",
       });
     } catch (err) {
       console.error("Failed to update booking status:", err);
