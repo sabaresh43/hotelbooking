@@ -86,7 +86,7 @@ const updateBookingStatus = async (bookingDetails) => {
       total_price: bookingDetails.total_price || 0,
       price: bookingDetails.price || 0,
       currency: bookingDetails.currency || "USD",
-      payment_reference: bookingDetails.payment_reference || "",
+      custom_payment_reference: bookingDetails.payment_reference || "",
 
     };
 
@@ -232,7 +232,7 @@ export const hotelService = {
       contact: bookingData.contact,
       payable_amount: bookingData.payable_amount,
       occupancy: bookingData.occupancy,
-      payment_reference: bookingData.payment_reference || "",
+      custom_payment_reference: bookingData.payment_reference || "",
     };
 
     console.log("Booking API payload:", payload);
@@ -271,7 +271,7 @@ export const hotelService = {
       price: bookingData.payable_amount || 0,
       currency: bookingData.currency || "USD",
       payment_method: "Card",
-      payment_reference: bookingData.payment_reference || "",
+      custom_payment_reference: bookingData.payment_reference || "",
     };
 
     if (isSuccess) {
@@ -308,7 +308,7 @@ export const hotelService = {
         total_price: bookingData.payable_amount || 0,
         price: bookingData.payable_amount || 0,
         currency: bookingData.currency || "USD",
-        payment_reference: bookingData.payment_reference || "",
+        custom_payment_reference: bookingData.payment_reference || "",
       });
     } catch (err) {
       console.error("Failed to update booking status:", err);
