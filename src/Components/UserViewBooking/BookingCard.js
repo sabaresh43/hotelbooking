@@ -90,19 +90,25 @@ export default function BookingCard({
 
         {/* Amenities */}
         <Typography variant="body2" color="text.secondary" mb={2} sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-          <b>Amenities:</b> 
-          {amenities.map((amenity, index) => (
-            <Chip 
-              key={index}
-              label={amenity}
-              color="secondary" 
-              variant="outlined" 
-              size="small" 
-              sx={{ p: 1, pt:1.25, ml: 0.5, mb: 0.5 }} 
-            />
-          ))
-            
-          }
+          <Box display="flex" gap={1} mb={0.5} >
+
+          <b >Amenities:</b> 
+            <Box display="flex" gap={1} flexWrap="wrap">
+
+            {amenities.map((amenity, index) => (
+              <Chip 
+                key={index}
+                label={amenity}
+                color="secondary" 
+                variant="outlined" 
+                size="small" 
+                sx={{ p: 1, pt:1.25, ml: 0.5, mb: 0.5 }} 
+              />
+            ))
+              
+            }
+            </Box>
+          </Box>
 
         </Typography>
 
