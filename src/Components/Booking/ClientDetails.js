@@ -4,7 +4,8 @@ import BookingContext from "./BookingContext";
 import { Controller, useFormContext } from "react-hook-form";
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch as useReduxDispatch } from "react-redux";
+import { startTimer } from "../../features/timerSlice";
 import { UserInfoReuseContext } from "./BookRooms";
 import { Skeleton } from "@mui/material";
 import { trackActivity } from "../../services/hotel.service";
@@ -18,10 +19,21 @@ function ClientDetails({ nextStep }) {
     const { control, handleSubmit, reset, formState: { errors, isSubmitted, isSubmitSuccessful, isValid }, watch, setError, clearErrors, setValue, getValues }
         = useFormContext();
     const navigate = useNavigate();
+    const reduxDispatch = useReduxDispatch();
+
+    useEffect(() => {
+        // Start timer when entering client details
+        if (bookingData?.hotel?.id) {
+            reduxDispatch(startTimer({ hotelId: bookingData.hotel.id }));
+        }
+    }, [bookingData?.hotel?.id, reduxDispatch]);
+
+    // Actually, I can't easily check state inside useEffect without adding it to dependency or using ref.
+    // I'll add `timer` to useSelector.
 
     const onSubmit = (data, e) => {
         e.preventDefault();
-                        const userData = getValues("clientInfo")
+        const userData = getValues("clientInfo")
 
         if (useExistingInfo) {
             if (userInfoReuseData.clientInfo) {
@@ -73,18 +85,18 @@ function ClientDetails({ nextStep }) {
         trackActivity("guest_details_entered").catch((err) =>
             console.error("Activity tracking failed:", err)
         );
-// (async () => {
-//   const res = await paymentService.createPayment({
-//     amount: bookingData.totalPrice ||10,
-//     email: userData.email,
-//     name: userData.firstName + " " + userData.lastName,
-//     phone: userData.phone,
-//   });
-// console.log("Payment Service Response:", res);
-//   if (res?.message?.payment_url) {
-//     window.location.href = res.message.payment_url; // Redirect to HitPay checkout
-//   }
-// })();
+        // (async () => {
+        //   const res = await paymentService.createPayment({
+        //     amount: bookingData.totalPrice ||10,
+        //     email: userData.email,
+        //     name: userData.firstName + " " + userData.lastName,
+        //     phone: userData.phone,
+        //   });
+        // console.log("Payment Service Response:", res);
+        //   if (res?.message?.payment_url) {
+        //     window.location.href = res.message.payment_url; // Redirect to HitPay checkout
+        //   }
+        // })();
 
         nextStep();
         navigate("review");

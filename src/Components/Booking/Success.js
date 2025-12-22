@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useReward } from 'react-rewards';
 import dayjs from "dayjs";
 import hotelService from "../../services/hotel.service";
+import { useDispatch } from 'react-redux';
+import { stopTimer } from '../../features/timerSlice';
 
 // Safe JSON parser
 const safeParse = (value) => {
@@ -18,6 +20,7 @@ const safeParse = (value) => {
 export default function Success() {
 
   const { reward } = useReward('rewardId', 'confetti');
+  const dispatch = useDispatch();
 
   // Safely parse all localStorage values
   const bookdata = safeParse(localStorage.getItem('bookingPayload'));
@@ -42,7 +45,8 @@ export default function Success() {
 
   useEffect(() => {
     reward();
-  }, [reward]);
+    dispatch(stopTimer());
+  }, [reward, dispatch]);
 
   useEffect(() => {
     console.log("bookdata", bookdata);

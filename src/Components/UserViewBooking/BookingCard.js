@@ -17,9 +17,11 @@ export default function BookingCard({
   statusColor,
   checkIn,
   checkOut,
-  amenities,
+  roomBasis,
+  roomCategory,
   amount,
-  onViewDetails
+  onViewDetails,
+  onCancel
 }) {
   return (
     <Card
@@ -65,11 +67,11 @@ export default function BookingCard({
           "&:last-child": { pb: 2 }
         }}
       >
-        
+
         {/* Header: Hotel Name + Status */}
         <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Typography variant="h6" fontWeight={600} display="flex" gap={1} color="primary.main" sx={{ fontSize: { xs: '1.1rem', sm: '1.2rem' } }}>
-            <HotelIcon fontSize="small" /> 
+            <HotelIcon fontSize="small" />
             {hotelName}
           </Typography>
           <Chip label={statusLabel} color={statusColor} size="small" />
@@ -88,37 +90,70 @@ export default function BookingCard({
           </Box>
         </Box>
 
-        {/* Amenities */}
-        <Typography variant="body2" color="text.secondary" mb={2} sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-          <Box display="flex" gap={1} mb={0.5} >
+        {/* Room Details */}
+        <Box mb={2}>
+          <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' }, mb: 0.5 }}>
+            <b>Room Category:</b> {roomCategory || 'N/A'}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+            <b>Room Basis:</b> {roomBasis || 'N/A'}
+          </Typography>
+        </Box>
 
-          <b >Amenities:</b> 
-            <Box display="flex" gap={1} flexWrap="wrap">
-
-            {amenities.map((amenity, index) => (
-              <Chip 
-                key={index}
-                label={amenity}
-                color="secondary" 
-                variant="outlined" 
-                size="small" 
-                sx={{ p: 1, pt:1.25, ml: 0.5, mb: 0.5 }} 
-              />
-            ))
-              
-            }
-            </Box>
-          </Box>
-
-        </Typography>
 
         {/* Amount */}
         <Typography variant="h6" fontWeight={700} color="primary" mb={2}>
           € {amount}
         </Typography>
 
-        {/* View Details Button */}
-        
+        {/* Action Buttons */}
+        <Box display="flex" gap={2} mt="auto">
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={onViewDetails}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 600,
+              py: 1.2,
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: 4
+              }
+            }}
+          >
+            View Details
+          </Button>
+
+          {statusLabel !== 'Failed' && statusLabel !== 'Cancelled' && (
+            <Button
+              variant="outlined"
+              color="error"
+              fullWidth
+              onClick={onCancel}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 600,
+                py: 1.2,
+                borderRadius: 2,
+                borderWidth: 2,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  borderWidth: 2,
+                  transform: 'translateY(-2px)',
+                  boxShadow: 2,
+                  backgroundColor: 'error.main',
+                  color: 'white'
+                }
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+        </Box>
+
       </CardContent>
     </Card>
   );

@@ -13,6 +13,8 @@ function BookingReview({ prevStep }) {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    console.log("🐛 DEBUG BookingReview Render rooms:", bookingData.rooms);
+
     const goBack = () => {
         prevStep();
         navigate(-1);
@@ -61,6 +63,8 @@ function BookingReview({ prevStep }) {
                 const totalTax = nonInclusiveTaxes.reduce((sum, tax) => sum + (parseFloat(tax.Amount || 0)), 0);
                 totalPayableAmount += basePrice + totalTax;
             });
+
+            console.log("🐛 DEBUG BookingReview rooms:", bookingData.rooms);
 
             console.log("💰 Calculated Total Payable Amount:", totalPayableAmount);
 
@@ -112,8 +116,8 @@ function BookingReview({ prevStep }) {
                 hotelId: bookingData.hotel.id,
                 hotelName: bookingData.hotel.name || bookingData.hotel.hotelName || "",
                 roomCode: selectedRoom.HotelSearchCode,
-                fromDate: dayjs(bookingData.from).format("YYYY-MM-DD"),
-                toDate: dayjs(bookingData.to).format("YYYY-MM-DD"),
+                fromDate: dayjs(bookingData.from).isValid() ? dayjs(bookingData.from).format("YYYY-MM-DD") : bookingData.from,
+                toDate: dayjs(bookingData.to).isValid() ? dayjs(bookingData.to).format("YYYY-MM-DD") : bookingData.to,
                 rooms: roomsPayload,
                 currency: selectedRoom.Currency || "USD",
                 country: "IN",
@@ -128,7 +132,7 @@ function BookingReview({ prevStep }) {
                 }
             };
 
-            localStorage.setItem('bookingPayload',JSON.stringify(bookingPayload));
+            localStorage.setItem('bookingPayload', JSON.stringify(bookingPayload));
 
             console.log("📤 Submitting booking:", bookingPayload);
 
@@ -209,7 +213,33 @@ function BookingReview({ prevStep }) {
                                 {bookingData.rooms.map((room, index) => (
                                     <Box key={index} sx={{ pl: 2 }}>
                                         <Typography>• Room {index + 1}: {room.Description}</Typography>
-                                        <Typography variant="caption">{room.RoomBasis}</Typography>
+                                        <Typography variant="caption" display="block">{room.RoomBasis}</Typography>
+
+                                        {/* Cancellation Deadline */}
+                                        {room.CxlDeadLine && (
+                                            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                                                <strong>Cancellation Deadline:</strong> {room.CxlDeadLine}
+                                            </Typography>
+                                        )}
+
+                                        {/* Remarks */}
+                                        {room.Remark && (
+                                            <Typography variant="body2" sx={{ mt: 1, p: 1, bgcolor: 'grey.100', borderRadius: 1 }} color="text.secondary">
+                                                <strong>Remarks:</strong> {room.Remark}
+                                            </Typography>
+                                        )}
+
+                                        {/* Cancellation Policies */}
+                                        {room.CancellationPolicies && room.CancellationPolicies.length > 0 && (
+                                            <Box sx={{ mt: 1 }}>
+                                                <Typography variant="body2" fontWeight={600}>Cancellation Policy:</Typography>
+                                                {room.CancellationPolicies.map((policy, idx) => (
+                                                    <Typography key={idx} variant="caption" display="block" color="text.secondary">
+                                                        • From {policy.Starting}: {policy.Mode === 'PCT' ? `${policy.Value}%` : policy.Value} penalty ({policy.BasedOn})
+                                                    </Typography>
+                                                ))}
+                                            </Box>
+                                        )}
                                     </Box>
                                 ))}
                             </Box>

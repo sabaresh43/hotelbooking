@@ -118,7 +118,7 @@ const displayDataReducer = (state, action) => {
 function ViewHotels() {
     const { dispatch, hotelList, reloadHotelList } = useContext(HotelDisplayContext);
     const [displayData, dispatchDisplay] = useReducer(displayDataReducer, initialDisplayData);
-    const { searchOption, setSearchOption,updatePriceRange} = useContext(SearchContext);
+    const { searchOption, setSearchOption, updatePriceRange } = useContext(SearchContext);
     const debouncedFilterData = useDebounce(dispatchDisplay, 1000);
 
     // ✅ Get dynamic min/max from hotelList
@@ -262,7 +262,7 @@ function ViewHotels() {
                                         sx={{ my: 1, mx: 'auto', justifyContent: 'center', width: '95%' }}
                                     />
 
-                                     {/* ✅ Show min/max labels */}
+                                    {/* ✅ Show min/max labels */}
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, px: 1 }}>
                                         <Typography variant="caption" color="text.secondary" fontWeight={600}>
                                             Min: {getCurrencySymbol()}{minPrice}
@@ -494,9 +494,34 @@ function ViewHotels() {
                                                                         label={item.rooms.room_basis}
                                                                         size="small"
                                                                         color="secondary"
-                                                                        sx={{ mr: 1 }}
+                                                                        sx={{ mr: 1, mb: 1 }}
                                                                     />
                                                                 )}
+
+                                                                {item.rooms?.CxlDeadLine && (
+                                                                    <Chip
+                                                                        label={`Cancel before: ${item.rooms.CxlDeadLine}`}
+                                                                        size="small"
+                                                                        variant="outlined"
+                                                                        color="success"
+                                                                        sx={{ mb: 1 }}
+                                                                    />
+                                                                )}
+
+                                                                {item.rooms?.Remark && (
+                                                                    <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1, fontSize: '0.75rem' }}>
+                                                                        {item.rooms.Remark.length > 100 ? item.rooms.Remark.substring(0, 100) + '...' : item.rooms.Remark}
+                                                                    </Typography>
+                                                                )}
+
+                                                                {/* {item.rooms?.room_basis && (
+                                                                    <Chip
+                                                                        label={item.rooms.room_basis}
+                                                                        size="small"
+                                                                        color="secondary"
+                                                                        sx={{ mr: 1 }}
+                                                                    />
+                                                                )} */}
                                                             </Box>
 
                                                             {item.rating && (
@@ -529,9 +554,10 @@ function ViewHotels() {
                                                                     })()}
 
                                                                 </Typography>
-                                                                {/* {item.rooms?.taxesFees > 0 && (
+                                                                {/* Tax Display */}
+                                                                {/* Logic: if taxesFees > 0, show it. The user provided snippet has "taxesFees": 0, so check validity. */}
+                                                                {(item.rooms?.taxesFees !== undefined && item.rooms?.taxesFees !== null) && (
                                                                     <Typography variant="caption" color="text.secondary" display="block">
-
                                                                         {(() => {
                                                                             const currencySymbolMap = {
                                                                                 USD: '$',
@@ -539,11 +565,16 @@ function ViewHotels() {
                                                                                 EUR: '€',
                                                                             };
                                                                             const symbol = currencySymbolMap[item.rooms.currency?.toUpperCase()] || item.rooms.currency;
-                                                                            return `${symbol} ${item.rooms?.taxesFees || 0} taxes & fees`;
-                                                                        })()}
+                                                                            const taxVal = item.rooms.taxesFees;
 
+                                                                            if (taxVal > 0) {
+                                                                                return `+ ${symbol} ${taxVal} taxes & fees`;
+                                                                            } else {
+                                                                                return `(Includes taxes & fees)`;
+                                                                            }
+                                                                        })()}
                                                                     </Typography>
-                                                                )} */}
+                                                                )}
                                                             </Box>
 
                                                             <Button

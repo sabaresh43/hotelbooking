@@ -73,7 +73,7 @@ const updateBookingStatus = async (bookingDetails) => {
   try {
     const payload = {
       employee_id: bookingDetails.employee_id || getEmployeeId(),
-    
+
       booking_id: bookingDetails.booking_id || 15721065094,
       check_in_date: bookingDetails.check_in_date || "",
       check_out_date: bookingDetails.check_out_date || "",
@@ -87,7 +87,7 @@ const updateBookingStatus = async (bookingDetails) => {
       total_price: bookingDetails.total_price || 0,
       price: bookingDetails.price || 0,
       currency: bookingDetails.currency || "USD",
-      custom_payment_reference: bookingDetails.payment_reference||bookingDetails?.custom_payment_reference || "",
+      custom_payment_reference: bookingDetails.payment_reference || bookingDetails?.custom_payment_reference || "",
 
     };
 
@@ -110,27 +110,27 @@ const updateBookingStatus = async (bookingDetails) => {
 };
 
 export const getUserBookings = async () => {
-    try {
-        const employeeId = getEmployeeId();
-        const token = getToken();
+  try {
+    const employeeId = getEmployeeId();
+    const token = getToken();
 
-        const response = await axios.post(
-            `${FRAPPE_URL}.travel_bookings.travel_bookings.get_all_bookings`,
-            { employee_id: employeeId },
-            {
-                headers: {
-                    Authorization: `token ${token}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
+    const response = await axios.post(
+      `${FRAPPE_URL}.travel_bookings.travel_bookings.get_all_bookings`,
+      { employee_id: employeeId },
+      {
+        headers: {
+          Authorization: `token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-        console.log("📋 Bookings fetched:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Failed to fetch user bookings:", error);
-        throw error;
-    }
+    console.log("📋 Bookings fetched:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch user bookings:", error);
+    throw error;
+  }
 };
 
 export const hotelService = {
@@ -138,42 +138,42 @@ export const hotelService = {
   // Search hotels with filters - will call external supplier POST when configured
   searchHotels: async (options) => {
     const formatDate = (date) => {
-  if (!date) return "";
-  const d = new Date(date);
-  return !isNaN(d) ? d.toISOString().split("T")[0] : "";
-};
-  const payload = {
-    country: "IN",
-    cityCode: options.cityCode || options.location || "",
-    fromDate: formatDate(options.fromDate || options.from),
-    toDate: formatDate(options.toDate || options.to),
-    sort: options.sort || 1,
-    currency: options.currency || "EUR",
-    occupancy: options.occupancy || [
-      { adults: options.numberOfGuest || 2, roomCount: 1 },
-    ],
-  };
+      if (!date) return "";
+      const d = new Date(date);
+      return !isNaN(d) ? d.toISOString().split("T")[0] : "";
+    };
+    const payload = {
+      country: "IN",
+      cityCode: options.cityCode || options.location || "",
+      fromDate: formatDate(options.fromDate || options.from),
+      toDate: formatDate(options.toDate || options.to),
+      sort: options.sort || 1,
+      currency: options.currency || "EUR",
+      occupancy: options.occupancy || [
+        { adults: options.numberOfGuest || 2, roomCount: 1 },
+      ],
+    };
 
-  console.log("payload", payload);
+    console.log("payload", payload);
 
-  if (BASE_URL) {
-    const response = await api.post(`/hotels/${SUPPLIER}`, payload, {
-      headers: { "Content-Type": "application/json" },
+    if (BASE_URL) {
+      const response = await api.post(`/hotels/${SUPPLIER}`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+      return response.data;
+    }
+
+    // If using fallback, also format dates there
+    const response = await api.get("/hotels/search", {
+      params: {
+        ...options,
+        fromDate: payload.fromDate,
+        toDate: payload.toDate,
+      },
     });
+
     return response.data;
-  }
-
-  // If using fallback, also format dates there
-  const response = await api.get("/hotels/search", {
-    params: {
-      ...options,
-      fromDate: payload.fromDate,
-      toDate: payload.toDate,
-    },
-  });
-
-  return response.data;
-},
+  },
 
   // Get hotel by ID
   // Get hotel details by ID with search parameters
@@ -185,12 +185,12 @@ export const hotelService = {
         roomCount: occ.roomCount,
         childAges: occ.childAges || [],
       })) || [
-        {
-          adults: searchOptions.numberOfGuest || 2,
-          roomCount: 1,
-          childAges: [],
-        },
-      ];
+          {
+            adults: searchOptions.numberOfGuest || 2,
+            roomCount: 1,
+            childAges: [],
+          },
+        ];
 
       const payload = {
         country: "IN",
@@ -218,84 +218,64 @@ export const hotelService = {
     }
   },
 
- bookHotel: async (bookingData) => {
-  if (!BASE_URL) return;
-
-  try {
-    const payload = {
-      hotelId: bookingData.hotelId,
-      roomCode: bookingData.roomCode,
-      fromDate: bookingData.fromDate,
-      toDate: bookingData.toDate,
-      rooms: bookingData.rooms,
-      currency: bookingData.currency || "EUR",
-      country: bookingData.country || "IN",
-      contact: bookingData.contact,
-      payable_amount: bookingData.payable_amount,
-      occupancy: bookingData.occupancy,
-      custom_payment_reference: bookingData.payment_reference||bookingData?.custom_payment_reference || "",
-    };
-
-    console.log("Booking API payload:", payload);
-
-    const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
-      headers: { "Content-Type": "application/json" },
-    });
-
-    console.log("Booking API response:", response);
-
-    const bookingResult = response?.data?.data || response?.data || {};
-
-    const roomName =
-      bookingResult?.Hotel?.RatePlanList?.[0]?.RoomName ||
-      bookingData?.rooms?.[0]?.roomName ||
-      bookingData.roomCode ||
-      "";
-
-    const isSuccess =
-      response?.data?.status?.toString().toLowerCase() === "success" ||
-      response?.data?.BookingId;
-
-    const bookingUpdatePayload = {
-      booking_id: response?.data?.BookingId || 15721065094,
-      check_in_date: bookingData.fromDate,
-      check_out_date: bookingData.toDate,
-      guest_count:
-        bookingData.rooms?.reduce(
-          (sum, room) => sum + (room.adults || 0),
-          0
-        ) || 0,
-      hotel_name: bookingData.hotelName || "",
-      supplier: SUPPLIER,
-      room_type: roomName,
-      total_price: bookingData.payable_amount || 0,
-      price: bookingData.payable_amount || 0,
-      currency: bookingData.currency || "USD",
-      payment_method: "Card",
-      custom_payment_reference: bookingData.payment_reference||bookingData.custom_payment_reference || "",
-    };
-
-    if (isSuccess) {
-      bookingUpdatePayload.booking_status = "Success";
-      bookingUpdatePayload.payment_status = "Success";
-    } else {
-      bookingUpdatePayload.booking_status = "Failure";
-      bookingUpdatePayload.payment_status = "Pending";
+  // Get booking valuation
+  bookingValuation: async (payload) => {
+    if (BASE_URL) {
+      console.log("Valuation payload:", payload);
+      const response = await api.post(
+        `/hotels/${SUPPLIER}/bookingValuation`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log("Valuation response:", response.data);
+      return response.data;
     }
+  },
 
-    await updateBookingStatus(bookingUpdatePayload);
+  bookHotel: async (bookingData) => {
+    if (!BASE_URL) return;
 
-    return response;
-  } catch (error) {
-    console.error("Booking API Error:", error);
-
-    // Send failure booking attempt also to DB
     try {
-      await updateBookingStatus({
-        booking_id: 15721065094|| "",
+      const payload = {
+        hotelId: bookingData.hotelId,
+        roomCode: bookingData.roomCode,
+        fromDate: bookingData.fromDate,
+        toDate: bookingData.toDate,
+        rooms: bookingData.rooms,
+        currency: bookingData.currency || "EUR",
+        country: bookingData.country || "IN",
+        contact: bookingData.contact,
+        payable_amount: bookingData.payable_amount,
+        occupancy: bookingData.occupancy,
+        custom_payment_reference: bookingData.payment_reference || bookingData?.custom_payment_reference || "",
+      };
+
+      console.log("Booking API payload:", payload);
+
+      const response = await api.post(`/hotels/${SUPPLIER}/booking`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log("Booking API response:", response);
+
+      const bookingResult = response?.data?.data || response?.data || {};
+
+      const roomName =
+        bookingResult?.Hotel?.RatePlanList?.[0]?.RoomName ||
+        bookingData?.rooms?.[0]?.roomName ||
+        bookingData.roomCode ||
+        "";
+
+      const isSuccess =
+        response?.data?.status?.toString().toLowerCase() === "success" ||
+        response?.data?.BookingId;
+
+      const bookingUpdatePayload = {
+        booking_id: response?.data?.BookingId || 15721065094,
         check_in_date: bookingData.fromDate,
         check_out_date: bookingData.toDate,
-        booking_status: "Failure",
         guest_count:
           bookingData.rooms?.reduce(
             (sum, room) => sum + (room.adults || 0),
@@ -303,43 +283,79 @@ export const hotelService = {
           ) || 0,
         hotel_name: bookingData.hotelName || "",
         supplier: SUPPLIER,
-        room_type: bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
-        payment_status: "Pending",
-        payment_method: "Card",
+        room_type: roomName,
         total_price: bookingData.payable_amount || 0,
         price: bookingData.payable_amount || 0,
         currency: bookingData.currency || "USD",
-        custom_payment_reference: bookingData.payment_reference||bookingData.custom_payment_reference || "",
-      });
-    } catch (err) {
-      console.error("Failed to update booking status:", err);
-    }
+        payment_method: "Card",
+        custom_payment_reference: bookingData.payment_reference || bookingData.custom_payment_reference || "",
+      };
 
-  }
+      if (isSuccess) {
+        bookingUpdatePayload.booking_status = "Success";
+        bookingUpdatePayload.payment_status = "Success";
+      } else {
+        bookingUpdatePayload.booking_status = "Failure";
+        bookingUpdatePayload.payment_status = "Pending";
+      }
+
+      await updateBookingStatus(bookingUpdatePayload);
+
+      return response;
+    } catch (error) {
+      console.error("Booking API Error:", error);
+
+      // Send failure booking attempt also to DB
+      try {
+        await updateBookingStatus({
+          booking_id: 15721065094 || "",
+          check_in_date: bookingData.fromDate,
+          check_out_date: bookingData.toDate,
+          booking_status: "Failure",
+          guest_count:
+            bookingData.rooms?.reduce(
+              (sum, room) => sum + (room.adults || 0),
+              0
+            ) || 0,
+          hotel_name: bookingData.hotelName || "",
+          supplier: SUPPLIER,
+          room_type: bookingData.rooms?.[0]?.roomCode || bookingData.roomCode || "",
+          payment_status: "Pending",
+          payment_method: "Card",
+          total_price: bookingData.payable_amount || 0,
+          price: bookingData.payable_amount || 0,
+          currency: bookingData.currency || "USD",
+          custom_payment_reference: bookingData.payment_reference || bookingData.custom_payment_reference || "",
+        });
+      } catch (err) {
+        console.error("Failed to update booking status:", err);
+      }
+
+    }
 
     let data = {};
     return data;
   },
 
   // Get booking list by employee ID
-   getUserBookings: async () => {
-        try {
-            const response = await getUserBookings();
-            return {
-                success: response.message?.success || false,
-                bookings: response.message?.data || [],
-                count: response.message?.count || 0
-            };
-        } catch (error) {
-            console.error("Failed to fetch bookings:", error);
-            return {
-                success: false,
-                bookings: [],
-                count: 0,
-                error: error.message
-            };
-        }
-    },
+  getUserBookings: async () => {
+    try {
+      const response = await getUserBookings();
+      return {
+        success: response.message?.success || false,
+        bookings: response.message?.data || [],
+        count: response.message?.count || 0
+      };
+    } catch (error) {
+      console.error("Failed to fetch bookings:", error);
+      return {
+        success: false,
+        bookings: [],
+        count: 0,
+        error: error.message
+      };
+    }
+  },
   // Get booking details by booking ID and supplier
   getBookingDetails: async (bookingId, supplier) => {
     try {
