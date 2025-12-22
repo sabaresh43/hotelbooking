@@ -9,7 +9,7 @@ import {
     DialogContent,
     Alert,
     Stack,
-   
+
     CardMedia,
     Divider
 } from '@mui/material';
@@ -30,7 +30,7 @@ function RoomDetailsList({ rooms }) {
     const { bookingData, dispatch } = useContext(BookingContext);
     const navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
-    
+
     // ✅ Get total rooms needed
     const totalRoomsNeeded = bookingData.occupancy?.reduce((sum, occ) => sum + occ.roomCount, 0) || 1;
 
@@ -57,32 +57,32 @@ function RoomDetailsList({ rooms }) {
             HotelSearchCode: room.HotelSearchCode,
             RoomId: room.HotelSearchCode,
             roomId: room.HotelSearchCode,
-            
+
             Description: room.Rooms?.[0] || 'Standard Room',
             RoomBasis: room.RoomBasis,
-            
+
             baseRate: roomBasePrice,
             TotalPrice: roomBasePrice,
             Currency: room.Currency || 'USD',
-            
+
             Tax: room.Tax || [],
             Fee: room.Fee || [],
-            
+
             NonRef: room.NonRef,
             CxlDeadLine: room.CxlDeadLine,
             Availability: room.Availability,
             Special: room.Special,
-            
+
             sleepsCount: bookingData.numberOfGuest || 2,
             tags: room.Special ? [room.Special] : [],
-            
+
             CancellationPolicies: room.CancellationPolicies,
             Remark: room.Remark
         };
 
         // ✅ Create array of same room repeated for number of rooms needed
         const roomsArray = Array(totalRoomsNeeded).fill(normalizedRoom);
-        
+
         // ✅ Calculate total price (room price × number of rooms)
         const singleRoomPrice = roomBasePrice + totalNonInclusiveTax;
         const totalPrice = singleRoomPrice * totalRoomsNeeded;
@@ -133,17 +133,18 @@ function RoomDetailsList({ rooms }) {
                     const inclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Inclusive") || [];
                     const nonInclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Not Inclusive") || [];
                     const totalNonInclusiveTax = nonInclusiveTaxes.reduce((sum, tax) => sum + tax.Amount, 0);
-                    const singleRoomPrice = basePrice + totalNonInclusiveTax;
-                    
+                    // ✅ Fix: Don't add non-inclusive tax to the main price display. Show it separately.
+                    const singleRoomPrice = basePrice;
+
                     // ✅ Calculate total for all rooms
                     const totalPriceForAllRooms = singleRoomPrice * totalRoomsNeeded;
 
                     return (
-                        <Card 
-                            key={room.HotelSearchCode || index} 
-                            sx={{ 
-                                display: 'flex', 
-                                borderRadius: 2, 
+                        <Card
+                            key={room.HotelSearchCode || index}
+                            sx={{
+                                display: 'flex',
+                                borderRadius: 2,
                                 boxShadow: 3,
                                 '&:hover': {
                                     boxShadow: 6,
@@ -267,7 +268,7 @@ function RoomDetailsList({ rooms }) {
                 </DialogContent>
             </Dialog>
 
-         
+
         </>
     );
 }
