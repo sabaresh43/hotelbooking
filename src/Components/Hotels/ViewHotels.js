@@ -508,9 +508,26 @@ function ViewHotels() {
                                                                     />
                                                                 )}
 
+                                                                {/* ✅ Show Cancellation Policy */}
+                                                                {item.rooms?.CancellationPolicies && item.rooms.CancellationPolicies.length > 0 && (
+                                                                    <Box sx={{ mt: 1, mb: 1 }}>
+                                                                        <Typography variant="body2" fontWeight="bold" sx={{ fontSize: '0.75rem', color: 'text.primary' }}>
+                                                                            Cancellation Policy:
+                                                                        </Typography>
+                                                                        {item.rooms.CancellationPolicies.map((policy, idx) => (
+                                                                            <Typography key={idx} variant="caption" display="block" color="error" sx={{ fontSize: '0.7rem' }}>
+                                                                                • From {policy.Starting}: {policy.Mode === 'PCT' ? `${policy.Value}% penalty` : `${policy.Value} ${policy.BasedOn} charges`}
+                                                                            </Typography>
+                                                                        ))}
+                                                                    </Box>
+                                                                )}
+
                                                                 {item.rooms?.Remark && (
                                                                     <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1, fontSize: '0.75rem' }}>
-                                                                        {item.rooms.Remark.length > 100 ? item.rooms.Remark.substring(0, 100) + '...' : item.rooms.Remark}
+                                                                        {(() => {
+                                                                            const cleanRemark = item.rooms.Remark.replace(/<[^>]*>?/gm, '');
+                                                                            return cleanRemark.length > 100 ? cleanRemark.substring(0, 100) + '...' : cleanRemark;
+                                                                        })()}
                                                                     </Typography>
                                                                 )}
 

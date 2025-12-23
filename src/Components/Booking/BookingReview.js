@@ -61,7 +61,11 @@ function BookingReview({ prevStep }) {
                 const basePrice = parseFloat(room.TotalPrice || room.baseRate || 0);
                 const nonInclusiveTaxes = room.Tax?.filter(t => t.Inclusive === "Not Inclusive") || [];
                 const totalTax = nonInclusiveTaxes.reduce((sum, tax) => sum + (parseFloat(tax.Amount || 0)), 0);
-                totalPayableAmount += basePrice + totalTax;
+
+                const nonInclusiveFees = room.Fee?.filter(f => f.Inclusive === "Not Inclusive" || f.Inclusive === false || f.Inclusive === "false") || [];
+                const totalFee = nonInclusiveFees.reduce((sum, fee) => sum + (parseFloat(fee.Amount || 0)), 0);
+
+                totalPayableAmount += basePrice + totalTax + totalFee;
             });
 
             console.log("🐛 DEBUG BookingReview rooms:", bookingData.rooms);
@@ -225,7 +229,7 @@ function BookingReview({ prevStep }) {
                                         {/* Remarks */}
                                         {room.Remark && (
                                             <Typography variant="body2" sx={{ mt: 1, p: 1, bgcolor: 'grey.100', borderRadius: 1 }} color="text.secondary">
-                                                <strong>Remarks:</strong> {room.Remark}
+                                                <strong>Remarks:</strong> {room.Remark.replace(/<[^>]*>?/gm, '')}
                                             </Typography>
                                         )}
 
@@ -235,13 +239,48 @@ function BookingReview({ prevStep }) {
                                                 <Typography variant="body2" fontWeight={600}>Cancellation Policy:</Typography>
                                                 {room.CancellationPolicies.map((policy, idx) => (
                                                     <Typography key={idx} variant="caption" display="block" color="text.secondary">
-                                                        • From {policy.Starting}: {policy.Mode === 'PCT' ? `${policy.Value}%` : policy.Value} penalty ({policy.BasedOn})
+                                                        • From {policy.Starting}: {policy.Mode === 'PCT' ? `${policy.Value}% penalty` : `${policy.Value} ${policy.BasedOn} charges`} ({policy.BasedOn})
                                                     </Typography>
                                                 ))}
                                             </Box>
                                         )}
                                     </Box>
                                 ))}
+
+                                {/* ✅ Fee Breakdown (Review Page) */}
+                                {bookingData.rooms.map((room, index) => {
+                                    const allFees = room.Fee || [];
+                                    const inclusiveFees = allFees.filter(f => f.Inclusive === "Inclusive" || f.Inclusive === true || f.Inclusive === "true");
+                                    const nonInclusiveFees = allFees.filter(f => f.Inclusive === "Not Inclusive" || f.Inclusive === false || f.Inclusive === "false");
+                                    const currency = room.Currency || 'USD';
+
+                                    if (inclusiveFees.length === 0 && nonInclusiveFees.length === 0) return null;
+
+                                    return (
+                                        <Box key={`fees-${index}`} sx={{ mt: 1, pl: 0 }}>
+                                            {allFees.length > 0 && (
+                                                <Box sx={{ mt: 1 }}>
+                                                    <Typography variant="body2" fontWeight="bold">Fees:</Typography>
+                                                    {allFees.map((fee, idx) => {
+                                                        const feeName = fee.Detail ? fee.Detail.replace(/_/g, ' ') : fee.Type;
+                                                        const isInclusive = fee.Inclusive === "Inclusive" || fee.Inclusive === true || fee.Inclusive === "true";
+
+                                                        return (
+                                                            <Stack key={idx} direction="row" justifyContent="space-between" sx={{ pl: 2, pr: 2 }}>
+                                                                <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+                                                                    {feeName}
+                                                                </Typography>
+                                                                <Typography variant="caption" color={isInclusive ? "success.main" : "warning.main"}>
+                                                                    {currency} {fee.Amount.toFixed(2)} {isInclusive ? '(included)' : ''}
+                                                                </Typography>
+                                                            </Stack>
+                                                        );
+                                                    })}
+                                                </Box>
+                                            )}
+                                        </Box>
+                                    );
+                                })}
                             </Box>
 
                             <Divider sx={{ my: 1 }} />
@@ -265,7 +304,7 @@ function BookingReview({ prevStep }) {
                     </Button>
                 </Box>
             </Stack>
-        </Container>
+        </Container >
     );
 }
 

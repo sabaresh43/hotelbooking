@@ -52,6 +52,16 @@ function RoomDetailsList({ rooms }) {
             });
         }
 
+        // ✅ Calculate Fees
+        let totalNonInclusiveFee = 0;
+        if (room.Fee && room.Fee.length > 0) {
+            room.Fee.forEach(fee => {
+                if (fee.Inclusive === "Not Inclusive" || fee.Inclusive === "false") {
+                    totalNonInclusiveFee += fee.Amount;
+                }
+            });
+        }
+
         // ✅ Normalize room structure
         const normalizedRoom = {
             HotelSearchCode: room.HotelSearchCode,
@@ -84,7 +94,8 @@ function RoomDetailsList({ rooms }) {
         const roomsArray = Array(totalRoomsNeeded).fill(normalizedRoom);
 
         // ✅ Calculate total price (room price × number of rooms)
-        const singleRoomPrice = roomBasePrice + totalNonInclusiveTax;
+        // Includes Base + Non-Inclusive Tax + Non-Inclusive Fee
+        const singleRoomPrice = roomBasePrice + totalNonInclusiveTax + totalNonInclusiveFee;
         const totalPrice = singleRoomPrice * totalRoomsNeeded;
 
         // ✅ Update context with repeated rooms
@@ -200,9 +211,23 @@ function RoomDetailsList({ rooms }) {
                                         </Typography>
                                     )}
 
+                                    {/* ✅ Show Cancellation Policy */}
+                                    {room.CancellationPolicies && room.CancellationPolicies.length > 0 && (
+                                        <Box sx={{ mt: 1 }}>
+                                            <Typography variant="body2" fontWeight="bold" sx={{ fontSize: '0.75rem', color: 'text.primary' }}>
+                                                Cancellation Policy:
+                                            </Typography>
+                                            {room.CancellationPolicies.map((policy, idx) => (
+                                                <Typography key={idx} variant="caption" display="block" color="error">
+                                                    • From {policy.Starting}: {policy.Mode === 'PCT' ? `${policy.Value}% penalty` : `${policy.Value} ${policy.BasedOn} charges`}
+                                                </Typography>
+                                            ))}
+                                        </Box>
+                                    )}
+                                    {/* Remarks */}
                                     {room.Remark && (
-                                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
-                                            {room.Remark.substring(0, 150)}...
+                                        <Typography variant="body2" sx={{ mt: 1, p: 1, bgcolor: 'grey.100', borderRadius: 1 }} color="text.secondary">
+                                            <strong>Remarks:</strong> {room.Remark.replace(/<[^>]*>?/gm, '')}
                                         </Typography>
                                     )}
                                 </Stack>

@@ -317,6 +317,33 @@ function BookRooms() {
                                                                 </Typography>
                                                             </Stack>
                                                         )}
+
+                                                        {/* ✅ Show Fees Breakdown */}
+                                                        {(() => {
+                                                            const allFees = room.Fee || [];
+                                                            if (allFees.length === 0) return null;
+
+                                                            return (
+                                                                <Box sx={{ mt: 0.5 }}>
+                                                                    <Typography variant="caption" fontWeight="bold">Fees</Typography>
+                                                                    {allFees.map((fee, idx) => {
+                                                                        const feeName = fee.Detail ? fee.Detail.replace(/_/g, ' ') : fee.Type;
+                                                                        const isInclusive = fee.Inclusive === "Inclusive" || fee.Inclusive === true || fee.Inclusive === "true";
+
+                                                                        return (
+                                                                            <Stack key={idx} direction="row" justifyContent="space-between">
+                                                                                <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+                                                                                    {feeName}
+                                                                                </Typography>
+                                                                                <Typography variant="caption" color={isInclusive ? "success.main" : "warning.main"}>
+                                                                                    {currency} {fee.Amount.toFixed(2)} {isInclusive ? '(included)' : ''}
+                                                                                </Typography>
+                                                                            </Stack>
+                                                                        );
+                                                                    })}
+                                                                </Box>
+                                                            );
+                                                        })()}
                                                     </Box>
                                                 );
                                             })}

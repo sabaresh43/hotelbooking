@@ -229,11 +229,11 @@ function MainHeader() {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Session Expired"}
+                    {"Rates Expired"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Rates have changed please recheck the rooms.
+                       Room rates might have changed, please click on OK to refresh.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
