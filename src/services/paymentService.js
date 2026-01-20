@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const HITPAY_BASE_URL = "https://hitpay-backend.vercel.app/api/hitpay";
+const HITPAY_BASE_URL = "https://indefatigably-openchain-brandi.ngrok-free.dev/api/hitpay";
 
 // Token, Employee helpers (if needed later)
 const getEmployeeId = () =>
