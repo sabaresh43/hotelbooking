@@ -5,6 +5,6 @@ export const getSupplier = () => {
   if (host.includes("dida")) return "dida";
   if (host.includes("goglobal")) return "goglobal";
 
-  // fallback
+  // fallbackkkkk
   return "goglobal";
 };
